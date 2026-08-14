@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>فكرة - لعبة إنسان جماد نبات</title>
+    <title>فكرة - لعبة إنسان جماد نبات أونلاين</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -14,6 +14,8 @@
             --text-dark: #2B2D42;
             --green-success: #2E7D32;
             --red-danger: #D32F2F;
+            --freeze-blue: #00B4D8;
+            --steal-purple: #7209B7;
         }
 
         * {
@@ -24,7 +26,7 @@
         }
 
         body {
-            background: #F4F6F8; /* خلفية بيضاء مائلة للرمادي الفاتح المريح للعين */
+            background: #F4F6F8;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -157,6 +159,18 @@
             box-shadow: 0 4px 15px rgba(211, 47, 47, 0.2);
         }
 
+        .btn-freeze {
+            background: var(--freeze-blue);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 180, 216, 0.3);
+        }
+
+        .btn-steal {
+            background: var(--steal-purple);
+            color: white;
+            box-shadow: 0 4px 15px rgba(114, 9, 183, 0.3);
+        }
+
         .btn-sm {
             padding: 0.3rem 0.6rem;
             font-size: 0.8rem;
@@ -222,6 +236,27 @@
             color: var(--dark-bg);
         }
 
+        .frozen-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(173, 216, 230, 0.85);
+            backdrop-filter: blur(8px);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: #03045E;
+            text-align: center;
+        }
+
+        .frozen-overlay h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(255,255,255,0.8);
+        }
+
         .countdown-num {
             font-size: 6rem;
             font-weight: 900;
@@ -278,6 +313,17 @@
             margin-bottom: 0.5rem;
             font-weight: 700;
         }
+
+        .powerups-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+            background: #F8FAFC;
+            padding: 0.8rem;
+            border-radius: 16px;
+            border: 1px solid #E2E8F0;
+        }
     </style>
 </head>
 <body>
@@ -286,8 +332,8 @@
 
     <!-- شاشة إعداد الغرفة والدخول -->
     <div id="roomSelectionView" class="glass-card">
-        <h1 class="title">💡 فكرة</h1>
-        <p class="subtitle">التحدي المباشر والأسرع في إنسان جماد نبات!</p>
+        <h1 class="title">💡 فكرة أونلاين</h1>
+        <p class="subtitle">التحدي المباشر والأسرع عبر الفايربيس السحابي! 🌐</p>
 
         <div class="form-group">
             <label>اسمك في اللعبة</label>
@@ -340,8 +386,8 @@
 
     <!-- شاشة الـ Lobby (الانتظار) -->
     <div id="lobbyView" class="glass-card" style="display: none; text-align: center;">
-        <h2 style="margin-bottom: 0.5rem;">غرفة اللعب 🎮</h2>
-        <p style="color: #666;">شارك هذا الرمز مع أصدقائك:</p>
+        <h2 style="margin-bottom: 0.5rem;">غرفة اللعب السحابية 🎮</h2>
+        <p style="color: #666;">شارك هذا الرمز مع أصدقائك في أي مكان:</p>
         <div id="displayRoomCode" onclick="copyCode()" style="font-size: 2rem; font-weight: 900; color: var(--primary-orange); cursor: pointer; background: #FFF3EF; padding: 0.8rem; border-radius: 12px; border: 2px dashed var(--primary-orange); margin: 1rem 0;">
             FKR-0000 📋
         </div>
@@ -349,7 +395,7 @@
         <div style="margin-bottom: 1.5rem;">
             <label>اللاعبون المتصلون حالياً:</label>
             <div id="connectedPlayers" style="font-weight: 800; font-size: 1.2rem; color: var(--dark-bg); margin-top: 0.5rem;">
-                جاري الانتظار...
+                جاري الاتصال بقواعد البيانات...
             </div>
         </div>
 
@@ -366,6 +412,16 @@
             </div>
             <div class="letter-badge" id="activeLetter">أ</div>
             <div class="timer-display" id="timer">45s</div>
+        </div>
+
+        <!-- شريط القدرات / الباور أبز ⚡ -->
+        <div class="powerups-bar">
+            <button id="btnFreeze" onclick="useFreezePowerup()" class="btn btn-freeze btn-sm">
+                🥶 تجميد الخوي (150 نقطة)
+            </button>
+            <button id="btnSteal" onclick="useStealPowerup()" class="btn btn-steal btn-sm">
+                🥷 سرقة 20 نقطة (200 نقطة)
+            </button>
         </div>
 
         <div class="grid-inputs" id="dynamicAnswersForm"></div>
@@ -397,13 +453,40 @@
     <div id="countdownText" style="font-size: 1.5rem; font-weight: 800; margin-top: 1rem;">تهيّأ، الحرف قادم...</div>
 </div>
 
+<!-- شاشة التجميد (Frozen Overlay) ❄️ -->
+<div id="frozenOverlay" class="frozen-overlay">
+    <h1>🥶 جمدوك!</h1>
+    <p style="font-size: 1.4rem; font-weight: 800; margin-bottom: 1rem;">خويك استخدم عليك التجميد، استنّ 10 ثواني تذوب!</p>
+    <div style="font-size: 3rem; font-weight: 900;" id="freezeTimerDisplay">10</div>
+</div>
+
+<!-- مكتبات الفايربيس السحابية الأساسية v8 -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
 <script>
+    // إعدادات الفايربيس الخاصة بمشروعك (Fikra)
+    const firebaseConfig = {
+        apiKey: "AIzaSyCg29LG4HI-vas93dBFIMqKEfzeYUAx-o0",
+        authDomain: "fikrh-cf0ff.firebaseapp.com",
+        databaseURL: "https://fikrh-cf0ff-default-rtdb.firebaseio.com",
+        projectId: "fikrh-cf0ff",
+        storageBucket: "fikrh-cf0ff.firebasestorage.app",
+        messagingSenderId: "523229194032",
+        appId: "1:523229194032:web:29e3a5ef0ce27d8b3d0af5",
+        measurementId: "G-2G8NQ7FF96"
+    };
+
+    // تشغيل الفايربيس
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
     const API_KEY = "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";
     const arabicLetters = ["أ", "ب", "ت", "ث", "ج", "ح", "خ", "د", "ر", "ز", "س", "ش", "ص", "ض", "ط", "ظ", "ع", "غ", "ف", "ق", "ك", "ل", "م", "ن", "هـ", "و", "ي"];
     
-    let gameChannel = null;
     let isHost = false;
     let currentRoomCode = "";
+    let roomRef = null;
     let timerInterval;
     let selectedTime = 45;
     let totalRounds = 3;
@@ -417,6 +500,7 @@
     let allPlayersAnswers = {};
     let currentEvaluations = {};
     let isGameStopped = false;
+    let lastHandledPowerup = 0;
 
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playHypeSound(type) {
@@ -491,6 +575,8 @@
         document.getElementById(viewId).style.display = 'block';
     }
 
+    /* === الربط السحابي مع Firebase === */
+
     function hostCreateRoom() {
         playerName = document.getElementById('playerNameInput').value.trim() || "الهوست";
         const checkedBoxes = document.querySelectorAll('#categoriesCheckboxGroup input:checked');
@@ -510,13 +596,28 @@
         currentRoomCode = "FKR-" + Math.floor(1000 + Math.random() * 9000);
         document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
 
-        initChannel(currentRoomCode);
+        roomRef = db.ref('rooms/' + currentRoomCode);
 
-        playersList = [playerName];
-        updatePlayersUI();
-        switchView('lobbyView');
-        document.getElementById('startGameBtn').style.display = 'block';
-        document.getElementById('waitingHostText').style.display = 'none';
+        // إنشاء بيانات الغرفة في السيرفر السحابي
+        roomRef.set({
+            host: playerName,
+            state: 'lobby',
+            settings: {
+                totalRounds,
+                selectedTime,
+                activeCategories
+            },
+            players: {
+                [playerName]: { joined: true, score: 0 }
+            }
+        }).then(() => {
+            listenToFirebaseRoom();
+            switchView('lobbyView');
+            document.getElementById('startGameBtn').style.display = 'block';
+            document.getElementById('waitingHostText').style.display = 'none';
+        }).catch(err => {
+            alert('خطأ في الاتصال بالفايربيس: ' + err.message);
+        });
     }
 
     function guestJoinRoom() {
@@ -526,67 +627,62 @@
 
         isHost = false;
         currentRoomCode = code;
+        roomRef = db.ref('rooms/' + currentRoomCode);
 
-        initChannel(currentRoomCode);
-
-        broadcast({ type: 'JOIN_REQUEST', name: playerName });
-
-        document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
-        playersList = [playerName];
-        updatePlayersUI();
-        switchView('lobbyView');
-        document.getElementById('startGameBtn').style.display = 'none';
-        document.getElementById('waitingHostText').style.display = 'block';
-    }
-
-    function initChannel(roomCode) {
-        if (gameChannel) gameChannel.close();
-        gameChannel = new BroadcastChannel('fekra_room_' + roomCode);
-
-        gameChannel.onmessage = (event) => {
-            const data = event.data;
-
-            if (isHost) {
-                if (data.type === 'JOIN_REQUEST') {
-                    if (!playersList.includes(data.name)) playersList.push(data.name);
-                    broadcast({ 
-                        type: 'UPDATE_PLAYERS', 
-                        players: playersList, 
-                        settings: { totalRounds, selectedTime, activeCategories } 
-                    });
-                    updatePlayersUI();
-                } else if (data.type === 'FORCE_STOP') {
-                    handleForceStop(data.stoppedBy);
-                } else if (data.type === 'SUBMIT_ANSWERS') {
-                    allPlayersAnswers[data.player] = data.answers;
-                    checkAndEvaluate();
-                }
+        roomRef.get().then((snapshot) => {
+            if (snapshot.exists()) {
+                roomRef.child('players/' + playerName).set({ joined: true, score: 0 });
+                document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
+                listenToFirebaseRoom();
+                switchView('lobbyView');
+                document.getElementById('startGameBtn').style.display = 'none';
+                document.getElementById('waitingHostText').style.display = 'block';
             } else {
-                if (data.type === 'UPDATE_PLAYERS') {
-                    playersList = data.players;
-                    totalRounds = data.settings.totalRounds;
-                    selectedTime = data.settings.selectedTime;
-                    activeCategories = data.settings.activeCategories;
-                    updatePlayersUI();
-                } else if (data.type === 'START_COUNTDOWN') {
-                    currentRound = data.round;
-                    currentLetter = data.letter;
-                    triggerCountdownAndStart();
-                } else if (data.type === 'FORCE_STOP') {
-                    handleForceStop(data.stoppedBy);
-                } else if (data.type === 'SHOW_RESULTS') {
-                    currentEvaluations = data.evaluations;
-                    renderMultiplayerResults(data.evaluations, data.allAnswers);
-                    switchView('resultsView');
-                } else if (data.type === 'FINISH_GAME') {
-                    finishGameProcess();
-                }
+                alert('رمز الغرفة غير موجود يا بطل، تأكد منه!');
             }
-        };
+        });
     }
 
-    function broadcast(data) {
-        if (gameChannel) gameChannel.postMessage(data);
+    function listenToFirebaseRoom() {
+        roomRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (!data) return;
+
+            // تحديث قائمة اللاعبين
+            if (data.players) {
+                playersList = Object.keys(data.players);
+                updatePlayersUI();
+            }
+
+            // تحديث الإعدادات عند الضيوف
+            if (data.settings) {
+                totalRounds = data.settings.totalRounds;
+                selectedTime = data.settings.selectedTime;
+                activeCategories = data.settings.activeCategories;
+            }
+
+            // متابعة حالات اللعبة
+            if (data.state === 'countdown' && data.currentRound !== currentRound) {
+                currentRound = data.currentRound;
+                currentLetter = data.currentLetter;
+                triggerCountdownAndStart();
+            } else if (data.state === 'playing' && data.stoppedBy && !isGameStopped) {
+                handleForceStop(data.stoppedBy);
+            } else if (data.state === 'results' && data.evaluations && data.evaluations['r' + currentRound]) {
+                currentEvaluations = data.evaluations['r' + currentRound];
+                allPlayersAnswers = (data.answers && data.answers['r' + currentRound]) ? data.answers['r' + currentRound] : {};
+                renderMultiplayerResults(currentEvaluations, allPlayersAnswers);
+                switchView('resultsView');
+            } else if (data.state === 'finished') {
+                finishGameProcess();
+            }
+
+            // التعامل مع القدرات الخاصة (Powerups)
+            if (data.powerupAction && data.powerupAction.timestamp > lastHandledPowerup) {
+                lastHandledPowerup = data.powerupAction.timestamp;
+                handleIncomingPowerup(data.powerupAction);
+            }
+        });
     }
 
     function updatePlayersUI() {
@@ -605,22 +701,31 @@
     }
 
     function hostNextRound() {
+        if (currentEvaluations[playerName]) {
+            globalScore += currentEvaluations[playerName].totalScore || 0;
+        }
+
         currentRound++;
         if (currentRound > totalRounds) {
-            if (isHost) broadcast({ type: 'FINISH_GAME' });
+            if (isHost) roomRef.update({ state: 'finished' });
             finishGameProcess();
             return;
         }
 
         allPlayersAnswers = {};
+        currentEvaluations = {};
         isGameStopped = false;
 
         currentLetter = arabicLetters[Math.floor(Math.random() * arabicLetters.length)];
 
         if (isHost) {
-            broadcast({ type: 'START_COUNTDOWN', round: currentRound, letter: currentLetter });
+            roomRef.update({
+                state: 'countdown',
+                currentRound: currentRound,
+                currentLetter: currentLetter,
+                stoppedBy: null
+            });
         }
-        triggerCountdownAndStart();
     }
 
     function triggerCountdownAndStart() {
@@ -673,6 +778,7 @@
         }
 
         switchView('gamePlayView');
+        updatePowerupButtonsUI();
         startTimer();
     }
 
@@ -692,6 +798,96 @@
         }, 1000);
     }
 
+    /* === نظام القدرات الخاصة (Power-ups) ⚡ === */
+
+    function updatePowerupButtonsUI() {
+        const btnFreeze = document.getElementById('btnFreeze');
+        const btnSteal = document.getElementById('btnSteal');
+
+        if (globalScore >= 150) {
+            btnFreeze.disabled = false;
+            btnFreeze.style.opacity = '1';
+        } else {
+            btnFreeze.disabled = true;
+            btnFreeze.style.opacity = '0.5';
+        }
+
+        if (globalScore >= 200) {
+            btnSteal.disabled = false;
+            btnSteal.style.opacity = '1';
+        } else {
+            btnSteal.disabled = true;
+            btnSteal.style.opacity = '0.5';
+        }
+    }
+
+    function useFreezePowerup() {
+        if (globalScore < 150) {
+            return alert('تحتاج 150 نقطة لتجميد خويك!');
+        }
+
+        globalScore -= 150;
+        updatePowerupButtonsUI();
+
+        roomRef.child('powerupAction').set({
+            type: 'FREEZE',
+            from: playerName,
+            timestamp: Date.now()
+        });
+
+        alert('🥶 تم إرسال التجميد لخويك! راح يتقفل عليه اللعب 10 ثواني!');
+    }
+
+    function useStealPowerup() {
+        if (globalScore < 200) {
+            return alert('تحتاج 200 نقطة لسرقة النقاط!');
+        }
+
+        globalScore -= 200;
+        globalScore += 20;
+        updatePowerupButtonsUI();
+
+        roomRef.child('powerupAction').set({
+            type: 'STEAL',
+            from: playerName,
+            amount: 20,
+            timestamp: Date.now()
+        });
+
+        alert('🥷 سرقت 20 نقطة من خويك وضفتها لرصيدك!');
+    }
+
+    function handleIncomingPowerup(data) {
+        if (data.from === playerName) return;
+
+        if (data.type === 'FREEZE') {
+            applyFreezeEffect();
+        } else if (data.type === 'STEAL') {
+            globalScore = Math.max(0, globalScore - data.amount);
+            alert(`🥷 ${data.from} سرق منك ${data.amount} نقطة!`);
+        }
+    }
+
+    function applyFreezeEffect() {
+        const frozenOverlay = document.getElementById('frozenOverlay');
+        const timerDisplay = document.getElementById('freezeTimerDisplay');
+        
+        frozenOverlay.style.display = 'flex';
+        let freezeTime = 10;
+        timerDisplay.innerText = freezeTime;
+
+        const freezeInterval = setInterval(() => {
+            freezeTime--;
+            timerDisplay.innerText = freezeTime;
+            if (freezeTime <= 0) {
+                clearInterval(freezeInterval);
+                frozenOverlay.style.display = 'none';
+            }
+        }, 1000);
+    }
+
+    /* ========================================= */
+
     function userTriggeredStop(manual = true) {
         if (isGameStopped) return;
         isGameStopped = true;
@@ -700,7 +896,10 @@
         playHypeSound('stop');
 
         if (manual) {
-            broadcast({ type: 'FORCE_STOP', stoppedBy: playerName });
+            roomRef.update({
+                state: 'playing',
+                stoppedBy: playerName
+            });
             handleForceStop(playerName);
         } else {
             submitMyAnswers();
@@ -730,28 +929,33 @@
 
         allPlayersAnswers[playerName] = myAnswers;
 
-        if (isHost) {
-            checkAndEvaluate();
-        } else {
-            broadcast({ type: 'SUBMIT_ANSWERS', player: playerName, answers: myAnswers });
-        }
+        // إرسال الإجابات للفايربيس
+        roomRef.child('answers/r' + currentRound + '/' + playerName).set(myAnswers).then(() => {
+            if (isHost) {
+                checkAndEvaluate();
+            }
+        });
     }
 
     async function checkAndEvaluate() {
         setTimeout(async () => {
             if (isHost && !window.isEvaluating) {
                 window.isEvaluating = true;
-                const evaluations = await evaluateAllPlayersWithAI(currentLetter, allPlayersAnswers, activeCategories);
+
+                // جلب إجابات جميع اللاعبين من الفايربيس للتحكيم
+                const snap = await roomRef.child('answers/r' + currentRound).get();
+                const currentRoundAnswers = snap.val() || {};
+
+                const evaluations = await evaluateAllPlayersWithAI(currentLetter, currentRoundAnswers, activeCategories);
                 window.isEvaluating = false;
 
                 if (evaluations) {
                     currentEvaluations = evaluations;
-                    broadcast({ type: 'SHOW_RESULTS', evaluations: currentEvaluations, allAnswers: allPlayersAnswers });
-                    renderMultiplayerResults(currentEvaluations, allPlayersAnswers);
-                    switchView('resultsView');
+                    roomRef.child('evaluations/r' + currentRound).set(evaluations);
+                    roomRef.update({ state: 'results' });
                 }
             }
-        }, 800);
+        }, 1200);
     }
 
     async function evaluateAllPlayersWithAI(letter, allAnswers, categories) {
@@ -808,26 +1012,21 @@ ${JSON.stringify(allAnswers)}
         }
     }
 
-    // تعديل النتيجة يدوياً بواسطة الهوست
     function hostOverrideScore(pName, catKey, newScore) {
         if (!isHost) return;
         
         if (!currentEvaluations[pName] || !currentEvaluations[pName].details[catKey]) return;
 
-        const oldScore = currentEvaluations[pName].details[catKey].score;
         currentEvaluations[pName].details[catKey].score = newScore;
         currentEvaluations[pName].details[catKey].reason = `تم تعديل الحكم يدوياً بواسطة الهوست (${newScore} نقاط).`;
 
-        // إعادة حساب مجموع نقاط اللاعب لهذه الجولة
         let newTotal = 0;
         Object.keys(currentEvaluations[pName].details).forEach(k => {
             newTotal += currentEvaluations[pName].details[k].score;
         });
         currentEvaluations[pName].totalScore = newTotal;
 
-        // إرسال التعديل للجميع وإعادة الرسم
-        broadcast({ type: 'SHOW_RESULTS', evaluations: currentEvaluations, allAnswers: allPlayersAnswers });
-        renderMultiplayerResults(currentEvaluations, allPlayersAnswers);
+        roomRef.child('evaluations/r' + currentRound).set(currentEvaluations);
     }
 
     function renderMultiplayerResults(evaluations, allAnswers) {
@@ -850,7 +1049,6 @@ ${JSON.stringify(allAnswers)}
                 
                 const isCorrect = pEval.score > 0;
 
-                // زر التعديل المتاح للهوست فقط
                 let overrideControls = '';
                 if (isHost) {
                     overrideControls = `
@@ -863,13 +1061,12 @@ ${JSON.stringify(allAnswers)}
                 }
 
                 playersCardsHTML += `
-                    <div style="background: ${isCorrect ? '#E8F5E9' : '#FFEBEE'}; padding: 0.8rem; border-radius: 12px; margin-top: 0.5rem; border: 1px solid ${isCorrect ? '#2E7D32' : '#D32F2F'};">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-weight: 800; color: #1D2029;">👤 ${pName} ${pName === playerName ? '(أنت)' : ''}</span>
-                            <span class="score-badge ${isCorrect ? 'correct' : 'incorrect'}">${pEval.score} نقاط</span>
+                    <div style="background: #F8FAFC; border-radius: 10px; padding: 0.6rem; margin-top: 0.4rem; border: 1px solid #E2E8F0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: 800;">👤 ${pName}: <span style="color: var(--primary-orange);">${pWord}</span></span>
+                            <span class="score-badge ${isCorrect ? 'correct' : 'incorrect'}">${pEval.score} نقطة</span>
                         </div>
-                        <div style="font-size: 1.05rem; font-weight: 800; margin: 0.3rem 0;">الكلمة: "${pWord}"</div>
-                        <div style="font-size: 0.85rem; color: ${isCorrect ? '#2E7D32' : '#C62828'}; font-weight: 700;">💬 ${pEval.reason}</div>
+                        <div style="font-size: 0.8rem; color: #666; margin-top: 0.2rem;">💬 ${pEval.reason}</div>
                         ${overrideControls}
                     </div>
                 `;
@@ -877,71 +1074,70 @@ ${JSON.stringify(allAnswers)}
 
             container.innerHTML += `
                 <div class="result-card">
-                    <div class="category-name" style="font-size: 1.2rem; border-bottom: 2px solid #F0F0F0; padding-bottom: 0.4rem; font-weight: 800;">📌 تصنيف: ${cat.name}</div>
+                    <h3 style="color: var(--primary-orange); font-size: 1.1rem; margin-bottom: 0.3rem;">📌 ${cat.name}</h3>
                     ${playersCardsHTML}
                 </div>
             `;
         });
 
         const nextBtn = document.getElementById('nextActionBtn');
-        const waitText = document.getElementById('waitingNextText');
         const finishBtn = document.getElementById('finishGameBtn');
+        const waitingText = document.getElementById('waitingNextText');
 
         if (currentRound < totalRounds) {
             if (isHost) {
                 nextBtn.style.display = 'block';
-                waitText.style.display = 'none';
+                finishBtn.style.display = 'none';
+                waitingText.style.display = 'none';
             } else {
                 nextBtn.style.display = 'none';
-                waitText.style.display = 'block';
+                finishBtn.style.display = 'none';
+                waitingText.style.display = 'block';
             }
-            finishBtn.style.display = 'none';
         } else {
             nextBtn.style.display = 'none';
-            waitText.style.display = 'none';
+            waitingText.style.display = 'none';
             finishBtn.style.display = 'block';
         }
     }
 
     function finishGameProcess() {
-        const myEval = currentEvaluations[playerName] || { totalScore: 0 };
-        globalScore += (myEval.totalScore || 0);
-        saveToLeaderboard(playerName, globalScore);
-        alert(`انتهت اللعبة! مجموع نقاطك النهائية هو: ${globalScore}`);
-        resetToHome();
-    }
+        if (currentEvaluations[playerName]) {
+            globalScore += currentEvaluations[playerName].totalScore || 0;
+        }
 
-    function resetToHome() {
-        if (gameChannel) gameChannel.close();
-        currentRound = 0;
-        globalScore = 0;
-        switchView('roomSelectionView');
+        saveToLeaderboard(playerName, globalScore);
+        alert(`انتهت اللعبة! مجموع نقاطك النهائي هو: ${globalScore}`);
+        location.reload();
     }
 
     function saveToLeaderboard(name, score) {
-        let scores = JSON.parse(localStorage.getItem('fekra_lb') || '[]');
-        scores.push({ name, score, date: new Date().toLocaleDateString('ar-SA') });
-        scores.sort((a, b) => b.score - a.score);
-        scores = scores.slice(0, 5);
-        localStorage.setItem('fekra_lb', JSON.stringify(scores));
-        loadLeaderboard();
+        let lb = JSON.parse(localStorage.getItem('fekra_leaderboard') || '[]');
+        lb.push({ name, score, date: new Date().toLocaleDateString('ar-SA') });
+        lb.sort((a, b) => b.score - a.score);
+        lb = lb.slice(0, 5);
+        localStorage.setItem('fekra_leaderboard', JSON.stringify(lb));
     }
 
     function loadLeaderboard() {
-        let scores = JSON.parse(localStorage.getItem('fekra_lb') || '[]');
         const lbContainer = document.getElementById('leaderboardList');
-        if (scores.length === 0) {
-            lbContainer.innerHTML = `<div class="lb-item"><span>لا توجد أرقام مسجلة بعد</span><span>0 نقطة</span></div>`;
+        let lb = JSON.parse(localStorage.getItem('fekra_leaderboard') || '[]');
+        
+        if (lb.length === 0) {
+            lbContainer.innerHTML = '<div style="color: #888; font-size: 0.9rem;">لا يوجد أساطير بعد، كن الأول! 👑</div>';
             return;
         }
-        lbContainer.innerHTML = scores.map(item => `
-            <div class="lb-item">
-                <span>${item.name}</span>
-                <span>${item.score} نقطة</span>
-            </div>
-        `).join('');
+
+        lbContainer.innerHTML = '';
+        lb.forEach((item, index) => {
+            lbContainer.innerHTML += `
+                <div class="lb-item">
+                    <span>#${index + 1} ${item.name}</span>
+                    <span style="color: var(--primary-orange);">${item.score} نقطة</span>
+                </div>
+            `;
+        });
     }
 </script>
-
 </body>
 </html>
