@@ -203,7 +203,7 @@
         }
         .btn-back:hover { background: #FFF; border-color: var(--primary-orange); color: var(--primary-orange); }
 
-        /* --- تصميم تنبيه المغادرة الزجاجي --- */
+        /* --- تصميم تنبيه الموضحة الموحد (نفس تنبيه الرجوع للغرفة) --- */
         #leaveWarningToast {
             position: fixed;
             top: -140px;
@@ -400,19 +400,72 @@
         .podium-3 { height: 55%; background: linear-gradient(180deg, #CD7F32, #B36B25); }
         .crown-icon { position: absolute; top: -30px; font-size: 1.6rem; }
         .hidden { display: none !important; }
+
+        /* --- تنسيقات خاصة بلعبة الرسم والتخمين --- */
+        .canvas-wrapper {
+            position: relative;
+            width: 100%;
+            background: #FFFFFF;
+            border: 3px solid var(--primary-orange);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            touch-action: none;
+        }
+        #paintCanvas {
+            display: block;
+            width: 100%;
+            height: 320px;
+            background: #FFFFFF;
+            cursor: crosshair;
+        }
+        .drawing-tools {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            justify-content: center;
+            background: #F8FAFC;
+            padding: 8px;
+            border-radius: 14px;
+            margin-top: 10px;
+            border: 1px solid #E2E8F0;
+            flex-wrap: wrap;
+        }
+        .color-dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            transition: 0.2s;
+        }
+        .color-dot.active { transform: scale(1.25); border-color: var(--primary-orange); }
+        .chat-guesses-box {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 14px;
+            height: 140px;
+            overflow-y: auto;
+            padding: 8px 12px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+        }
+        .chat-msg { margin-bottom: 4px; border-bottom: 1px solid #F1F5F9; padding-bottom: 2px; }
+        .chat-msg.correct { color: var(--green-success); font-weight: 900; background: #E8F5E9; padding: 4px 8px; border-radius: 8px; }
     </style>
 </head>
 <body>
 
-    <!-- رسالة تنبيه المغادرة الزجاجية العلوية -->
+    <!-- رسالة التنبيه الزجاجية العلوية الموحدة -->
     <div id="leaveWarningToast">
         <div class="toast-icon">💡</div>
         <div class="toast-content">
-            <div class="toast-title">العودة إلى الغرفة!</div>
-            <div class="toast-desc">يمديك ترجع للعبة خلال <span id="leaveCountdownNum" class="pulse-num">10</span> ثواني.</div>
+            <div id="toastTitleEl" class="toast-title">تنبيه فكرة!</div>
+            <div id="toastDescEl" class="toast-desc">جاري إشعارك بالتحديث الجديد خلال <span id="leaveCountdownNum" class="pulse-num">10</span> ثواني.</div>
         </div>
-        <div class="toast-actions">
-            <button onclick="restoreRoomSession()" class="btn btn-primary btn-sm">تراجع 🚀</button>
+        <div id="toastActionsEl" class="toast-actions">
+            <button id="toastMainBtn" onclick="restoreRoomSession()" class="btn btn-primary btn-sm">تراجع 🚀</button>
             <button onclick="dismissLeaveToast()" class="btn btn-secondary btn-sm" style="background:#E2E8F0; color:var(--text-main);">إخفاء</button>
         </div>
     </div>
@@ -462,18 +515,18 @@
                 <div class="game-desc">اللعبة الكلاسيكية الشهيرة! اختبر سرعة بديهتك وجيب كلمات بالحرف المطلوب.</div>
                 <div class="game-meta">
                     <span class="players-count">👥 2 - 8 لاعبين</span>
-                    <button onclick="openGameRoom()" class="btn btn-primary">العب</button>
+                    <button onclick="openGameRoom('scattergories')" class="btn btn-primary">العب</button>
                 </div>
             </div>
 
-            <!-- ألعاب قريباً (معطلة) -->
+            <!-- لعبة مين الجاسوس (شغالة ومفعلة الآن!) -->
             <div class="game-card" data-category="party" data-name="مين الجاسوس">
                 <div class="game-icon">🕵️‍♂️</div>
                 <div class="game-title">مين الجاسوس؟</div>
-                <div class="game-desc">اكتشف الجاسوس المتخفي بينكم قبل ما يعرف المكان السري!</div>
+                <div class="game-desc">اكتشف الجاسوس المتخفي بينكم قبل ما يعرف المكان السري! لعبة الذكاء والتشكيك.</div>
                 <div class="game-meta">
                     <span class="players-count">👥 3 - 10 لاعبين</span>
-                    <button onclick="alert('قريباً يا بطل! 🚀 نعمل على برمجتها حالياً.')" class="btn btn-primary">قريباً 🚀</button>
+                    <button onclick="openGameRoom('spy')" class="btn btn-primary">العب 🔥</button>
                 </div>
             </div>
 
@@ -483,183 +536,437 @@
                 <div class="game-desc">اذكر 3 أشياء مطلوبة منك في 5 ثواني فقط، الضغط عالي!</div>
                 <div class="game-meta">
                     <span class="players-count">👥 2 - 6 لاعبين</span>
-                    <button onclick="alert('قريباً يا بطل! 🚀')" class="btn btn-primary">قريباً 🚀</button>
+                    <button onclick="triggerUniversalToast('تنبيه تطويري 🚀', 'لعبة تحدي الـ 5 ثواني قادمة قريباً يا بطل، ترقبونا!', false)" class="btn btn-primary">قريباً 🚀</button>
                 </div>
             </div>
 
+            <!-- لعبة ارسم وتخمّن (جاهزة وشغالة 100%) -->
             <div class="game-card" data-category="party" data-name="ارسم وتخمن">
                 <div class="game-icon">🎨</div>
                 <div class="game-title">ارسم وتخمّن</div>
                 <div class="game-desc">ارسم الكلمة المكتوبة وخلي بقية اللاعبين يحزرون الرسمة بأسرع وقت.</div>
                 <div class="game-meta">
                     <span class="players-count">👥 2 - 12 لاعبين</span>
-                    <button onclick="alert('قريباً يا بطل! 🚀')" class="btn btn-primary">قريباً 🚀</button>
+                    <button onclick="openGameRoom('draw')" class="btn btn-primary">العب 🔥</button>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- حاوية اللعبة الداخلية (غرفة الإنشاء والانضمام واللعب) -->
+    <!-- حاوية اللعبة الداخلية المشتركة -->
     <div id="gameContainerView" style="display: none; max-width: 600px; margin: 1rem auto; padding: 0 0.8rem;">
         
-        <!-- واجهة اختيار الغرفة (إنشاء / انضمام) -->
-        <div id="roomSelectionView" class="glass-card">
-            <h1 class="title">فِكْرَة 💡</h1>
-            <p class="subtitle">التحدي المباشر والأسرع!</p>
+        <!-- ==================== واجهة إنسان جماد نبات ==================== -->
+        <div id="scattergoriesGameFlow" style="display:none;">
+            <!-- اختيار الغرفة -->
+            <div id="roomSelectionView" class="glass-card">
+                <h1 class="title">فِكْرَة 💡</h1>
+                <p class="subtitle">اسم انسان جماد نبات - التحدي الأسرع!</p>
 
-            <div class="form-group">
-                <label>اسمك في اللعبة</label>
-                <input type="text" id="playerNameInput" placeholder="أدخل اسمك هنا..." maxlength="15">
-            </div>
+                <div class="form-group">
+                    <label>اسمك في اللعبة</label>
+                    <input type="text" id="playerNameInput" placeholder="أدخل اسمك هنا..." maxlength="15">
+                </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1rem;">
-                <div>
-                    <label>عدد الجولات</label>
-                    <select id="roundsSelect">
-                        <option value="1">جولة واحدة (سريعة 🔥)</option>
-                        <option value="3" selected>3 جولات</option>
-                        <option value="5">5 جولات</option>
-                        <option value="7">7 جولات</option>
-                        <option value="9">9 جولات (للأساطير 💀)</option>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1rem;">
+                    <div>
+                        <label>عدد الجولات</label>
+                        <select id="roundsSelect">
+                            <option value="1">جولة واحدة (سريعة 🔥)</option>
+                            <option value="3" selected>3 جولات</option>
+                            <option value="5">5 جولات</option>
+                            <option value="7">7 جولات</option>
+                            <option value="9">9 جولات (للأساطير 💀)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>وقت الجولة</label>
+                        <select id="timeSelect">
+                            <option value="30">30 ثانية</option>
+                            <option value="45">45 ثانية</option>
+                            <option value="60" selected>60 ثانية (دقيقة)</option>
+                            <option value="90">90 ثانية</option>
+                            <option value="120">120 ثانية (🐢)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>حد التصنيفات (تحكم الهوست 👑)</label>
+                    <select id="maxCategoriesSelect" onchange="updateMaxCategoriesLimit()">
+                        <option value="3">3 تصنيفات</option>
+                        <option value="5">5 تصنيفات</option>
+                        <option value="7">7 تصنيفات</option>
+                        <option value="10" selected>10 تصنيفات (الكل 🔥)</option>
                     </select>
                 </div>
-                <div>
-                    <label>وقت الجولة</label>
-                    <select id="timeSelect">
-                        <option value="30">30 ثانية</option>
-                        <option value="45">45 ثانية</option>
-                        <option value="60" selected>60 ثانية (دقيقة)</option>
-                        <option value="90">90 ثانية</option>
-                        <option value="120">120 ثانية (🐢)</option>
+
+                <div class="form-group">
+                    <label>التصنيفات المختارة (<span id="selectedCount">0 / 10</span>)</label>
+                    <div class="checkbox-group" id="categoriesCheckboxGroup">
+                        <label class="checkbox-label"><input type="checkbox" value="human" data-name="إنسان" checked> إنسان</label>
+                        <label class="checkbox-label"><input type="checkbox" value="animal" data-name="حيوان" checked> حيوان</label>
+                        <label class="checkbox-label"><input type="checkbox" value="plant" data-name="نبات" checked> نبات</label>
+                        <label class="checkbox-label"><input type="checkbox" value="object" data-name="جماد" checked> جماد</label>
+                        <label class="checkbox-label"><input type="checkbox" value="country" data-name="بلاد" checked> بلاد</label>
+                        <label class="checkbox-label"><input type="checkbox" value="job" data-name="مهنة" checked> مهنة</label>
+                        <label class="checkbox-label"><input type="checkbox" value="food" data-name="أكلة" checked> أكلة</label>
+                        <label class="checkbox-label"><input type="checkbox" value="car" data-name="سيارة" checked> سيارة</label>
+                        <label class="checkbox-label"><input type="checkbox" value="famous" data-name="مشاهير"> مشاهير</label>
+                        <label class="checkbox-label"><input type="checkbox" value="movie" data-name="فيلم/مسلسل"> فيلم/مسلسل</label>
+                    </div>
+                </div>
+
+                <button onclick="hostCreateRoom()" class="btn btn-primary" style="width: 100%;">إنشاء غرفة أونلاين 🚀</button>
+                
+                <div style="margin: 1rem 0; text-align: center; font-weight: 700; color: #888; font-size: 0.85rem;">أو</div>
+
+                <div class="form-group">
+                    <input type="text" id="roomCodeInput" placeholder="أدخل رمز الغرفة (مثال: 4582)" maxlength="6" style="text-align: center; letter-spacing: 2px; font-weight: 900;">
+                </div>
+                <button onclick="guestJoinRoom()" class="btn btn-primary" style="width: 100%;">انضمام لغرفة 🔗</button>
+
+                <div style="margin-top: 1.2rem; border-top: 1px solid #EEE; padding-top: 0.8rem;">
+                    <label>🏆 قائمة الأساطير العالمية</label>
+                    <div id="leaderboardList" style="font-size: 0.88rem;">جاري جلب القائمة...</div>
+                </div>
+            </div>
+
+            <!-- لوبي الانتظار -->
+            <div id="lobbyView" class="glass-card" style="display: none; text-align: center;">
+                <h2 style="margin-bottom: 0.3rem; font-size: 1.3rem;">غرفة اللعب السحابية 🎮</h2>
+                <p style="color: #666; font-size: 0.85rem;">شارك هذا الرمز الرقمي مع أصدقائك:</p>
+                <div id="displayRoomCode" onclick="copyCode()" style="font-size: 2rem; font-weight: 900; color: var(--primary-orange); cursor: pointer; background: #FFF3EF; padding: 0.6rem; border-radius: 12px; border: 2px dashed var(--primary-orange); margin: 0.8rem 0; letter-spacing: 3px;">
+                    0000 📋
+                </div>
+
+                <div style="margin-bottom: 0.8rem;">
+                    <label>اللاعبون المتصلون حالياً:</label>
+                    <div id="connectedPlayersContainer" style="margin-top: 0.4rem;"></div>
+                </div>
+
+                <div class="emoji-bar">
+                    <button onclick="sendEmojiReaction('😂')" class="emoji-btn">😂</button>
+                    <button onclick="sendEmojiReaction('🔥')" class="emoji-btn">🔥</button>
+                    <button onclick="sendEmojiReaction('💩')" class="emoji-btn">💩</button>
+                    <button onclick="sendEmojiReaction('🥶')" class="emoji-btn">🥶</button>
+                    <button onclick="sendEmojiReaction('👍')" class="emoji-btn">👍</button>
+                    <button onclick="sendEmojiReaction('🚀')" class="emoji-btn">🚀</button>
+                </div>
+
+                <button id="startGameBtn" onclick="hostStartGame()" class="btn btn-primary" style="display: none; margin-top: 1.2rem; width: 100%;">بدء اللعبة للجميع 🏁</button>
+                <p id="waitingHostText" style="color: #888; font-weight: 700; display: none; margin-top: 0.8rem; font-size: 0.85rem;">في انتظار الهوست ليبدأ اللعبة...</p>
+            </div>
+
+            <!-- واجهة اللعب الفعلي -->
+            <div id="gamePlayView" class="glass-card" style="display: none;">
+                <div class="header-status">
+                    <div>
+                        <span id="roundDisplay" style="font-size: 0.78rem; font-weight: 800; color: #666;">الجولة 1 من 3</span>
+                        <div style="font-weight: 800; font-size: 0.95rem; margin-top: 0.1rem;">الحرف المطلوب:</div>
+                    </div>
+                    <div class="letter-badge" id="activeLetter">أ</div>
+                    <div class="timer-display" id="timer">45s</div>
+                </div>
+
+                <div class="powerups-bar">
+                    <button id="btnFreeze" onclick="useFreezePowerup()" class="btn btn-freeze btn-sm">
+                        🥶 تجميد الخوي (150ن)
+                    </button>
+                    <button id="btnSteal" onclick="useStealPowerup()" class="btn btn-steal btn-sm">
+                        🥷 سرقة 20ن (200ن)
+                    </button>
+                </div>
+
+                <div id="dynamicAnswersForm" style="display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 1.2rem;"></div>
+
+                <button id="stopBtn" onclick="userTriggeredStop(true)" class="btn btn-danger" style="width: 100%;">إنهاء (STOP) 🛑</button>
+            </div>
+
+            <!-- واجهة نتائج الجولة -->
+            <div id="resultsView" class="glass-card" style="display: none;">
+                <h2 style="text-align: center; margin-bottom: 0.4rem; font-size: 1.3rem;">نتائج الجولة <span id="resultRoundTitle">1</span> 📊</h2>
+                
+                <div style="display: flex; justify-content: space-around; background: #FFF3EF; padding: 0.7rem; border-radius: 10px; margin-bottom: 1rem; font-weight: 800; font-size: 0.85rem;">
+                    <div>نقاطك بالجولة: <span id="totalScoreDisplay" style="color: var(--primary-orange);">0</span></div>
+                    <div>مجموعك: <span id="accumulatedScore" style="color: var(--green-success);">0</span></div>
+                </div>
+
+                <div id="resultsContainer"></div>
+
+                <button id="nextActionBtn" onclick="hostNextRound()" class="btn btn-primary" style="display: none; width: 100%;">الجولة التالية ➡️</button>
+                <p id="waitingNextText" style="text-align: center; color: #888; font-weight: 700; display: none; font-size: 0.85rem;">في انتظار الهوست للانتقال للجولة التالية...</p>
+                <button id="finishGameBtn" onclick="finishGameProcess()" class="btn btn-secondary" style="display: none; width: 100%;">عرض شاشة التتويج 🏆</button>
+            </div>
+
+            <!-- واجهة التتويج -->
+            <div id="winnerView" class="glass-card" style="display: none; text-align: center;">
+                <h1 class="title" style="font-size: 1.5rem;">🎉 أساطير اللعبة 🎉</h1>
+                <p class="subtitle">تهانينا للفائزين وبقية اللاعبين تعوضونها! 😂</p>
+
+                <div id="podiumDisplay" class="podium-container"></div>
+                <div id="fullFinalScores" style="margin-top: 1.2rem; text-align: right; font-size: 0.9rem;"></div>
+
+                <button onclick="goHome()" class="btn btn-primary" style="margin-top: 1.2rem; width: 100%;">العودة للشاشة الرئيسية 🏠</button>
+            </div>
+        </div>
+
+        <!-- ==================== واجهة لعبة مين الجاسوس ==================== -->
+        <div id="spyGameFlow" style="display:none;">
+            <!-- اختيار الغرفة للجاسوس -->
+            <div id="spyRoomSelectionView" class="glass-card">
+                <h1 class="title">🕵️‍♂️ مين الجاسوس؟</h1>
+                <p class="subtitle">اكتشف العميل السري قبل أن يكشف مكانكم!</p>
+
+                <div class="form-group">
+                    <label>اسمك في اللعبة</label>
+                    <input type="text" id="spyPlayerNameInput" placeholder="أدخل اسمك..." maxlength="15">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1rem;">
+                    <div>
+                        <label>عدد الجولات</label>
+                        <select id="spyRoundsSelect">
+                            <option value="1">جولة واحدة سريعة 🔥</option>
+                            <option value="3" selected>3 جولات</option>
+                            <option value="5">5 جولات تحدي</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>وقت النقاش والتلميحات</label>
+                        <select id="spyTimeSelect">
+                            <option value="45">45 ثانية</option>
+                            <option value="90">دقيقة ونصف</option>
+                            <option value="120" selected>دقيقتان (مثالي)</option>
+                            <option value="180">3 دقائق (تكتيكي ☕)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>عدد الجواسيس في الغرفة</label>
+                    <select id="spyCountSelect">
+                        <option value="1" selected>جاسوس واحد 🕵️‍♂️</option>
+                        <option value="2">جاسوسان (حماس دبل 🔥)</option>
                     </select>
                 </div>
+
+                <button onclick="spyHostCreateRoom()" class="btn btn-primary" style="width: 100%;">إنشاء غرفة الجاسوس 🕵️‍♂️</button>
+                
+                <div style="margin: 1rem 0; text-align: center; font-weight: 700; color: #888; font-size: 0.85rem;">أو</div>
+
+                <div class="form-group">
+                    <input type="text" id="spyRoomCodeInput" placeholder="أدخل رمز الغرفة (مثال: 9812)" maxlength="6" style="text-align: center; letter-spacing: 2px; font-weight: 900;">
+                </div>
+                <button onclick="spyGuestJoinRoom()" class="btn btn-primary" style="width: 100%;">انضمام للغرفة 🔗</button>
             </div>
 
-            <div class="form-group">
-                <label>حد التصنيفات (تحكم الهوست 👑)</label>
-                <select id="maxCategoriesSelect" onchange="updateMaxCategoriesLimit()">
-                    <option value="3">3 تصنيفات</option>
-                    <option value="5">5 تصنيفات</option>
-                    <option value="7">7 تصنيفات</option>
-                    <option value="10" selected>10 تصنيفات (الكل 🔥)</option>
-                </select>
+            <!-- لوبي انتظار الجاسوس -->
+            <div id="spyLobbyView" class="glass-card" style="display: none; text-align: center;">
+                <h2 style="margin-bottom: 0.3rem; font-size: 1.3rem;">غرفة الجاسوس السرية 🕵️‍♂️</h2>
+                <p style="color: #666; font-size: 0.85rem;">شارك رمز الغرفة مع أصدقائك:</p>
+                <div id="spyDisplayRoomCode" onclick="spyCopyCode()" style="font-size: 2rem; font-weight: 900; color: var(--primary-orange); cursor: pointer; background: #FFF3EF; padding: 0.6rem; border-radius: 12px; border: 2px dashed var(--primary-orange); margin: 0.8rem 0; letter-spacing: 3px;">
+                    0000 📋
+                </div>
+
+                <div style="margin-bottom: 0.8rem;">
+                    <label>العملاء المتصلون:</label>
+                    <div id="spyConnectedPlayersContainer" style="margin-top: 0.4rem;"></div>
+                </div>
+
+                <div class="emoji-bar">
+                    <button onclick="sendSpyEmojiReaction('🕵️‍♂️')" class="emoji-btn">🕵️‍♂️</button>
+                    <button onclick="sendSpyEmojiReaction('🤫')" class="emoji-btn">🤫</button>
+                    <button onclick="sendSpyEmojiReaction('🔥')" class="emoji-btn">🔥</button>
+                    <button onclick="sendSpyEmojiReaction('😂')" class="emoji-btn">😂</button>
+                    <button onclick="sendSpyEmojiReaction('💀')" class="emoji-btn">💀</button>
+                </div>
+
+                <button id="spyStartGameBtn" onclick="spyHostStartGame()" class="btn btn-primary" style="display: none; margin-top: 1.2rem; width: 100%;">توزيع الأدوار وبدء اللعبة 🚨</button>
+                <p id="spyWaitingHostText" style="color: #888; font-weight: 700; display: none; margin-top: 0.8rem; font-size: 0.85rem;">في انتظار الهوست ليبدأ اللعبة...</p>
             </div>
 
-            <div class="form-group">
-                <label>التصنيفات المختارة (<span id="selectedCount">0 / 10</span>)</label>
-                <div class="checkbox-group" id="categoriesCheckboxGroup">
-                    <label class="checkbox-label"><input type="checkbox" value="human" data-name="إنسان" checked> إنسان</label>
-                    <label class="checkbox-label"><input type="checkbox" value="animal" data-name="حيوان" checked> حيوان</label>
-                    <label class="checkbox-label"><input type="checkbox" value="plant" data-name="نبات" checked> نبات</label>
-                    <label class="checkbox-label"><input type="checkbox" value="object" data-name="جماد" checked> جماد</label>
-                    <label class="checkbox-label"><input type="checkbox" value="country" data-name="بلاد" checked> بلاد</label>
-                    <label class="checkbox-label"><input type="checkbox" value="job" data-name="مهنة" checked> مهنة</label>
-                    <label class="checkbox-label"><input type="checkbox" value="food" data-name="أكلة" checked> أكلة</label>
-                    <label class="checkbox-label"><input type="checkbox" value="car" data-name="سيارة" checked> سيارة</label>
-                    <label class="checkbox-label"><input type="checkbox" value="famous" data-name="مشاهير"> مشاهير</label>
-                    <label class="checkbox-label"><input type="checkbox" value="movie" data-name="فيلم/مسلسل"> فيلم/مسلسل</label>
+            <!-- واجهة كشف الدور (سري) -->
+            <div id="spyRoleView" class="glass-card" style="display: none; text-align: center;">
+                <h2 style="color: var(--primary-orange); margin-bottom: 0.5rem;">دورك السري في هذه الجولة 🤫</h2>
+                <p style="color: #666; font-size: 0.85rem; margin-bottom: 1.5rem;">تأكد أن لا أحد يرى شاشتك:</p>
+                
+                <div id="secretRoleBox" style="background: var(--orange-gradient); color: white; padding: 2rem; border-radius: 20px; margin-bottom: 1.5rem; box-shadow: 0 10px 25px var(--orange-glow);">
+                    <div id="secretRoleTitle" style="font-size: 1.5rem; font-weight: 900; margin-bottom: 0.5rem;">جاري التحميل...</div>
+                    <div id="secretRoleDesc" style="font-size: 1.1rem; opacity: 0.95;">...</div>
+                </div>
+
+                <button onclick="enterSpyDiscussionPhase()" class="btn btn-primary" style="width: 100%;">فهمت، ابدأ مرحلة النقاش والتلميحات 💬</button>
+            </div>
+
+            <!-- واجهة النقاش والتلميحات -->
+            <div id="spyDiscussionView" class="glass-card" style="display: none;">
+                <div class="header-status">
+                    <div>
+                        <div style="font-weight: 800; font-size: 0.95rem;">مرحلة النقاش والتلميحات 🗣️</div>
+                        <div style="font-size: 0.78rem; color: #666; margin-top: 0.1rem;">كل لاعب يقول كلمة واحدة أو تلميح بالترتيب!</div>
+                    </div>
+                    <div class="timer-display" id="spyTimer">120s</div>
+                </div>
+
+                <div style="background: #FFF3EF; padding: 1rem; border-radius: 12px; margin-bottom: 1rem; text-align: center; border: 1px solid rgba(255,94,54,0.2);">
+                    <span style="font-size: 0.85rem; color: #666; display: block;">هل أنت الجاسوس؟ حاول أن تندمج وتعرف المكان بدون أن تشكك أحد!</span>
+                    <span style="font-size: 0.85rem; color: #666; display: block; margin-top: 4px;">هل أنت مواطن؟ احذر أن تعطي تلميحاً واضحاً يكشف المكان للجاسوس!</span>
+                </div>
+
+                <div class="emoji-bar" style="margin-bottom: 1rem;">
+                    <button onclick="sendSpyEmojiReaction('🤫')" class="emoji-btn">🤫</button>
+                    <button onclick="sendSpyEmojiReaction('🤨')" class="emoji-btn">🤨</button>
+                    <button onclick="sendSpyEmojiReaction('👀')" class="emoji-btn">👀</button>
+                    <button onclick="sendSpyEmojiReaction('⚡')" class="emoji-btn">⚡</button>
+                </div>
+
+                <button onclick="triggerSpyVotingPhase()" class="btn btn-danger" style="width: 100%;">فتح صندوق التصويت والاتهام 🗳️</button>
+            </div>
+
+            <!-- واجهة التصويت واختيار الجاسوس -->
+            <div id="spyVotingView" class="glass-card" style="display: none;">
+                <h2 style="text-align: center; margin-bottom: 0.4rem; font-size: 1.3rem;">صندوق الاتهام والتصويت 🗳️</h2>
+                <p style="text-align: center; color: #666; font-size: 0.85rem; margin-bottom: 1rem;">من هو الجاسوس المتخفي بينكم؟ اصعقه بصوتك:</p>
+
+                <div id="spyVotingList" style="display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.2rem;"></div>
+            </div>
+
+            <!-- واجهة نتائج الجولة للجاسوس -->
+            <div id="spyResultView" class="glass-card" style="display: none; text-align: center;">
+                <h1 class="title" id="spyResultTitle" style="font-size: 1.5rem;">نتيجة التحقيق 🎯</h1>
+                <p class="subtitle" id="spyResultDesc" style="font-size: 1rem; margin: 1rem 0;"></p>
+
+                <div id="spyFullReveal" style="background: #F8FAFC; padding: 1rem; border-radius: 12px; margin-bottom: 1.2rem; text-align: right; font-size: 0.9rem;"></div>
+
+                <button onclick="goHome()" class="btn btn-primary" style="width: 100%;">العودة للشاشة الرئيسية 🏠</button>
+            </div>
+        </div>
+
+        <!-- ==================== واجهة لعبة ارسم وتخمّن ==================== -->
+        <div id="drawGameFlow" style="display:none;">
+            <!-- اختيار الغرفة للرسم -->
+            <div id="drawRoomSelectionView" class="glass-card">
+                <h1 class="title">🎨 ارسم وتخمّن</h1>
+                <p class="subtitle">شخبط وارسم وخلي أصحابك يحزرون قبل ينتهي الوقت!</p>
+
+                <div class="form-group">
+                    <label>اسمك في اللعبة</label>
+                    <input type="text" id="drawPlayerNameInput" placeholder="أدخل اسمك هنا..." maxlength="15">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1rem;">
+                    <div>
+                        <label>عدد الجولات</label>
+                        <select id="drawRoundsSelect">
+                            <option value="1">جولة واحدة 🔥</option>
+                            <option value="3" selected>3 جولات</option>
+                            <option value="5">5 جولات</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>وقت الرسم</label>
+                        <select id="drawTimeSelect">
+                            <option value="45">45 ثانية</option>
+                            <option value="60" selected>60 ثانية</option>
+                            <option value="90">90 ثانية</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button onclick="drawHostCreateRoom()" class="btn btn-primary" style="width: 100%;">إنشاء غرفة رسم 🎨</button>
+                
+                <div style="margin: 1rem 0; text-align: center; font-weight: 700; color: #888; font-size: 0.85rem;">أو</div>
+
+                <div class="form-group">
+                    <input type="text" id="drawRoomCodeInput" placeholder="أدخل رمز الغرفة" maxlength="6" style="text-align: center; letter-spacing: 2px; font-weight: 900;">
+                </div>
+                <button onclick="drawGuestJoinRoom()" class="btn btn-primary" style="width: 100%;">انضمام للغرفة 🔗</button>
+            </div>
+
+            <!-- لوبي انتظار لعبة الرسم -->
+            <div id="drawLobbyView" class="glass-card" style="display: none; text-align: center;">
+                <h2 style="margin-bottom: 0.3rem; font-size: 1.3rem;">استوديو الرسّامين 🎨</h2>
+                <p style="color: #666; font-size: 0.85rem;">شارِك هذا الرمز مع أصحابك للرسم معاً:</p>
+                <div id="drawDisplayRoomCode" onclick="drawCopyCode()" style="font-size: 2rem; font-weight: 900; color: var(--primary-orange); cursor: pointer; background: #FFF3EF; padding: 0.6rem; border-radius: 12px; border: 2px dashed var(--primary-orange); margin: 0.8rem 0; letter-spacing: 3px;">
+                    0000 📋
+                </div>
+
+                <div style="margin-bottom: 0.8rem;">
+                    <label>الرسامون في الانتظار:</label>
+                    <div id="drawConnectedPlayersContainer" style="margin-top: 0.4rem;"></div>
+                </div>
+
+                <div class="emoji-bar">
+                    <button onclick="sendDrawEmojiReaction('🎨')" class="emoji-btn">🎨</button>
+                    <button onclick="sendDrawEmojiReaction('🖌️')" class="emoji-btn">🖌️</button>
+                    <button onclick="sendDrawEmojiReaction('😂')" class="emoji-btn">😂</button>
+                    <button onclick="sendDrawEmojiReaction('🔥')" class="emoji-btn">🔥</button>
+                    <button onclick="sendDrawEmojiReaction('👏')" class="emoji-btn">👏</button>
+                </div>
+
+                <button id="drawStartGameBtn" onclick="drawHostStartGame()" class="btn btn-primary" style="display: none; margin-top: 1.2rem; width: 100%;">بدء التحدي والفرشاة 🚀</button>
+                <p id="drawWaitingHostText" style="color: #888; font-weight: 700; display: none; margin-top: 0.8rem; font-size: 0.85rem;">في انتظار الهوست ليبدأ اللعبة...</p>
+            </div>
+
+            <!-- واجهة اللعب الفعلي للرسم والتخمين -->
+            <div id="drawGamePlayView" class="glass-card" style="display: none;">
+                <div class="header-status">
+                    <div>
+                        <div id="drawerInfoDisplay" style="font-weight: 800; font-size: 0.85rem; color: #666;">الرّسام: ...</div>
+                        <div id="drawWordHintDisplay" style="font-size: 1.3rem; font-weight: 900; color: var(--primary-orange); letter-spacing: 2px;">___</div>
+                    </div>
+                    <div class="timer-display" id="drawTimer">60s</div>
+                </div>
+
+                <!-- شاشة الكانفاس -->
+                <div class="canvas-wrapper">
+                    <canvas id="paintCanvas"></canvas>
+                </div>
+
+                <!-- أدوات الرسم (تظهر فقط للرسّام) -->
+                <div id="drawerToolsArea" class="drawing-tools">
+                    <div class="color-dot active" style="background: #000000;" onclick="selectBrushColor('#000000', this)"></div>
+                    <div class="color-dot" style="background: #FF5E36;" onclick="selectBrushColor('#FF5E36', this)"></div>
+                    <div class="color-dot" style="background: #2E7D32;" onclick="selectBrushColor('#2E7D32', this)"></div>
+                    <div class="color-dot" style="background: #00B4D8;" onclick="selectBrushColor('#00B4D8', this)"></div>
+                    <div class="color-dot" style="background: #7209B7;" onclick="selectBrushColor('#7209B7', this)"></div>
+                    <div class="color-dot" style="background: #FFD700;" onclick="selectBrushColor('#FFD700', this)"></div>
+                    <button onclick="clearCanvasAction()" class="btn btn-danger btn-sm" style="margin-right: auto;">مسح اللوحة 🗑️</button>
+                </div>
+
+                <!-- منطقة الشات والتخمين (تظهر للمحزرين) -->
+                <div class="chat-guesses-box" id="drawChatBox"></div>
+                <div id="guesserInputArea" style="display: flex; gap: 0.5rem; margin-top: 0.6rem;">
+                    <input type="text" id="guessTextInput" placeholder="اكتب تخمينك هنا وسوّ إرسال..." onkeydown="if(event.key === 'Enter') submitGuessWord()">
+                    <button onclick="submitGuessWord()" class="btn btn-primary" style="padding: 0.6rem 1.2rem;">تخمين 🚀</button>
+                </div>
+
+                <div class="emoji-bar" style="margin-top: 0.8rem;">
+                    <button onclick="sendDrawEmojiReaction('👏')" class="emoji-btn">👏</button>
+                    <button onclick="sendDrawEmojiReaction('🤔')" class="emoji-btn">🤔</button>
+                    <button onclick="sendDrawEmojiReaction('😂')" class="emoji-btn">😂</button>
+                    <button onclick="sendDrawEmojiReaction('🔥')" class="emoji-btn">🔥</button>
                 </div>
             </div>
 
-            <button onclick="hostCreateRoom()" class="btn btn-primary" style="width: 100%;">إنشاء غرفة أونلاين 🚀</button>
-            
-            <div style="margin: 1rem 0; text-align: center; font-weight: 700; color: #888; font-size: 0.85rem;">أو</div>
+            <!-- واجهة نتائج التتويج للرسم -->
+            <div id="drawWinnerView" class="glass-card" style="display: none; text-align: center;">
+                <h1 class="title" style="font-size: 1.5rem;">🎨 أساطير الرسم والتخمين 🎨</h1>
+                <p class="subtitle">أبدعتم يا بيكاسو العرب! شوفوا ترتيب المبدعين:</p>
 
-            <div class="form-group">
-                <input type="text" id="roomCodeInput" placeholder="أدخل رمز الغرفة (مثال: 4582)" maxlength="6" style="text-align: center; letter-spacing: 2px; font-weight: 900;">
-            </div>
-            <button onclick="guestJoinRoom()" class="btn btn-primary" style="width: 100%;">انضمام لغرفة 🔗</button>
+                <div id="drawPodiumDisplay" class="podium-container"></div>
+                <div id="drawFullFinalScores" style="margin-top: 1.2rem; text-align: right; font-size: 0.9rem;"></div>
 
-            <div style="margin-top: 1.2rem; border-top: 1px solid #EEE; padding-top: 0.8rem;">
-                <label>🏆 قائمة الأساطير العالمية</label>
-                <div id="leaderboardList" style="font-size: 0.88rem;">جاري جلب القائمة...</div>
+                <button onclick="goHome()" class="btn btn-primary" style="margin-top: 1.2rem; width: 100%;">العودة للشاشة الرئيسية 🏠</button>
             </div>
         </div>
 
-        <!-- لوبي الانتظار -->
-        <div id="lobbyView" class="glass-card" style="display: none; text-align: center;">
-            <h2 style="margin-bottom: 0.3rem; font-size: 1.3rem;">غرفة اللعب السحابية 🎮</h2>
-            <p style="color: #666; font-size: 0.85rem;">شارك هذا الرمز الرقمي مع أصدقائك:</p>
-            <div id="displayRoomCode" onclick="copyCode()" style="font-size: 2rem; font-weight: 900; color: var(--primary-orange); cursor: pointer; background: #FFF3EF; padding: 0.6rem; border-radius: 12px; border: 2px dashed var(--primary-orange); margin: 0.8rem 0; letter-spacing: 3px;">
-                0000 📋
-            </div>
-
-            <div style="margin-bottom: 0.8rem;">
-                <label>اللاعبون المتصلون حالياً:</label>
-                <div id="connectedPlayersContainer" style="margin-top: 0.4rem;"></div>
-            </div>
-
-            <div class="emoji-bar">
-                <button onclick="sendEmojiReaction('😂')" class="emoji-btn">😂</button>
-                <button onclick="sendEmojiReaction('🔥')" class="emoji-btn">🔥</button>
-                <button onclick="sendEmojiReaction('💩')" class="emoji-btn">💩</button>
-                <button onclick="sendEmojiReaction('🥶')" class="emoji-btn">🥶</button>
-                <button onclick="sendEmojiReaction('👍')" class="emoji-btn">👍</button>
-                <button onclick="sendEmojiReaction('🚀')" class="emoji-btn">🚀</button>
-            </div>
-
-            <button id="startGameBtn" onclick="hostStartGame()" class="btn btn-primary" style="display: none; margin-top: 1.2rem; width: 100%;">بدء اللعبة للجميع 🏁</button>
-            <p id="waitingHostText" style="color: #888; font-weight: 700; display: none; margin-top: 0.8rem; font-size: 0.85rem;">في انتظار الهوست ليبدأ اللعبة...</p>
-        </div>
-
-        <!-- واجهة اللعب الفعلية -->
-        <div id="gamePlayView" class="glass-card" style="display: none;">
-            <div class="header-status">
-                <div>
-                    <span id="roundDisplay" style="font-size: 0.78rem; font-weight: 800; color: #666;">الجولة 1 من 3</span>
-                    <div style="font-weight: 800; font-size: 0.95rem; margin-top: 0.1rem;">الحرف المطلوب:</div>
-                </div>
-                <div class="letter-badge" id="activeLetter">أ</div>
-                <div class="timer-display" id="timer">45s</div>
-            </div>
-
-            <div class="powerups-bar">
-                <button id="btnFreeze" onclick="useFreezePowerup()" class="btn btn-freeze btn-sm">
-                    🥶 تجميد الخوي (150ن)
-                </button>
-                <button id="btnSteal" onclick="useStealPowerup()" class="btn btn-steal btn-sm">
-                    🥷 سرقة 20ن (200ن)
-                </button>
-            </div>
-
-            <div id="dynamicAnswersForm" style="display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 1.2rem;"></div>
-
-            <button id="stopBtn" onclick="userTriggeredStop(true)" class="btn btn-danger" style="width: 100%;">إنهاء (STOP) 🛑</button>
-        </div>
-
-        <!-- واجهة نتائج الجولة -->
-        <div id="resultsView" class="glass-card" style="display: none;">
-            <h2 style="text-align: center; margin-bottom: 0.4rem; font-size: 1.3rem;">نتائج الجولة <span id="resultRoundTitle">1</span> 📊</h2>
-            
-            <div style="display: flex; justify-content: space-around; background: #FFF3EF; padding: 0.7rem; border-radius: 10px; margin-bottom: 1rem; font-weight: 800; font-size: 0.85rem;">
-                <div>نقاطك بالجولة: <span id="totalScoreDisplay" style="color: var(--primary-orange);">0</span></div>
-                <div>مجموعك: <span id="accumulatedScore" style="color: var(--green-success);">0</span></div>
-            </div>
-
-            <div id="resultsContainer"></div>
-
-            <button id="nextActionBtn" onclick="hostNextRound()" class="btn btn-primary" style="display: none; width: 100%;">الجولة التالية ➡️</button>
-            <p id="waitingNextText" style="text-align: center; color: #888; font-weight: 700; display: none; font-size: 0.85rem;">في انتظار الهوست للانتقال للجولة التالية...</p>
-            <button id="finishGameBtn" onclick="finishGameProcess()" class="btn btn-secondary" style="display: none; width: 100%;">عرض شاشة التتويج 🏆</button>
-        </div>
-
-        <!-- واجهة التتويج والنهاية -->
-        <div id="winnerView" class="glass-card" style="display: none; text-align: center;">
-            <h1 class="title" style="font-size: 1.5rem;">🎉 أساطير اللعبة 🎉</h1>
-            <p class="subtitle">تهانينا للفائزين وبقية اللاعبين تعوضونها! 😂</p>
-
-            <div id="podiumDisplay" class="podium-container"></div>
-            <div id="fullFinalScores" style="margin-top: 1.2rem; text-align: right; font-size: 0.9rem;"></div>
-
-            <button onclick="goHome()" class="btn btn-primary" style="margin-top: 1.2rem; width: 100%;">العودة للشاشة الرئيسية 🏠</button>
-        </div>
     </div>
 
     <!-- نافذة تسجيل الدخول / حساب جديد / تعديل البروفايل والصورة -->
     <div class="modal-overlay" id="authModal">
-        <div class="auth-card" id="authModalContent">
-            <!-- يتم تعبئته ديناميكياً حسب الحالة -->
-        </div>
+        <div class="auth-card" id="authModalContent"></div>
     </div>
 
     <div id="countdownOverlay" class="overlay">
@@ -694,6 +1001,8 @@
         const API_KEY = "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";
         const arabicLetters = ["أ", "ب", "ت", "ث", "ج", "ح", "خ", "د", "ر", "ز", "س", "ش", "ص", "ض", "ط", "ظ", "ع", "غ", "ف", "ق", "ك", "ل", "م", "ن", "هـ", "و", "ي"];
         
+        let activeGameType = 'scattergories';
+
         let maxCategories = 10;
         let isHost = false;
         let currentRoomCode = "";
@@ -709,7 +1018,6 @@
         let playerName = "لاعب";
         let playersList = [];
 
-        // بيانات الحساب المحلي والبروفايل مع الصورة الشخصية
         let currentUserAccount = JSON.parse(localStorage.getItem('fikra_user')) || null;
 
         let allPlayersAnswers = {};
@@ -718,8 +1026,39 @@
         let lastHandledPowerup = 0;
         let lastHandledReaction = 0;
 
-        let leaveTimer = null;
+        let universalToastTimer = null;
         let activeRoomStateForRestore = null;
+
+        let spyRoomCode = "";
+        let spyRoomRef = null;
+        let spyLocations = [
+            "مطعم فخم 🍽️", "مطار دولي ✈️", "مستشفى عام 🏥", "ملعب كرة قدم ⚽", 
+            "مدرسة ثانوية 🏫", "محطة قطار 🚆", "سوبرماركت ضخم 🛒", "فندق خمس نجوم 🏨", 
+            "سفينة سياحية 🚢", "حديقة ملاهي 🎢", "سينما ومسرح 🎬", "استديو بث مباشر 🎙️",
+            "محطة فضائية 🚀", "متحف أثري 🏛️", "سجن مركزى ⛓️", "شركة برمجيات 💻"
+        ];
+        let mySecretRole = "";
+        let secretLocation = "";
+        let spyTimerInterval;
+        let spyTotalRounds = 3;
+        let spyCurrentRound = 0;
+        let spyNumSpies = 1;
+
+        /* --- متغيّرات لعبة ارسم وتخمّن --- */
+        let drawRoomCode = "";
+        let drawRoomRef = null;
+        let drawWords = [
+            "سيارة", "بيت", "شجرة", "شمس", "تفاحة", "طائرة", "كمبيوتر", "قطة", "قمر", "برج", 
+            "سمكة", "موزة", "تفاحة", "كتاب", "نظارة", "ساعة", "هاتف", "وردة", "طاولة", "كرسي"
+        ];
+        let currentDrawer = "";
+        let currentDrawWord = "";
+        let isMyTurnToDraw = false;
+        let drawTimerInterval;
+        let currentBrushColor = "#000000";
+        let isDrawing = false;
+        let paintCanvas, canvasCtx;
+        let hasGuessedCorrectly = false;
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playHypeSound(type) {
@@ -763,7 +1102,6 @@
             } catch(e) {}
         }
 
-        // --- نظام فتح نوافذ تسجيل الدخول والبروفايل الشخصي وتعديل الصورة ---
         function openAuthModal(mode) {
             const modal = document.getElementById('authModal');
             const content = document.getElementById('authModalContent');
@@ -809,7 +1147,7 @@
             localStorage.setItem('fikra_user', JSON.stringify(currentUserAccount));
             updateHeaderAuthUI();
             closeAuthModal();
-            alert(`أهلاً بك يا ${uInput}! تم تسجيل دخولك بنجاح 🔥`);
+            triggerUniversalToast('أهلاً بك! 🔥', `تم تسجيل دخولك بنجاح يا ${uInput}!`, false);
         }
 
         function handleImageUpload(event) {
@@ -829,7 +1167,7 @@
             localStorage.setItem('fikra_user', JSON.stringify(currentUserAccount));
             updateHeaderAuthUI();
             closeAuthModal();
-            alert('تم حفظ تعديلات بروفايلك بنجاح! ✨');
+            triggerUniversalToast('تم الحفظ ✨', 'تم حفظ تعديلات بروفايلك بنجاح!', false);
         }
 
         function logoutAccount() {
@@ -837,7 +1175,7 @@
             localStorage.removeItem('fikra_user');
             updateHeaderAuthUI();
             closeAuthModal();
-            alert('تم تسجيل الخروج بنجاح.');
+            triggerUniversalToast('تم الخروج 🚪', 'تم تسجيل الخروج بنجاح.', false);
         }
 
         function updateHeaderAuthUI() {
@@ -851,6 +1189,10 @@
                 `;
                 const pNameInput = document.getElementById('playerNameInput');
                 if (pNameInput) pNameInput.value = currentUserAccount.name;
+                const spyNameInput = document.getElementById('spyPlayerNameInput');
+                if (spyNameInput) spyNameInput.value = currentUserAccount.name;
+                const drawNameInput = document.getElementById('drawPlayerNameInput');
+                if (drawNameInput) drawNameInput.value = currentUserAccount.name;
             } else {
                 area.innerHTML = `
                     <button class="btn btn-login" onclick="openAuthModal('login')">دخول</button>
@@ -859,7 +1201,6 @@
             }
         }
 
-        // --- نظام شريط البحث وتصفية الألعاب ---
         function filterGames() {
             const query = document.getElementById('searchInput').value.trim().toLowerCase();
             const cards = document.querySelectorAll('.games-grid .game-card');
@@ -889,28 +1230,47 @@
             });
         }
 
-        // تحكم زر الرجوع للوراء خطوة بخطوة
         function handleStepBack() {
             const gameContainer = document.getElementById('gameContainerView');
             if (gameContainer.style.display === 'block') {
-                const currentSubView = getActiveGameSubView();
-                if (currentSubView === 'lobbyView' || currentSubView === 'resultsView' || currentSubView === 'winnerView') {
-                    switchGameView('roomSelectionView');
-                } else if (currentSubView === 'gamePlayView') {
-                    if (confirm('هل أنت متأكد من رغبتك في الانسحاب من الجولة الحالية؟')) {
-                        switchGameView('roomSelectionView');
+                if (activeGameType === 'scattergories') {
+                    const currentSubView = getActiveScatterSubView();
+                    if (currentSubView === 'lobbyView' || currentSubView === 'resultsView' || currentSubView === 'winnerView') {
+                        switchScatterSubView('roomSelectionView');
+                    } else if (currentSubView === 'gamePlayView') {
+                        if (confirm('هل أنت متأكد من رغبتك في الانسحاب من الجولة الحالية؟')) {
+                            switchScatterSubView('roomSelectionView');
+                        }
+                    } else {
+                        activeRoomStateForRestore = 'roomSelectionView';
+                        document.getElementById('homeMainView').style.display = 'block';
+                        gameContainer.style.display = 'none';
+                        document.getElementById('backBtnContainer').style.display = 'none';
+                        triggerUniversalToast("العودة إلى الغرفة!", "يمديك ترجع للعبة خلال", true, () => restoreRoomSession());
                     }
-                } else {
-                    activeRoomStateForRestore = 'roomSelectionView';
-                    document.getElementById('homeMainView').style.display = 'block';
-                    gameContainer.style.display = 'none';
-                    document.getElementById('backBtnContainer').style.display = 'none';
-                    triggerLeaveWarningToast();
+                } else if (activeGameType === 'spy') {
+                    const currentSpyView = getActiveSpySubView();
+                    if (currentSpyView === 'spyLobbyView' || currentSpyView === 'spyRoleView' || currentSpyView === 'spyDiscussionView' || currentSpyView === 'spyVotingView' || currentSpyView === 'spyResultView') {
+                        switchSpySubView('spyRoomSelectionView');
+                    } else {
+                        document.getElementById('homeMainView').style.display = 'block';
+                        gameContainer.style.display = 'none';
+                        document.getElementById('backBtnContainer').style.display = 'none';
+                    }
+                } else if (activeGameType === 'draw') {
+                    const currentDrawView = getActiveDrawSubView();
+                    if (currentDrawView === 'drawLobbyView' || currentDrawView === 'drawGamePlayView' || currentDrawView === 'drawWinnerView') {
+                        switchDrawSubView('drawRoomSelectionView');
+                    } else {
+                        document.getElementById('homeMainView').style.display = 'block';
+                        gameContainer.style.display = 'none';
+                        document.getElementById('backBtnContainer').style.display = 'none';
+                    }
                 }
             }
         }
 
-        function getActiveGameSubView() {
+        function getActiveScatterSubView() {
             const subViews = ['roomSelectionView', 'lobbyView', 'gamePlayView', 'resultsView', 'winnerView'];
             for (let id of subViews) {
                 const el = document.getElementById(id);
@@ -919,33 +1279,79 @@
             return 'roomSelectionView';
         }
 
-        function triggerLeaveWarningToast() {
+        function getActiveSpySubView() {
+            const subViews = ['spyRoomSelectionView', 'spyLobbyView', 'spyRoleView', 'spyDiscussionView', 'spyVotingView', 'spyResultView'];
+            for (let id of subViews) {
+                const el = document.getElementById(id);
+                if (el && el.style.display === 'block') return id;
+            }
+            return 'spyRoomSelectionView';
+        }
+
+        function getActiveDrawSubView() {
+            const subViews = ['drawRoomSelectionView', 'drawLobbyView', 'drawGamePlayView', 'drawWinnerView'];
+            for (let id of subViews) {
+                const el = document.getElementById(id);
+                if (el && el.style.display === 'block') return id;
+            }
+            return 'drawRoomSelectionView';
+        }
+
+        function triggerUniversalToast(title, descText, hasTimer = true, onRestoreCallback = null) {
             const toast = document.getElementById('leaveWarningToast');
+            const titleEl = document.getElementById('toastTitleEl');
+            const descEl = document.getElementById('toastDescEl');
+            const mainBtn = document.getElementById('toastMainBtn');
             const countEl = document.getElementById('leaveCountdownNum');
+
+            titleEl.innerText = title;
+            if (hasTimer) {
+                descEl.innerHTML = `${descText} <span id="leaveCountdownNum" class="pulse-num">10</span> ثواني.`;
+                mainBtn.style.display = 'inline-flex';
+                mainBtn.onclick = onRestoreCallback || (() => dismissLeaveToast());
+            } else {
+                descEl.innerHTML = descText;
+                mainBtn.style.display = 'none';
+            }
+
             toast.classList.add('show');
             playHypeSound('tick');
 
-            let timeLeft = 10;
-            countEl.innerText = timeLeft;
-            clearInterval(leaveTimer);
+            if (universalToastTimer) clearInterval(universalToastTimer);
 
-            leaveTimer = setInterval(() => {
-                timeLeft--;
-                countEl.innerText = timeLeft;
-                if (timeLeft > 0) {
-                    playHypeSound('tick');
-                } else {
-                    clearInterval(leaveTimer);
+            if (hasTimer) {
+                let timeLeft = 10;
+                const dynamicCountEl = document.getElementById('leaveCountdownNum');
+                if (dynamicCountEl) dynamicCountEl.innerText = timeLeft;
+
+                universalToastTimer = setInterval(() => {
+                    timeLeft--;
+                    const currentCountEl = document.getElementById('leaveCountdownNum');
+                    if (currentCountEl) currentCountEl.innerText = timeLeft;
+                    if (timeLeft > 0) {
+                        playHypeSound('tick');
+                    } else {
+                        clearInterval(universalToastTimer);
+                        dismissLeaveToast();
+                        if (activeGameType === 'scattergories' && currentRoomCode) {
+                            cleanupRoomCompletely();
+                        }
+                    }
+                }, 1000);
+            } else {
+                universalToastTimer = setTimeout(() => {
                     dismissLeaveToast();
-                    cleanupRoomCompletely();
-                }
-            }, 1000);
+                }, 4000);
+            }
         }
 
         function dismissLeaveToast() {
             const toast = document.getElementById('leaveWarningToast');
             toast.classList.remove('show');
-            clearInterval(leaveTimer);
+            if (universalToastTimer) {
+                clearInterval(universalToastTimer);
+                clearTimeout(universalToastTimer);
+            }
         }
 
         function restoreRoomSession() {
@@ -953,25 +1359,54 @@
             document.getElementById('homeMainView').style.display = 'none';
             document.getElementById('gameContainerView').style.display = 'block';
             document.getElementById('backBtnContainer').style.display = 'block';
-            if (activeRoomStateForRestore) {
-                switchGameView(activeRoomStateForRestore);
+            if (activeRoomStateForRestore && activeGameType === 'scattergories') {
+                switchScatterSubView(activeRoomStateForRestore);
             }
             playHypeSound('pop');
         }
 
         function cleanupRoomCompletely() {
             if (roomRef) roomRef.off();
+            if (spyRoomRef) spyRoomRef.off();
+            if (drawRoomRef) drawRoomRef.off();
             clearInterval(timerInterval);
+            clearInterval(spyTimerInterval);
+            clearInterval(drawTimerInterval);
             currentRoomCode = "";
+            spyRoomCode = "";
+            drawRoomCode = "";
         }
 
-        function openGameRoom() {
+        function openGameRoom(gameType) {
+            activeGameType = gameType;
             document.getElementById('homeMainView').style.display = 'none';
             document.getElementById('gameContainerView').style.display = 'block';
             document.getElementById('backBtnContainer').style.display = 'block';
-            switchGameView('roomSelectionView');
-            if (currentUserAccount && currentUserAccount.name) {
-                document.getElementById('playerNameInput').value = currentUserAccount.name;
+
+            if (gameType === 'scattergories') {
+                document.getElementById('scattergoriesGameFlow').style.display = 'block';
+                document.getElementById('spyGameFlow').style.display = 'none';
+                document.getElementById('drawGameFlow').style.display = 'none';
+                switchScatterSubView('roomSelectionView');
+                if (currentUserAccount && currentUserAccount.name) {
+                    document.getElementById('playerNameInput').value = currentUserAccount.name;
+                }
+            } else if (gameType === 'spy') {
+                document.getElementById('scattergoriesGameFlow').style.display = 'none';
+                document.getElementById('spyGameFlow').style.display = 'block';
+                document.getElementById('drawGameFlow').style.display = 'none';
+                switchSpySubView('spyRoomSelectionView');
+                if (currentUserAccount && currentUserAccount.name) {
+                    document.getElementById('spyPlayerNameInput').value = currentUserAccount.name;
+                }
+            } else if (gameType === 'draw') {
+                document.getElementById('scattergoriesGameFlow').style.display = 'none';
+                document.getElementById('spyGameFlow').style.display = 'none';
+                document.getElementById('drawGameFlow').style.display = 'block';
+                switchDrawSubView('drawRoomSelectionView');
+                if (currentUserAccount && currentUserAccount.name) {
+                    document.getElementById('drawPlayerNameInput').value = currentUserAccount.name;
+                }
             }
         }
 
@@ -983,8 +1418,18 @@
             dismissLeaveToast();
         }
 
-        function switchGameView(viewId) {
-            document.querySelectorAll('#gameContainerView .glass-card').forEach(card => card.style.display = 'none');
+        function switchScatterSubView(viewId) {
+            document.querySelectorAll('#scattergoriesGameFlow .glass-card').forEach(card => card.style.display = 'none');
+            document.getElementById(viewId).style.display = 'block';
+        }
+
+        function switchSpySubView(viewId) {
+            document.querySelectorAll('#spyGameFlow .glass-card').forEach(card => card.style.display = 'none');
+            document.getElementById(viewId).style.display = 'block';
+        }
+
+        function switchDrawSubView(viewId) {
+            document.querySelectorAll('#drawGameFlow .glass-card').forEach(card => card.style.display = 'none');
             document.getElementById(viewId).style.display = 'block';
         }
 
@@ -1023,10 +1468,11 @@
             updateHeaderAuthUI();
         });
 
+        // --- دوال لعبة إنسان جماد نبات (Scattergories) ---
         function hostCreateRoom() {
             playerName = document.getElementById('playerNameInput').value.trim() || (currentUserAccount ? currentUserAccount.name : "الهوست");
             const checkedBoxes = document.querySelectorAll('#categoriesCheckboxGroup input:checked');
-            if (checkedBoxes.length === 0) return alert('اختر تصنيف واحد على الأقل للعب!');
+            if (checkedBoxes.length === 0) return triggerUniversalToast('تنبيه مطلوب ⚠️', 'اختر تصنيف واحد على الأقل للعب!', false);
 
             activeCategories = Array.from(checkedBoxes).map(cb => ({
                 key: cb.value,
@@ -1053,18 +1499,18 @@
                 players: { [playerName]: { joined: true, score: 0 } }
             }).then(() => {
                 listenToFirebaseRoom();
-                switchGameView('lobbyView');
+                switchScatterSubView('lobbyView');
                 document.getElementById('startGameBtn').style.display = 'block';
                 document.getElementById('waitingHostText').style.display = 'none';
             }).catch(err => {
-                alert('خطأ في الاتصال بالفايربيس: ' + err.message);
+                triggerUniversalToast('خطأ في الاتصال ❌', err.message, false);
             });
         }
 
         function guestJoinRoom() {
             playerName = document.getElementById('playerNameInput').value.trim() || (currentUserAccount ? currentUserAccount.name : "الضيف");
             const code = document.getElementById('roomCodeInput').value.trim();
-            if (!code) return alert('أدخل رمز الغرفة المكون من أرقام.');
+            if (!code) return triggerUniversalToast('خطأ في الرمز ⚠️', 'أدخل رمز الغرفة المكون من أرقام.', false);
 
             isHost = false;
             currentRoomCode = code;
@@ -1075,11 +1521,11 @@
                     roomRef.child('players/' + playerName).set({ joined: true, score: 0 });
                     document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
                     listenToFirebaseRoom();
-                    switchGameView('lobbyView');
+                    switchScatterSubView('lobbyView');
                     document.getElementById('startGameBtn').style.display = 'none';
                     document.getElementById('waitingHostText').style.display = 'block';
                 } else {
-                    alert('رمز الغرفة غير موجود يا بطل، تأكد منه!');
+                    triggerUniversalToast('غير موجود ❌', 'رمز الغرفة غير موجود يا بطل، تأكد منه!', false);
                 }
             });
         }
@@ -1090,7 +1536,7 @@
                 if (!data) return;
 
                 if (data.kickedPlayers && data.kickedPlayers[playerName]) {
-                    alert('❌ تم طردك من الغرفة بواسطة الهوست!');
+                    triggerUniversalToast('تم طردك ❌', 'تم طردك من الغرفة بواسطة الهوست!', false);
                     goHome();
                     return;
                 }
@@ -1120,7 +1566,7 @@
                     currentEvaluations = data.evaluations['r' + currentRound];
                     allPlayersAnswers = (data.answers && data.answers['r' + data.currentRound]) ? data.answers['r' + data.currentRound] : {};
                     renderMultiplayerResults(currentEvaluations, allPlayersAnswers);
-                    switchGameView('resultsView');
+                    switchScatterSubView('resultsView');
                 } else if (data.state === 'finished') {
                     renderWinnerScreen(data.players);
                 }
@@ -1180,7 +1626,7 @@
 
         function copyCode() {
             navigator.clipboard.writeText(currentRoomCode);
-            alert('تم نسخ رمز الغرفة بنجاح!');
+            triggerUniversalToast('تم النسخ 📋', 'تم نسخ رمز الغرفة بنجاح!', false);
         }
 
         function hostStartGame() {
@@ -1266,7 +1712,7 @@
                 stopBtn.innerHTML = `إنهاء (STOP) 🛑`;
             }
 
-            switchGameView('gamePlayView');
+            switchScatterSubView('gamePlayView');
             updatePowerupButtonsUI();
             startTimer();
         }
@@ -1297,22 +1743,22 @@
         }
 
         function useFreezePowerup() {
-            if (globalScore < 150) return alert('تحتاج 150 نقطة لتجميد خويك!');
+            if (globalScore < 150) return triggerUniversalToast('نقاط غير كافية ⚠️', 'تحتاج 150 نقطة لتجميد خويك!', false);
             globalScore -= 150;
             roomRef.child('players/' + playerName + '/score').set(globalScore);
             updatePowerupButtonsUI();
             roomRef.child('powerupAction').set({ type: 'FREEZE', from: playerName, timestamp: Date.now() });
-            alert('🥶 تم إرسال التجميد لخويك!');
+            triggerUniversalToast('تم التجميد 🥶', 'تم إرسال التجميد لخويك بنجاح!', false);
         }
 
         function useStealPowerup() {
-            if (globalScore < 200) return alert('تحتاج 200 نقطة لسرقة النقاط!');
+            if (globalScore < 200) return triggerUniversalToast('نقاط غير كافية ⚠️', 'تحتاج 200 نقطة لسرقة النقاط!', false);
             globalScore -= 200;
             globalScore += 20;
             roomRef.child('players/' + playerName + '/score').set(globalScore);
             updatePowerupButtonsUI();
             roomRef.child('powerupAction').set({ type: 'STEAL', from: playerName, amount: 20, timestamp: Date.now() });
-            alert('🥷 سرقت 20 نقطة من خويك!');
+            triggerUniversalToast('تمت السرقة 🥷', 'سرقت 20 نقطة من الخصم!', false);
         }
 
         function handleIncomingPowerup(data) {
@@ -1322,7 +1768,7 @@
             } else if (data.type === 'STEAL') {
                 globalScore = Math.max(0, globalScore - data.amount);
                 roomRef.child('players/' + playerName + '/score').set(globalScore);
-                alert(`🥷 ${data.from} سرق منك ${data.amount} نقطة!`);
+                triggerUniversalToast('تنبيه سرقة 🥷', `${data.from} سرق منك ${data.amount} نقطة!`, false);
             }
         }
 
@@ -1573,7 +2019,7 @@ ${JSON.stringify(allAnswers, null, 2)}
         }
 
         function renderWinnerScreen(playersData) {
-            switchGameView('winnerView');
+            switchScatterSubView('winnerView');
             try { confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); } catch(e) {}
 
             let sorted = Object.keys(playersData || {}).map(k => ({ name: k, score: playersData[k].score || 0 })).sort((a, b) => b.score - a.score);
@@ -1639,6 +2085,551 @@ ${JSON.stringify(allAnswers, null, 2)}
                         </div>
                     `;
                 });
+            });
+        }
+
+        // ==================== دوال لعبة مين الجاسوس ====================
+        function spyHostCreateRoom() {
+            playerName = document.getElementById('spyPlayerNameInput').value.trim() || (currentUserAccount ? currentUserAccount.name : "الهوست");
+            spyTotalRounds = parseInt(document.getElementById('spyRoundsSelect').value);
+            spyNumSpies = parseInt(document.getElementById('spyCountSelect').value);
+            
+            spyRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
+            isHost = true;
+            document.getElementById('spyDisplayRoomCode').innerText = spyRoomCode + " 📋";
+
+            spyRoomRef = db.ref('spyRooms/' + spyRoomCode);
+            spyRoomRef.set({
+                host: playerName,
+                state: 'lobby',
+                settings: { 
+                    time: parseInt(document.getElementById('spyTimeSelect').value),
+                    totalRounds: spyTotalRounds,
+                    numSpies: spyNumSpies
+                },
+                players: { [playerName]: { joined: true, spyScore: 0 } }
+            }).then(() => {
+                listenToSpyRoom();
+                switchSpySubView('spyLobbyView');
+                document.getElementById('spyStartGameBtn').style.display = 'block';
+                document.getElementById('spyWaitingHostText').style.display = 'none';
+            });
+        }
+
+        function spyGuestJoinRoom() {
+            playerName = document.getElementById('spyPlayerNameInput').value.trim() || (currentUserAccount ? currentUserAccount.name : "الضيف");
+            const code = document.getElementById('spyRoomCodeInput').value.trim();
+            if (!code) return triggerUniversalToast('خطأ في الرمز ⚠️', 'أدخل رمز غرفة الجاسوس!', false);
+
+            isHost = false;
+            spyRoomCode = code;
+            spyRoomRef = db.ref('spyRooms/' + spyRoomCode);
+
+            spyRoomRef.get().then((snapshot) => {
+                if (snapshot.exists()) {
+                    spyRoomRef.child('players/' + playerName).set({ joined: true, spyScore: 0 });
+                    document.getElementById('spyDisplayRoomCode').innerText = spyRoomCode + " 📋";
+                    listenToSpyRoom();
+                    switchSpySubView('spyLobbyView');
+                    document.getElementById('spyStartGameBtn').style.display = 'none';
+                    document.getElementById('spyWaitingHostText').style.display = 'block';
+                } else {
+                    triggerUniversalToast('غير موجود ❌', 'رمز غرفة الجاسوس غير صحيح!', false);
+                }
+            });
+        }
+
+        function spyCopyCode() {
+            navigator.clipboard.writeText(spyRoomCode);
+            triggerUniversalToast('تم النسخ 📋', 'تم نسخ رمز غرفة الجاسوس بنجاح!', false);
+        }
+
+        function sendSpyEmojiReaction(emoji) {
+            if (!spyRoomRef) return;
+            spyRoomRef.child('lastReaction').set({ emoji: emoji, sender: playerName, timestamp: Date.now() });
+        }
+
+        function spyHostStartGame() {
+            if (!isHost) return;
+            spyRoomRef.child('players').get().then(snapshot => {
+                const pKeys = Object.keys(snapshot.val());
+                if (pKeys.length < 3) return triggerUniversalToast('لاعبين غير كافين ⚠️', 'تحتاج 3 لاعبين على الأقل لبدء لعبة الجاسوس!', false);
+
+                startNewSpyRound(pKeys);
+            });
+        }
+
+        function startNewSpyRound(pKeys) {
+            const chosenLocation = spyLocations[Math.floor(Math.random() * spyLocations.length)];
+            
+            let shuffled = [...pKeys].sort(() => 0.5 - Math.random());
+            let actualSpiesCount = Math.min(spyNumSpies, pKeys.length - 1);
+            let spiesList = shuffled.slice(0, actualSpiesCount);
+
+            let rolesAssign = {};
+            pKeys.forEach(p => {
+                rolesAssign[p] = spiesList.includes(p) ? 'spy' : chosenLocation;
+            });
+
+            spyRoomRef.update({
+                state: 'playing',
+                location: chosenLocation,
+                spiesList: spiesList,
+                roles: rolesAssign,
+                votes: null
+            });
+        }
+
+        function listenToSpyRoom() {
+            spyRoomRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (!data) return;
+
+                if (data.settings) {
+                    spyTotalRounds = data.settings.totalRounds || 3;
+                    spyNumSpies = data.settings.numSpies || 1;
+                }
+
+                if (data.players) {
+                    let pList = Object.keys(data.players);
+                    const container = document.getElementById('spyConnectedPlayersContainer');
+                    container.innerHTML = '';
+                    pList.forEach(p => {
+                        container.innerHTML += `<div class="player-chip"><span>👤 ${p} ${p === playerName ? ' (أنت)' : ''}</span></div>`;
+                    });
+                }
+
+                if (data.state === 'playing' && data.roles && data.roles[playerName]) {
+                    secretLocation = data.location;
+                    mySecretRole = data.roles[playerName];
+                    setupRoleScreen();
+                    switchSpySubView('spyRoleView');
+                    playHypeSound('pop');
+                } else if (data.state === 'voting') {
+                    renderSpyVotingScreen(data.players);
+                    switchSpySubView('spyVotingView');
+                } else if (data.state === 'ended') {
+                    renderSpyResultScreen(data);
+                    switchSpySubView('spyResultView');
+                }
+
+                if (data.lastReaction && data.lastReaction.timestamp > lastHandledReaction) {
+                    lastHandledReaction = data.lastReaction.timestamp;
+                    triggerFloatingEmoji(data.lastReaction.emoji);
+                }
+            });
+        }
+
+        function setupRoleScreen() {
+            const titleEl = document.getElementById('secretRoleTitle');
+            const descEl = document.getElementById('secretRoleDesc');
+
+            if (mySecretRole === 'spy') {
+                titleEl.innerText = "🕵️‍♂️ أنت الجاسوس المتخفي!";
+                descEl.innerText = "أنت لا تعرف المكان المختار! حاول الاستماع لتلميحات الآخرين والاندماج معهم دون أن ينكشف أمرك.";
+            } else {
+                titleEl.innerText = `📍 المكان السري: ${mySecretRole}`;
+                descEl.innerText = "أنت مواطن صالح ومطلع على المكان! اعطِ تلميحاً ذكياً دون أن تكشف المكان للجاسوس المتخفي بينكم.";
+            }
+        }
+
+        function enterSpyDiscussionPhase() {
+            switchSpySubView('spyDiscussionView');
+            let timeSec = (spyRoomRef && spyRoomRef.settings && spyRoomRef.settings.time) ? spyRoomRef.settings.time : 120;
+            document.getElementById('spyTimer').innerText = timeSec + "s";
+            clearInterval(spyTimerInterval);
+
+            spyTimerInterval = setInterval(() => {
+                timeSec--;
+                document.getElementById('spyTimer').innerText = timeSec + "s";
+                if (timeSec <= 0) {
+                    clearInterval(spyTimerInterval);
+                    triggerSpyVotingPhase();
+                }
+            }, 1000);
+        }
+
+        function triggerSpyVotingPhase() {
+            clearInterval(spyTimerInterval);
+            if (isHost) {
+                spyRoomRef.update({ state: 'voting' });
+            }
+        }
+
+        function renderSpyVotingScreen(playersObj) {
+            const listContainer = document.getElementById('spyVotingList');
+            listContainer.innerHTML = '';
+
+            Object.keys(playersObj || {}).forEach(p => {
+                if (p !== playerName) {
+                    listContainer.innerHTML += `
+                        <button onclick="submitSpyVote('${p}')" class="btn btn-secondary" style="justify-content: space-between; padding: 0.8rem 1rem;">
+                            <span>👤 الاتهام المباشر لـ: <strong>${p}</strong></span>
+                            <span>👉 تصويت</span>
+                        </button>
+                    `;
+                }
+            });
+        }
+
+        function submitSpyVote(targetPlayer) {
+            spyRoomRef.child('votes/' + playerName).set(targetPlayer).then(() => {
+                triggerUniversalToast('تم التصويت 🗳️', `تم تسجيل صوتك ضد ${targetPlayer}!`, false);
+                if (isHost) calculateSpyVotes();
+            });
+        }
+
+        function calculateSpyVotes() {
+            spyRoomRef.child('votes').get().then(snap => {
+                const votesData = snap.val() || {};
+                let counts = {};
+                Object.values(votesData).forEach(voted => {
+                    counts[voted] = (counts[voted] || 0) + 1;
+                });
+
+                let suspect = "";
+                let maxV = -1;
+                Object.keys(counts).forEach(target => {
+                    if (counts[target] > maxV) {
+                        maxV = counts[target];
+                        suspect = target;
+                    }
+                });
+
+                spyRoomRef.update({
+                    state: 'ended',
+                    accusedPlayer: suspect,
+                    voteSummary: counts
+                });
+            });
+        }
+
+        function renderSpyResultScreen(roomData) {
+            const title = document.getElementById('spyResultTitle');
+            const desc = document.getElementById('spyResultDesc');
+            const reveal = document.getElementById('spyFullReveal');
+
+            const accused = roomData.accusedPlayer || "لا أحد";
+            const spies = roomData.spiesList || [];
+            const isSpyAccused = spies.includes(accused);
+
+            if (isSpyAccused) {
+                title.innerText = "🎉 انتصر المواطنون!";
+                desc.innerHTML = `تم إلقاء القبض على الجاسوس <strong style="color:var(--primary-orange);">${accused}</strong> بنجاح! 🔥`;
+            } else {
+                title.innerText = "💀 انتصر الجاسوس!";
+                desc.innerHTML = `خدعكم الجاسوس! اتهمتم <strong style="color:var(--red-danger);">${accused}</strong> وهو مظلوم! 😂`;
+            }
+
+            reveal.innerHTML = `
+                <div>📍 <strong>المكان السري كان:</strong> ${roomData.location}</div>
+                <div style="margin-top: 0.4rem;">🕵️‍♂️ <strong>قائمة الجواسيس:</strong> ${spies.join(', ')}</div>
+            `;
+        }
+
+        // ==================== دوال لعبة ارسم وتخمّن (Draw & Guess) ====================
+        function drawHostCreateRoom() {
+            playerName = document.getElementById('drawPlayerNameInput').value.trim() || (currentUserAccount ? currentUserAccount.name : "رسّام الهوست");
+            drawRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
+            isHost = true;
+            document.getElementById('drawDisplayRoomCode').innerText = drawRoomCode + " 📋";
+
+            drawRoomRef = db.ref('drawRooms/' + drawRoomCode);
+            drawRoomRef.set({
+                host: playerName,
+                state: 'lobby',
+                settings: {
+                    time: parseInt(document.getElementById('drawTimeSelect').value),
+                    rounds: parseInt(document.getElementById('drawRoundsSelect').value)
+                },
+                players: { [playerName]: { joined: true, score: 0 } }
+            }).then(() => {
+                listenToDrawRoom();
+                switchDrawSubView('drawLobbyView');
+                document.getElementById('drawStartGameBtn').style.display = 'block';
+                document.getElementById('drawWaitingHostText').style.display = 'none';
+            });
+        }
+
+        function drawGuestJoinRoom() {
+            playerName = document.getElementById('drawPlayerNameInput').value.trim() || (currentUserAccount ? currentUserAccount.name : "الضيف الرسّام");
+            const code = document.getElementById('drawRoomCodeInput').value.trim();
+            if (!code) return triggerUniversalToast('خطأ في الرمز ⚠️', 'أدخل رمز غرفة الرسم!', false);
+
+            isHost = false;
+            drawRoomCode = code;
+            drawRoomRef = db.ref('drawRooms/' + drawRoomCode);
+
+            drawRoomRef.get().then((snapshot) => {
+                if (snapshot.exists()) {
+                    drawRoomRef.child('players/' + playerName).set({ joined: true, score: 0 });
+                    document.getElementById('drawDisplayRoomCode').innerText = drawRoomCode + " 📋";
+                    listenToDrawRoom();
+                    switchDrawSubView('drawLobbyView');
+                    document.getElementById('drawStartGameBtn').style.display = 'none';
+                    document.getElementById('drawWaitingHostText').style.display = 'block';
+                } else {
+                    triggerUniversalToast('غير موجود ❌', 'رمز غرفة الرسم غير صحيح!', false);
+                }
+            });
+        }
+
+        function drawCopyCode() {
+            navigator.clipboard.writeText(drawRoomCode);
+            triggerUniversalToast('تم النسخ 📋', 'تم نسخ رمز غرفة الرسم بنجاح!', false);
+        }
+
+        function sendDrawEmojiReaction(emoji) {
+            if (!drawRoomRef) return;
+            drawRoomRef.child('lastReaction').set({ emoji: emoji, sender: playerName, timestamp: Date.now() });
+        }
+
+        function drawHostStartGame() {
+            if (!isHost) return;
+            drawRoomRef.child('players').get().then(snapshot => {
+                const pKeys = Object.keys(snapshot.val());
+                if (pKeys.length < 2) return triggerUniversalToast('لاعبين غير كافين ⚠️', 'تحتاج رسّامَين على الأقل لبدء لعبة الرسم!', false);
+
+                startDrawNewTurn(pKeys[0], pKeys);
+            });
+        }
+
+        function startDrawNewTurn(drawer, pKeys) {
+            const randomWord = drawWords[Math.floor(Math.random() * drawWords.length)];
+            drawRoomRef.update({
+                state: 'playing',
+                drawer: drawer,
+                word: randomWord,
+                canvasData: null,
+                chat: null
+            });
+        }
+
+        function listenToDrawRoom() {
+            drawRoomRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (!data) return;
+
+                if (data.players) {
+                    let pList = Object.keys(data.players);
+                    const container = document.getElementById('drawConnectedPlayersContainer');
+                    container.innerHTML = '';
+                    pList.forEach(p => {
+                        container.innerHTML += `<div class="player-chip"><span>🎨 ${p} ${p === playerName ? ' (أنت)' : ''}</span></div>`;
+                    });
+                }
+
+                if (data.state === 'playing') {
+                    currentDrawer = data.drawer;
+                    currentDrawWord = data.word;
+                    isMyTurnToDraw = (currentDrawer === playerName);
+                    hasGuessedCorrectly = false;
+
+                    switchDrawSubView('drawGamePlayView');
+                    initPaintCanvas();
+                    setupDrawGamePlayUI();
+
+                    if (data.canvasData && !isMyTurnToDraw && canvasCtx) {
+                        let img = new Image();
+                        img.onload = () => { canvasCtx.drawImage(img, 0, 0); };
+                        img.src = data.canvasData;
+                    }
+
+                    if (data.chat) {
+                        renderDrawChatMessages(data.chat);
+                    }
+                } else if (data.state === 'ended') {
+                    renderDrawWinnerScreen(data.players);
+                    switchDrawSubView('drawWinnerView');
+                }
+
+                if (data.lastReaction && data.lastReaction.timestamp > lastHandledReaction) {
+                    lastHandledReaction = data.lastReaction.timestamp;
+                    triggerFloatingEmoji(data.lastReaction.emoji);
+                }
+            });
+        }
+
+        function initPaintCanvas() {
+            paintCanvas = document.getElementById('paintCanvas');
+            canvasCtx = paintCanvas.getContext('2d');
+            paintCanvas.width = paintCanvas.parentElement.clientWidth;
+            paintCanvas.height = 320;
+
+            canvasCtx.lineCap = 'round';
+            canvasCtx.lineJoin = 'round';
+            canvasCtx.lineWidth = 4;
+
+            // إزالة الأحداث القديمة لمنع التكرار
+            paintCanvas.onmousedown = startDrawing;
+            paintCanvas.onmousemove = drawStroke;
+            paintCanvas.onmouseup = stopDrawing;
+            paintCanvas.ontouchstart = startDrawing;
+            paintCanvas.ontouchmove = drawStroke;
+            paintCanvas.ontouchend = stopDrawing;
+        }
+
+        function getCanvasCoords(e) {
+            const rect = paintCanvas.getBoundingClientRect();
+            let x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+            let y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+            return { x, y };
+        }
+
+        function startDrawing(e) {
+            if (!isMyTurnToDraw) return;
+            isDrawing = true;
+            const { x, y } = getCanvasCoords(e);
+            canvasCtx.beginPath();
+            canvasCtx.moveTo(x, y);
+        }
+
+        function drawStroke(e) {
+            if (!isDrawing || !isMyTurnToDraw) return;
+            const { x, y } = getCanvasCoords(e);
+            canvasCtx.strokeStyle = currentBrushColor;
+            canvasCtx.lineTo(x, y);
+            canvasCtx.stroke();
+        }
+
+        function stopDrawing() {
+            if (!isDrawing || !isMyTurnToDraw) return;
+            isDrawing = false;
+            // رفع صورة الرسمة للفايربيس
+            const dataURL = paintCanvas.toDataURL();
+            drawRoomRef.child('canvasData').set(dataURL);
+        }
+
+        function selectBrushColor(colorHex, dotEl) {
+            currentBrushColor = colorHex;
+            document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+            dotEl.classList.add('active');
+        }
+
+        function clearCanvasAction() {
+            if (!isMyTurnToDraw) return;
+            canvasCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
+            drawRoomRef.child('canvasData').set('');
+        }
+
+        function setupDrawGamePlayUI() {
+            const drawerInfo = document.getElementById('drawerInfoDisplay');
+            const wordDisplay = document.getElementById('drawWordHintDisplay');
+            const toolsArea = document.getElementById('drawerToolsArea');
+            const guesserInputArea = document.getElementById('guesserInputArea');
+
+            drawerInfo.innerText = `الرسّام الحالي: ${currentDrawer} ${isMyTurnToDraw ? '(أنت! ارسم)' : ''}`;
+
+            if (isMyTurnToDraw) {
+                wordDisplay.innerText = `الكلمة المطلوب رسمها: ${currentDrawWord}`;
+                toolsArea.style.display = 'flex';
+                guesserInputArea.style.display = 'none';
+            } else {
+                wordDisplay.innerText = `الكلمة: ${'_ '.repeat(currentDrawWord.length)}`;
+                toolsArea.style.display = 'none';
+                guesserInputArea.style.display = 'flex';
+            }
+
+            let drawTimeSec = (drawRoomRef && drawRoomRef.settings && drawRoomRef.settings.time) ? drawRoomRef.settings.time : 60;
+            document.getElementById('drawTimer').innerText = drawTimeSec + "s";
+            clearInterval(drawTimerInterval);
+
+            drawTimerInterval = setInterval(() => {
+                drawTimeSec--;
+                document.getElementById('drawTimer').innerText = drawTimeSec + "s";
+                if (drawTimeSec <= 0) {
+                    clearInterval(drawTimerInterval);
+                    if (isHost) {
+                        drawRoomRef.update({ state: 'ended' });
+                    }
+                }
+            }, 1000);
+        }
+
+        function submitGuessWord() {
+            if (isMyTurnToDraw || hasGuessedCorrectly) return;
+            const inputEl = document.getElementById('guessTextInput');
+            const guessVal = inputEl.value.trim();
+            if (!guessVal) return;
+
+            inputEl.value = '';
+            const isCorrect = (guessVal.toLowerCase() === currentDrawWord.toLowerCase());
+
+            if (isCorrect) {
+                hasGuessedCorrectly = true;
+                playHypeSound('pop');
+                triggerUniversalToast('إجابة صحيحة! 🎉', 'أنت أسطورة! حزرت الكلمة صح!', false);
+                
+                // إضافة نقاط للمحزر وللرسام
+                drawRoomRef.child('players/' + playerName + '/score').transaction(s => (s || 0) + 100);
+                drawRoomRef.child('players/' + currentDrawer + '/score').transaction(s => (s || 0) + 50);
+
+                drawRoomRef.child('chat').push({
+                    sender: playerName,
+                    text: `حزر الكلمة الصحيحة! 🎉 (${currentDrawWord})`,
+                    isCorrect: true
+                });
+            } else {
+                drawRoomRef.child('chat').push({
+                    sender: playerName,
+                    text: guessVal,
+                    isCorrect: false
+                });
+            }
+        }
+
+        function renderDrawChatMessages(chatObj) {
+            const chatBox = document.getElementById('drawChatBox');
+            chatBox.innerHTML = '';
+            Object.values(chatObj || {}).forEach(msg => {
+                chatBox.innerHTML += `
+                    <div class="chat-msg ${msg.isCorrect ? 'correct' : ''}">
+                        <strong>${msg.sender}:</strong> ${msg.text}
+                    </div>
+                `;
+            });
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function renderDrawWinnerScreen(playersData) {
+            try { confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); } catch(e) {}
+
+            let sorted = Object.keys(playersData || {}).map(k => ({ name: k, score: playersData[k].score || 0 })).sort((a, b) => b.score - a.score);
+            const podium = document.getElementById('drawPodiumDisplay');
+            podium.innerHTML = '';
+
+            let p1 = sorted[0] || { name: '-', score: 0 };
+            let p2 = sorted[1] || { name: '-', score: 0 };
+            let p3 = sorted[2] || { name: '-', score: 0 };
+
+            podium.innerHTML = `
+                <div class="podium-step podium-2">
+                    <span style="font-size: 0.75rem;">🥈 المركز 2</span>
+                    <span style="font-size: 0.9rem; margin-top: 0.1rem;">${p2.name}</span>
+                    <span style="font-size: 0.8rem; opacity: 0.9;">${p2.score} ن</span>
+                </div>
+                <div class="podium-step podium-1">
+                    <div class="crown-icon">🎨</div>
+                    <span style="font-size: 0.8rem;">🥇 بطل الرسم</span>
+                    <span style="font-size: 1rem; margin-top: 0.1rem;">${p1.name}</span>
+                    <span style="font-size: 0.85rem; opacity: 0.9;">${p1.score} ن</span>
+                </div>
+                <div class="podium-step podium-3">
+                    <span style="font-size: 0.75rem;">🥉 المركز 3</span>
+                    <span style="font-size: 0.85rem; margin-top: 0.1rem;">${p3.name}</span>
+                    <span style="font-size: 0.75rem; opacity: 0.9;">${p3.score} ن</span>
+                </div>
+            `;
+
+            const fullScores = document.getElementById('drawFullFinalScores');
+            fullScores.innerHTML = '<h3>ترتيب الفنانين والمبدعين:</h3>';
+            sorted.forEach((p, idx) => {
+                fullScores.innerHTML += `
+                    <div class="lb-item" style="margin-top: 0.3rem;">
+                        <span>#${idx + 1} ${p.name}</span>
+                        <span style="color: var(--primary-orange);">${p.score} نقطة</span>
+                    </div>
+                `;
             });
         }
     </script>
