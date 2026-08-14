@@ -1,6 +1,20 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+    <!-- ربط ملف الـ Manifest عشان الجوالات والكمبيوترات -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- اسم الموقع لو انحفظ في سطح المكتب أو المفضلة -->
+    <meta name="application-name" content="فكرة">
+
+    <!-- تخصيص أجهزة آبل (آيفون/آيباد) لمن يسوون إضافة للشاشة الرئيسية -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="فكرة">
+    <link rel="apple-touch-icon" href="logo.png">
+
+    <!-- أيقونة الموقع المفضلة (Favicon) فوق بالمتصفح للكمبيوتر -->
+    <link rel="icon" type="image/png" href="logo.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>فِكْرَة 💡 | عالم الألعاب الجماعية</title>
@@ -133,6 +147,43 @@
         .btn-sm { padding: 0.3rem 0.6rem; font-size: 0.75rem; width: auto; border-radius: 6px; }
         .btn:disabled { background: #CBD5E1 !important; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
 
+        /* بروفايل الهيدر المصغر بعد تسجيل الدخول */
+        .user-profile-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 4px 12px 4px 4px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 94, 54, 0.3);
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            transition: 0.2s;
+        }
+        .user-profile-badge:hover { transform: translateY(-2px); border-color: var(--primary-orange); }
+        .user-avatar-sm {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: var(--orange-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 900;
+            font-size: 0.85rem;
+        }
+        .user-name-sm {
+            font-weight: 800;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            max-width: 90px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
         /* زر الرجوع الجديد */
         .back-btn-container {
             max-width: 1200px;
@@ -152,7 +203,7 @@
         }
         .btn-back:hover { background: #FFF; border-color: var(--primary-orange); color: var(--primary-orange); }
 
-        /* --- تصميم تنبيه المغادرة العلوي الزجاجي الجديد --- */
+        /* --- تصميم تنبيه المغادرة الزجاجي --- */
         #leaveWarningToast {
             position: fixed;
             top: -140px;
@@ -173,9 +224,7 @@
             max-width: 450px;
             width: 92%;
         }
-        #leaveWarningToast.show {
-            top: 20px;
-        }
+        #leaveWarningToast.show { top: 20px; }
         .toast-icon {
             font-size: 1.6rem;
             background: var(--orange-gradient);
@@ -183,24 +232,17 @@
             -webkit-text-fill-color: transparent;
             flex-shrink: 0;
         }
-        .toast-content {
-            flex-grow: 1;
+        .toast-content { flex-grow: 1; }
+        .toast-title { font-weight: 900; font-size: 0.9rem; color: var(--text-main); }
+        .toast-desc { font-size: 0.78rem; color: var(--text-muted); font-weight: 500; }
+        .toast-actions { display: flex; gap: 0.4rem; flex-shrink: 0; }
+        
+        @keyframes pulseSize {
+            0% { transform: scale(1.3); color: var(--primary-orange); }
+            50% { transform: scale(1); }
+            100% { transform: scale(1.1); }
         }
-        .toast-title {
-            font-weight: 900;
-            font-size: 0.9rem;
-            color: var(--text-main);
-        }
-        .toast-desc {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-        .toast-actions {
-            display: flex;
-            gap: 0.4rem;
-            flex-shrink: 0;
-        }
+        .pulse-num { display: inline-block; animation: pulseSize 0.9s infinite alternate; }
 
         .hero { text-align: center; padding: 2.5rem 1rem 1.8rem; max-width: 850px; margin: 0 auto; }
         .hero h1 { font-size: 2.1rem; font-weight: 900; margin-bottom: 1rem; line-height: 1.3; }
@@ -248,6 +290,7 @@
         .game-meta { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 1rem; border-top: 1px solid rgba(0, 0, 0, 0.05); }
         .players-count { font-size: 0.82rem; color: var(--text-muted); font-weight: 700; }
 
+        /* نوافذ منبثقة (Modal) لتسجيل الدخول والبروفايل */
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(29, 32, 41, 0.4); backdrop-filter: blur(8px);
@@ -255,13 +298,51 @@
             padding: 1rem;
         }
         .auth-card {
-            background: rgba(255, 255, 255, 0.95); padding: 2rem 1.5rem; border-radius: 28px;
-            width: 100%; max-width: 360px; text-align: center; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15); border: 1px solid #FFFFFF;
+            background: rgba(255, 255, 255, 0.98); padding: 2rem 1.5rem; border-radius: 28px;
+            width: 100%; max-width: 380px; text-align: center; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15); border: 1px solid #FFFFFF;
         }
         .auth-card h2 { margin-bottom: 1.2rem; font-weight: 900; font-size: 1.5rem; }
-        .auth-card input { width: 100%; padding: 0.8rem 1rem; margin-bottom: 0.9rem; border: 2px solid #EAEAEA; border-radius: 14px; outline: none; font-size: 0.9rem; }
+        .auth-card input[type="text"], .auth-card input[type="password"] { 
+            width: 100%; padding: 0.8rem 1rem; margin-bottom: 0.9rem; border: 2px solid #EAEAEA; border-radius: 14px; outline: none; font-size: 0.9rem; font-weight: 700; 
+        }
         .auth-card input:focus { border-color: var(--primary-orange); }
         .auth-card .btn { width: 100%; padding: 0.8rem; margin-top: 0.4rem; }
+
+        /* بروفايل المستخدم المطور وتعديل الصورة */
+        .profile-avatar-container {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 1rem;
+        }
+        .profile-avatar-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-orange);
+            box-shadow: 0 8px 20px var(--orange-glow);
+            background: #EEE;
+        }
+        .avatar-upload-btn {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            background: var(--primary-orange);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+        .avatar-upload-btn:hover { transform: scale(1.1); }
 
         /* تنسيقات صفحات اللعبة الداخلية والجوال */
         .glass-card {
@@ -285,7 +366,6 @@
         .letter-badge { background: var(--primary-orange); color: white; font-size: 1.8rem; font-weight: 900; width: 50px; height: 50px; border-radius: 14px; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(255, 107, 53, 0.3); }
         .timer-display { font-size: 1.5rem; font-weight: 900; color: var(--text-main); }
         
-        /* تعديلات الـ Overlay والعد التنازلي لضمان عدم الخروج عن الشاشة للجوال */
         .overlay { 
             position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
             background: rgba(255, 255, 255, 0.96); 
@@ -329,7 +409,7 @@
         <div class="toast-icon">💡</div>
         <div class="toast-content">
             <div class="toast-title">العودة إلى الغرفة!</div>
-            <div class="toast-desc">يمديك ترجع للعبة خلال <span id="leaveCountdownNum" style="color: var(--primary-orange); font-weight: 900;">10</span> ثواني.</div>
+            <div class="toast-desc">يمديك ترجع للعبة خلال <span id="leaveCountdownNum" class="pulse-num">10</span> ثواني.</div>
         </div>
         <div class="toast-actions">
             <button onclick="restoreRoomSession()" class="btn btn-primary btn-sm">تراجع 🚀</button>
@@ -341,21 +421,21 @@
     <div class="ambient-orb orb-2"></div>
 
     <header>
-        <div class="logo" onclick="safeGoHome()">
+        <div class="logo" onclick="goHome()">
             <span>💡</span> فِكْرَة
         </div>
-        <div class="nav-btns">
-            <button class="btn btn-login" onclick="toggleModal()">دخول</button>
-            <button class="btn btn-primary" onclick="toggleModal()">حساب جديد</button>
+        <div class="nav-btns" id="headerAuthArea">
+            <button class="btn btn-login" onclick="openAuthModal('login')">دخول</button>
+            <button class="btn btn-primary" onclick="openAuthModal('register')">حساب جديد</button>
         </div>
     </header>
 
-    <!-- زر رجوع عام يظهر في كل الصفحات الداخلية -->
+    <!-- زر رجوع خطوة للخلف بنظام متسلسل -->
     <div class="back-btn-container" id="backBtnContainer" style="display: none;">
-        <button class="btn-back" onclick="safeGoHome()">رجوع للخلف ⬅️</button>
+        <button class="btn-back" onclick="handleStepBack()">رجوع للخلف ⬅️</button>
     </div>
 
-    <!-- الصفحة الرئيسية: قائمة الألعاب -->
+    <!-- الصفحة الرئيسية: قائمة الألعاب وشريط البحث -->
     <div id="homeMainView">
         <section class="hero">
             <h1>كل لعبة تبدأ بـ <span>فِكْرَة</span>..<br>تحدى أصحابك واثبت إنك الأذكى! 🔥</h1>
@@ -364,18 +444,19 @@
 
         <section class="controls-section">
             <div class="search-box">
-                <input type="text" placeholder="🔍 ابحث عن لعبتك المفضلة (اسم جماد، جاسوس...)...">
+                <input type="text" id="searchInput" oninput="filterGames()" placeholder="🔍 ابحث عن لعبتك المفضلة (اسم انسان، جماد، جاسوس...)...">
             </div>
             <div class="categories">
-                <div class="cat-chip active">كل الألعاب 🔥</div>
-                <div class="cat-chip">ألعاب الكلمات 📝</div>
-                <div class="cat-chip">سرعة وذكاء ⚡</div>
-                <div class="cat-chip">تحديات جماعية 👥</div>
+                <div class="cat-chip active" onclick="filterByCategory('all', this)">كل الألعاب 🔥</div>
+                <div class="cat-chip" onclick="filterByCategory('word', this)">ألعاب الكلمات 📝</div>
+                <div class="cat-chip" onclick="filterByCategory('speed', this)">سرعة وذكاء ⚡</div>
+                <div class="cat-chip" onclick="filterByCategory('party', this)">تحديات جماعية 👥</div>
             </div>
         </section>
 
-        <main class="games-grid">
-            <div class="game-card">
+        <main class="games-grid" id="gamesGridContainer">
+            <!-- لعبة إنسان جماد نبات (شغالة) -->
+            <div class="game-card" data-category="word party" data-name="اسم انسان جماد نبات بلاد">
                 <div class="game-icon">🌱</div>
                 <div class="game-title">اسم انسان جماد نبات</div>
                 <div class="game-desc">اللعبة الكلاسيكية الشهيرة! اختبر سرعة بديهتك وجيب كلمات بالحرف المطلوب.</div>
@@ -385,33 +466,34 @@
                 </div>
             </div>
 
-            <div class="game-card">
+            <!-- ألعاب قريباً (معطلة) -->
+            <div class="game-card" data-category="party" data-name="مين الجاسوس">
                 <div class="game-icon">🕵️‍♂️</div>
                 <div class="game-title">مين الجاسوس؟</div>
                 <div class="game-desc">اكتشف الجاسوس المتخفي بينكم قبل ما يعرف المكان السري!</div>
                 <div class="game-meta">
                     <span class="players-count">👥 3 - 10 لاعبين</span>
-                    <button onclick="alert('قريباً يا بطل! 🚀')" class="btn btn-primary">العب</button>
+                    <button onclick="alert('قريباً يا بطل! 🚀 نعمل على برمجتها حالياً.')" class="btn btn-primary">قريباً 🚀</button>
                 </div>
             </div>
 
-            <div class="game-card">
+            <div class="game-card" data-category="speed" data-name="تحدي ال 5 ثواني">
                 <div class="game-icon">⏱️</div>
                 <div class="game-title">تحدي الـ 5 ثواني</div>
                 <div class="game-desc">اذكر 3 أشياء مطلوبة منك في 5 ثواني فقط، الضغط عالي!</div>
                 <div class="game-meta">
                     <span class="players-count">👥 2 - 6 لاعبين</span>
-                    <button onclick="alert('قريباً يا بطل! 🚀')" class="btn btn-primary">العب</button>
+                    <button onclick="alert('قريباً يا بطل! 🚀')" class="btn btn-primary">قريباً 🚀</button>
                 </div>
             </div>
 
-            <div class="game-card">
+            <div class="game-card" data-category="party" data-name="ارسم وتخمن">
                 <div class="game-icon">🎨</div>
                 <div class="game-title">ارسم وتخمّن</div>
                 <div class="game-desc">ارسم الكلمة المكتوبة وخلي بقية اللاعبين يحزرون الرسمة بأسرع وقت.</div>
                 <div class="game-meta">
                     <span class="players-count">👥 2 - 12 لاعبين</span>
-                    <button onclick="alert('قريباً يا بطل! 🚀')" class="btn btn-primary">العب</button>
+                    <button onclick="alert('قريباً يا بطل! 🚀')" class="btn btn-primary">قريباً 🚀</button>
                 </div>
             </div>
         </main>
@@ -573,18 +655,13 @@
         </div>
     </div>
 
-    <!-- نافذة تسجيل الدخول -->
+    <!-- نافذة تسجيل الدخول / حساب جديد / تعديل البروفايل والصورة -->
     <div class="modal-overlay" id="authModal">
-        <div class="auth-card">
-            <h2>تسجيل الدخول 🚀</h2>
-            <input type="text" placeholder="اسم المستخدم أو البريد">
-            <input type="password" placeholder="كلمة المرور">
-            <button class="btn btn-primary">دخول</button>
-            <button class="btn" style="color: var(--text-muted); margin-top: 8px;" onclick="toggleModal()">إلغاء</button>
+        <div class="auth-card" id="authModalContent">
+            <!-- يتم تعبئته ديناميكياً حسب الحالة -->
         </div>
     </div>
 
-    <!-- عناصر تحذيرية أثناء اللعب - تم تصحيح مقاساتها لتناسب الجوال تماماً -->
     <div id="countdownOverlay" class="overlay">
         <div id="countdownNum" style="font-size: 4.5rem; font-weight: 900; color: var(--primary-orange); line-height: 1;">3</div>
         <div id="countdownText" style="font-size: 1.1rem; font-weight: 800; margin-top: 1rem; padding: 0 10px;">تهيّأ، الحرف قادم...</div>
@@ -631,6 +708,9 @@
         let activeCategories = [];
         let playerName = "لاعب";
         let playersList = [];
+
+        // بيانات الحساب المحلي والبروفايل مع الصورة الشخصية
+        let currentUserAccount = JSON.parse(localStorage.getItem('fikra_user')) || null;
 
         let allPlayersAnswers = {};
         let currentEvaluations = {};
@@ -683,23 +763,150 @@
             } catch(e) {}
         }
 
-        function toggleModal() {
+        // --- نظام فتح نوافذ تسجيل الدخول والبروفايل الشخصي وتعديل الصورة ---
+        function openAuthModal(mode) {
             const modal = document.getElementById('authModal');
-            modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
+            const content = document.getElementById('authModalContent');
+            modal.style.display = 'flex';
+
+            if (mode === 'profile') {
+                content.innerHTML = `
+                    <h2>الملف الشخصي 👤</h2>
+                    <div class="profile-avatar-container">
+                        <img id="modalAvatarPreview" src="${currentUserAccount.avatar || 'https://via.placeholder.com/90?text=USER'}" class="profile-avatar-img">
+                        <label for="avatarFileInput" class="avatar-upload-btn" title="تغيير الصورة">📷</label>
+                        <input type="file" id="avatarFileInput" accept="image/*" style="display:none;" onchange="handleImageUpload(event)">
+                    </div>
+                    <input type="text" id="profileNameInput" value="${currentUserAccount.name || ''}" placeholder="اسم المستخدم" maxlength="15">
+                    <button onclick="saveProfileChanges()" class="btn btn-primary">حفظ التعديلات ✨</button>
+                    <button onclick="logoutAccount()" class="btn btn-danger" style="margin-top: 0.5rem;">تسجيل الخروج 🚪</button>
+                    <button class="btn" style="color: var(--text-muted); margin-top: 6px;" onclick="closeAuthModal()">إغلاق</button>
+                `;
+            } else {
+                let isReg = mode === 'register';
+                content.innerHTML = `
+                    <h2>${isReg ? 'حساب جديد 🚀' : 'تسجيل الدخول 🚀'}</h2>
+                    <input type="text" id="authUserInput" placeholder="اسم المستخدم أو البريد" value="">
+                    <input type="password" id="authPassInput" placeholder="كلمة المرور" value="">
+                    <button onclick="submitAuthAction('${mode}')" class="btn btn-primary">${isReg ? 'إنشاء حساب' : 'دخول'}</button>
+                    <button class="btn" style="color: var(--text-muted); margin-top: 8px;" onclick="closeAuthModal()">إلغاء</button>
+                `;
+            }
         }
 
-        function safeGoHome() {
-            const gameContainer = document.getElementById('gameContainerView');
-            const isInsideGame = gameContainer.style.display === 'block';
+        function closeAuthModal() {
+            document.getElementById('authModal').style.display = 'none';
+        }
+
+        function submitAuthAction(mode) {
+            const uInput = document.getElementById('authUserInput').value.trim();
+            if (!uInput) return alert('أدخل اسم المستخدم لو سمحت!');
             
-            if (isInsideGame) {
-                activeRoomStateForRestore = getActiveGameSubView();
-                document.getElementById('homeMainView').style.display = 'block';
-                gameContainer.style.display = 'none';
-                document.getElementById('backBtnContainer').style.display = 'none';
-                triggerLeaveWarningToast();
+            currentUserAccount = {
+                name: uInput,
+                avatar: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'
+            };
+            localStorage.setItem('fikra_user', JSON.stringify(currentUserAccount));
+            updateHeaderAuthUI();
+            closeAuthModal();
+            alert(`أهلاً بك يا ${uInput}! تم تسجيل دخولك بنجاح 🔥`);
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                currentUserAccount.avatar = e.target.result;
+                document.getElementById('modalAvatarPreview').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveProfileChanges() {
+            const newName = document.getElementById('profileNameInput').value.trim();
+            if (newName) currentUserAccount.name = newName;
+            localStorage.setItem('fikra_user', JSON.stringify(currentUserAccount));
+            updateHeaderAuthUI();
+            closeAuthModal();
+            alert('تم حفظ تعديلات بروفايلك بنجاح! ✨');
+        }
+
+        function logoutAccount() {
+            currentUserAccount = null;
+            localStorage.removeItem('fikra_user');
+            updateHeaderAuthUI();
+            closeAuthModal();
+            alert('تم تسجيل الخروج بنجاح.');
+        }
+
+        function updateHeaderAuthUI() {
+            const area = document.getElementById('headerAuthArea');
+            if (currentUserAccount) {
+                area.innerHTML = `
+                    <div class="user-profile-badge" onclick="openAuthModal('profile')">
+                        <img src="${currentUserAccount.avatar}" class="user-avatar-sm" alt="صورة">
+                        <span class="user-name-sm">${currentUserAccount.name}</span>
+                    </div>
+                `;
+                const pNameInput = document.getElementById('playerNameInput');
+                if (pNameInput) pNameInput.value = currentUserAccount.name;
             } else {
-                goHome();
+                area.innerHTML = `
+                    <button class="btn btn-login" onclick="openAuthModal('login')">دخول</button>
+                    <button class="btn btn-primary" onclick="openAuthModal('register')">حساب جديد</button>
+                `;
+            }
+        }
+
+        // --- نظام شريط البحث وتصفية الألعاب ---
+        function filterGames() {
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            const cards = document.querySelectorAll('.games-grid .game-card');
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name').toLowerCase();
+                const title = card.querySelector('.game-title').innerText.toLowerCase();
+                const desc = card.querySelector('.game-desc').innerText.toLowerCase();
+                if (name.includes(query) || title.includes(query) || desc.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function filterByCategory(categoryKey, chipEl) {
+            document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+            chipEl.classList.add('active');
+            const cards = document.querySelectorAll('.games-grid .game-card');
+            cards.forEach(card => {
+                const categories = card.getAttribute('data-category');
+                if (categoryKey === 'all' || (categories && categories.includes(categoryKey))) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // تحكم زر الرجوع للوراء خطوة بخطوة
+        function handleStepBack() {
+            const gameContainer = document.getElementById('gameContainerView');
+            if (gameContainer.style.display === 'block') {
+                const currentSubView = getActiveGameSubView();
+                if (currentSubView === 'lobbyView' || currentSubView === 'resultsView' || currentSubView === 'winnerView') {
+                    switchGameView('roomSelectionView');
+                } else if (currentSubView === 'gamePlayView') {
+                    if (confirm('هل أنت متأكد من رغبتك في الانسحاب من الجولة الحالية؟')) {
+                        switchGameView('roomSelectionView');
+                    }
+                } else {
+                    activeRoomStateForRestore = 'roomSelectionView';
+                    document.getElementById('homeMainView').style.display = 'block';
+                    gameContainer.style.display = 'none';
+                    document.getElementById('backBtnContainer').style.display = 'none';
+                    triggerLeaveWarningToast();
+                }
             }
         }
 
@@ -753,9 +960,7 @@
         }
 
         function cleanupRoomCompletely() {
-            if (roomRef) {
-                roomRef.off();
-            }
+            if (roomRef) roomRef.off();
             clearInterval(timerInterval);
             currentRoomCode = "";
         }
@@ -765,6 +970,9 @@
             document.getElementById('gameContainerView').style.display = 'block';
             document.getElementById('backBtnContainer').style.display = 'block';
             switchGameView('roomSelectionView');
+            if (currentUserAccount && currentUserAccount.name) {
+                document.getElementById('playerNameInput').value = currentUserAccount.name;
+            }
         }
 
         function goHome() {
@@ -812,10 +1020,11 @@
             });
             updateMaxCategoriesLimit();
             loadGlobalLeaderboard();
+            updateHeaderAuthUI();
         });
 
         function hostCreateRoom() {
-            playerName = document.getElementById('playerNameInput').value.trim() || "الهوست";
+            playerName = document.getElementById('playerNameInput').value.trim() || (currentUserAccount ? currentUserAccount.name : "الهوست");
             const checkedBoxes = document.querySelectorAll('#categoriesCheckboxGroup input:checked');
             if (checkedBoxes.length === 0) return alert('اختر تصنيف واحد على الأقل للعب!');
 
@@ -853,7 +1062,7 @@
         }
 
         function guestJoinRoom() {
-            playerName = document.getElementById('playerNameInput').value.trim() || "الضيف";
+            playerName = document.getElementById('playerNameInput').value.trim() || (currentUserAccount ? currentUserAccount.name : "الضيف");
             const code = document.getElementById('roomCodeInput').value.trim();
             if (!code) return alert('أدخل رمز الغرفة المكون من أرقام.');
 
