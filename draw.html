@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ارسم وتخمّن 🎨 | فِكْرَة</title>
+    <!-- خط تجوال من جوجل -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <style>
+        :root {
+            --primary-orange: #FF5E36;
+            --orange-gradient: linear-gradient(135deg, #FF5E36 0%, #FFA036 100%);
+            --orange-glow: rgba(255, 94, 54, 0.35);
+            --text-main: #1D2029;
+            --text-muted: #6C757D;
+            --green-success: #2E7D32;
+            --red-danger: #D32F2F;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #FFF3EB;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(255, 160, 54, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(255, 94, 54, 0.2) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(255, 235, 220, 0.8) 0px, transparent 100%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 2rem;
+        }
+
+        /* --- الهيدر مطابق تماماً لتصميم اسم جماد نبات --- */
+        header {
+            background: transparent;
+            padding: 1.5rem 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        /* اليمين: الحساب */
+        .header-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-profile-badge {
+            background: #FFFFFF;
+            padding: 0.4rem 0.9rem;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            border: 1px solid #F1F5F9;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: #E0F2FE;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        /* اليسار: اللوجو وتحته زر الرجوع */
+        .header-left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.8rem;
+        }
+
+        .logo-main {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #FF5E36;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* زر الرجوع للخلف مطابق تماماً */
+        .btn-back-custom {
+            background-color: #FFFFFF;
+            color: #3B82F6;
+            border: 1px solid #E2E8F0;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: all 0.2s ease;
+        }
+        .btn-back-custom:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            background-color: #F8FAFC;
+        }
+
+        .btn {
+            padding: 0.7rem 1.2rem;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn-primary {
+            background: var(--orange-gradient);
+            color: white;
+            box-shadow: 0 8px 20px var(--orange-glow);
+        }
+        .btn-primary:hover { transform: translateY(-2px); }
+
+        .btn-danger { background: var(--red-danger); color: white; }
+        .btn-sm { padding: 0.3rem 0.6rem; font-size: 0.75rem; border-radius: 6px; }
+
+        .glass-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 2rem 1.8rem;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.04);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            margin-bottom: 1rem;
+        }
+
+        .title { text-align: center; font-weight: 900; font-size: 1.8rem; color: #FF5E36; margin-bottom: 0.2rem; }
+        .subtitle { text-align: center; color: #718096; margin-bottom: 1.8rem; font-size: 0.9rem; font-weight: 700; }
+        
+        .form-group { margin-bottom: 1.2rem; }
+        label { display: block; font-weight: 700; margin-bottom: 0.4rem; color: #2D3748; font-size: 0.9rem; text-align: center; }
+        
+        input[type="text"], select {
+            width: 100%; padding: 0.85rem 1rem; border-radius: 14px; border: 1.5px solid #E2E8F0;
+            font-size: 0.95rem; outline: none; background: #FAFAFA; text-align: center; color: #2D3748; font-weight: 700;
+        }
+        input[type="text"]:focus, select:focus { border-color: var(--primary-orange); background: #FFF; }
+
+        .header-status {
+            display: flex; justify-content: space-between; align-items: center;
+            background: #F8FAFC; padding: 0.8rem; border-radius: 14px; margin-bottom: 1.2rem; border: 1px solid #E2E8F0;
+        }
+        .timer-display { font-size: 1.5rem; font-weight: 900; color: var(--text-main); }
+
+        /* --- الكانفاس والأدوات --- */
+        .canvas-wrapper {
+            position: relative;
+            width: 100%;
+            background: #FFFFFF;
+            border: 3px solid var(--primary-orange);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            touch-action: none;
+        }
+        #paintCanvas {
+            display: block;
+            width: 100%;
+            height: 320px;
+            background: #FFFFFF;
+            cursor: crosshair;
+        }
+        .drawing-tools {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            justify-content: center;
+            background: #F8FAFC;
+            padding: 8px;
+            border-radius: 14px;
+            margin-top: 10px;
+            border: 1px solid #E2E8F0;
+            flex-wrap: wrap;
+        }
+        .color-dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            transition: 0.2s;
+        }
+        .color-dot.active { transform: scale(1.25); border-color: var(--primary-orange); }
+
+        .chat-guesses-box {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 14px;
+            height: 140px;
+            overflow-y: auto;
+            padding: 8px 12px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+        }
+        .chat-msg { margin-bottom: 4px; border-bottom: 1px solid #F1F5F9; padding-bottom: 2px; }
+        .chat-msg.correct { color: var(--green-success); font-weight: 900; background: #E8F5E9; padding: 4px 8px; border-radius: 8px; }
+
+        .emoji-bar { display: flex; justify-content: center; gap: 0.4rem; margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px solid #E2E8F0; }
+        .emoji-btn { font-size: 1.3rem; background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        
+        .podium-container { display: flex; justify-content: center; align-items: flex-end; gap: 0.6rem; height: 170px; margin: 1.5rem 0; }
+        .podium-step { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 0.6rem; border-radius: 12px 12px 0 0; color: white; font-weight: 900; width: 31%; position: relative; }
+        .podium-1 { height: 100%; background: linear-gradient(180deg, #FFD700, #E6B800); }
+        .podium-2 { height: 75%; background: linear-gradient(180deg, #C0C0C0, #A8A8A8); }
+        .podium-3 { height: 55%; background: linear-gradient(180deg, #CD7F32, #B36B25); }
+        
+        .flying-emoji { position: fixed; font-size: 3rem; z-index: 10000; pointer-events: none; animation: flyUp 2s ease-out forwards; }
+        @keyframes flyUp { 0% { opacity: 1; transform: translateY(0) scale(0.5); } 50% { transform: translateY(-120px) scale(1.1); } 100% { opacity: 0; transform: translateY(-250px) scale(1.3); } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <!-- اليمين: الحساب -->
+        <div class="header-right">
+            <div class="user-profile-badge">
+                <span id="headerUserName" style="font-weight: 800; font-size: 0.9rem; color: #2D3748;">بيب</span>
+                <div class="user-avatar">👤</div>
+            </div>
+        </div>
+
+        <!-- اليسار: اللوجو + زر الرجوع -->
+        <div class="header-left">
+            <div class="logo-main" onclick="window.location.href='index.html'">
+                فِكْرَة 💡
+            </div>
+            <button onclick="confirmGoBack()" class="btn-back-custom">
+                رجوع للخلف <span style="font-size: 0.9rem;">⬅️</span>
+            </button>
+        </div>
+    </header>
+
+    <div style="max-width: 520px; margin: 0.5rem auto; padding: 0 1rem;">
+        
+        <!-- اختيار الغرفة -->
+        <div id="drawRoomSelectionView" class="glass-card">
+            <h1 class="title">فِكْرَة 💡</h1>
+            <p class="subtitle">ارسم وتخمّن - التحدي الأسرع!</p>
+
+            <div class="form-group">
+                <label>اسمك في اللعبة</label>
+                <input type="text" id="drawPlayerNameInput" placeholder="أدخل اسمك..." maxlength="15" oninput="updateHeaderName(this.value)">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 1.2rem;">
+                <div>
+                    <label>عدد الجولات</label>
+                    <select id="drawRoundsSelect">
+                        <option value="1">جولة واحدة 🔥</option>
+                        <option value="3" selected>3 جولات</option>
+                        <option value="5">5 جولات</option>
+                    </select>
+                </div>
+                <div>
+                    <label>وقت الجولة</label>
+                    <select id="drawTimeSelect">
+                        <option value="45">45 ثانية</option>
+                        <option value="60" selected>60 ثانية (دقيقة)</option>
+                        <option value="90">90 ثانية</option>
+                    </select>
+                </div>
+            </div>
+
+            <button onclick="drawHostCreateRoom()" class="btn btn-primary" style="width: 100%;">إنشاء غرفة رسم 🎨</button>
+            
+            <div style="margin: 1.2rem 0; text-align: center; font-weight: 700; color: #A0AEC0; font-size: 0.85rem;">أو الانضمام لغرفة</div>
+
+            <div class="form-group">
+                <input type="text" id="drawRoomCodeInput" placeholder="أدخل رمز الغرفة" maxlength="6" style="letter-spacing: 2px; font-weight: 900;">
+            </div>
+            <button onclick="drawGuestJoinRoom()" class="btn btn-primary" style="width: 100%; background: linear-gradient(135deg, #3182CE 0%, #63B3ED 100%); box-shadow: 0 8px 20px rgba(49, 130, 206, 0.3);">انضمام للغرفة 🔗</button>
+        </div>
+
+        <!-- لوبي الانتظار -->
+        <div id="drawLobbyView" class="glass-card" style="display: none; text-align: center;">
+            <h2 style="margin-bottom: 0.3rem; font-size: 1.3rem;">استوديو الرسّامين 🎨</h2>
+            <p style="color: #666; font-size: 0.85rem;">شارِك هذا الرمز مع أصحابك للرسم معاً:</p>
+            <div id="drawDisplayRoomCode" onclick="drawCopyCode()" style="font-size: 2rem; font-weight: 900; color: var(--primary-orange); cursor: pointer; background: #FFF3EF; padding: 0.6rem; border-radius: 12px; border: 2px dashed var(--primary-orange); margin: 0.8rem 0; letter-spacing: 3px;">
+                0000 📋
+            </div>
+
+            <div style="margin-bottom: 0.8rem;">
+                <label>الرسامون في الانتظار:</label>
+                <div id="drawConnectedPlayersContainer" style="margin-top: 0.4rem;"></div>
+            </div>
+
+            <div class="emoji-bar">
+                <button onclick="sendDrawEmojiReaction('🎨')" class="emoji-btn">🎨</button>
+                <button onclick="sendDrawEmojiReaction('🖌️')" class="emoji-btn">🖌️</button>
+                <button onclick="sendDrawEmojiReaction('😂')" class="emoji-btn">😂</button>
+                <button onclick="sendDrawEmojiReaction('🔥')" class="emoji-btn">🔥</button>
+                <button onclick="sendDrawEmojiReaction('👏')" class="emoji-btn">👏</button>
+            </div>
+
+            <button id="drawStartGameBtn" onclick="drawHostStartGame()" class="btn btn-primary" style="display: none; margin-top: 1.2rem; width: 100%;">بدء التحدي والفرشاة 🚀</button>
+            <p id="drawWaitingHostText" style="color: #888; font-weight: 700; display: none; margin-top: 0.8rem; font-size: 0.85rem;">في انتظار الهوست ليبدأ اللعبة...</p>
+        </div>
+
+        <!-- واجهة اللعب الفعلي -->
+        <div id="drawGamePlayView" class="glass-card" style="display: none;">
+            <div class="header-status">
+                <div>
+                    <div id="drawerInfoDisplay" style="font-weight: 800; font-size: 0.85rem; color: #666;">الرّسام: ...</div>
+                    <div id="drawWordHintDisplay" style="font-size: 1.3rem; font-weight: 900; color: var(--primary-orange); letter-spacing: 2px;">___</div>
+                </div>
+                <div class="timer-display" id="drawTimer">60s</div>
+            </div>
+
+            <!-- الكانفاس -->
+            <div class="canvas-wrapper">
+                <canvas id="paintCanvas"></canvas>
+            </div>
+
+            <!-- أدوات الرسم -->
+            <div id="drawerToolsArea" class="drawing-tools">
+                <div class="color-dot active" style="background: #000000;" onclick="selectBrushColor('#000000', this)"></div>
+                <div class="color-dot" style="background: #FF5E36;" onclick="selectBrushColor('#FF5E36', this)"></div>
+                <div class="color-dot" style="background: #2E7D32;" onclick="selectBrushColor('#2E7D32', this)"></div>
+                <div class="color-dot" style="background: #00B4D8;" onclick="selectBrushColor('#00B4D8', this)"></div>
+                <div class="color-dot" style="background: #7209B7;" onclick="selectBrushColor('#7209B7', this)"></div>
+                <div class="color-dot" style="background: #FFD700;" onclick="selectBrushColor('#FFD700', this)"></div>
+                <button onclick="clearCanvasAction()" class="btn btn-danger btn-sm" style="margin-right: auto;">مسح اللوحة 🗑️</button>
+            </div>
+
+            <!-- الشات والتخمين -->
+            <div class="chat-guesses-box" id="drawChatBox"></div>
+            <div id="guesserInputArea" style="display: flex; gap: 0.5rem; margin-top: 0.6rem;">
+                <input type="text" id="guessTextInput" placeholder="اكتب تخمينك هنا وسوّ إرسال..." onkeydown="if(event.key === 'Enter') submitGuessWord()">
+                <button onclick="submitGuessWord()" class="btn btn-primary" style="padding: 0.6rem 1.2rem;">تخمين 🚀</button>
+            </div>
+
+            <div class="emoji-bar" style="margin-top: 0.8rem;">
+                <button onclick="sendDrawEmojiReaction('👏')" class="emoji-btn">👏</button>
+                <button onclick="sendDrawEmojiReaction('🤔')" class="emoji-btn">🤔</button>
+                <button onclick="sendDrawEmojiReaction('😂')" class="emoji-btn">😂</button>
+                <button onclick="sendDrawEmojiReaction('🔥')" class="emoji-btn">🔥</button>
+            </div>
+        </div>
+
+        <!-- شاشة النتائج والتتويج -->
+        <div id="drawWinnerView" class="glass-card" style="display: none; text-align: center;">
+            <h1 class="title" style="font-size: 1.5rem;">🎨 أساطير الرسم والتخمين 🎨</h1>
+            <p class="subtitle">أبدعتم يا بيكاسو العرب! شوفوا ترتيب المبدعين:</p>
+
+            <div id="drawPodiumDisplay" class="podium-container"></div>
+            <div id="drawFullFinalScores" style="margin-top: 1.2rem; text-align: right; font-size: 0.9rem;"></div>
+
+            <button onclick="window.location.href='index.html'" class="btn btn-primary" style="margin-top: 1.2rem; width: 100%;">العودة للشاشة الرئيسية 🏠</button>
+        </div>
+
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCg29LG4HI-vas93dBFIMqKEfzeYUAx-o0",
+            authDomain: "fikrh-cf0ff.firebaseapp.com",
+            databaseURL: "https://fikrh-cf0ff-default-rtdb.firebaseio.com",
+            projectId: "fikrh-cf0ff",
+            storageBucket: "fikrh-cf0ff.firebasestorage.app",
+            messagingSenderId: "523229194032",
+            appId: "1:523229194032:web:29e3a5ef0ce27d8b3d0af5",
+            measurementId: "G-2G8NQ7FF96"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let currentUserAccount = JSON.parse(localStorage.getItem('fikra_user')) || null;
+        let playerName = currentUserAccount ? currentUserAccount.name : "بيب";
+
+        let drawRoomCode = "";
+        let drawRoomRef = null;
+        let isHost = false;
+        let drawWords = ["سيارة", "بيت", "شجرة", "شمس", "تفاحة", "طائرة", "كمبيوتر", "قطة", "قمر", "برج", "سمكة", "موزة", "كتاب", "نظارة", "ساعة", "هاتف", "وردة", "طاولة", "كرسي"];
+        let currentDrawer = "";
+        let currentDrawWord = "";
+        let isMyTurnToDraw = false;
+        let drawTimerInterval;
+        let currentBrushColor = "#000000";
+        let isDrawing = false;
+        let paintCanvas, canvasCtx;
+        let hasGuessedCorrectly = false;
+        let lastHandledReaction = 0;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputVal = document.getElementById('drawPlayerNameInput');
+            if (currentUserAccount && currentUserAccount.name) {
+                inputVal.value = currentUserAccount.name;
+                document.getElementById('headerUserName').innerText = currentUserAccount.name;
+            } else {
+                inputVal.value = "بيب";
+            }
+            initCanvas();
+        });
+
+        /* دالة تنبيه الرجوع */
+        function confirmGoBack() {
+            if (confirm("هل أنت متأكد من الخروج والعودة للقائمة الرئيسية؟")) {
+                window.history.back();
+            }
+        }
+
+        function updateHeaderName(val) {
+            document.getElementById('headerUserName').innerText = val.trim() || "بيب";
+        }
+
+        function switchDrawSubView(viewId) {
+            document.querySelectorAll('.glass-card').forEach(card => card.style.display = 'none');
+            document.getElementById(viewId).style.display = 'block';
+        }
+
+        function drawHostCreateRoom() {
+            playerName = document.getElementById('drawPlayerNameInput').value.trim() || "الرسام";
+            const totalRounds = parseInt(document.getElementById('drawRoundsSelect').value);
+            const selectedTime = parseInt(document.getElementById('drawTimeSelect').value);
+
+            isHost = true;
+            drawRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
+            document.getElementById('drawDisplayRoomCode').innerText = drawRoomCode + " 📋";
+
+            drawRoomRef = db.ref('draw_rooms/' + drawRoomCode);
+            drawRoomRef.set({
+                host: playerName,
+                state: 'lobby',
+                settings: { totalRounds, selectedTime },
+                players: { [playerName]: { joined: true, score: 0 } }
+            }).then(() => {
+                listenToDrawRoom();
+                switchDrawSubView('drawLobbyView');
+                document.getElementById('drawStartGameBtn').style.display = 'block';
+                document.getElementById('drawWaitingHostText').style.display = 'none';
+            });
+        }
+
+        function drawGuestJoinRoom() {
+            playerName = document.getElementById('drawPlayerNameInput').value.trim() || "مخمّن";
+            const code = document.getElementById('drawRoomCodeInput').value.trim();
+            if (!code) return alert('أدخل رمز الغرفة!');
+
+            isHost = false;
+            drawRoomCode = code;
+            drawRoomRef = db.ref('draw_rooms/' + drawRoomCode);
+
+            drawRoomRef.get().then((snapshot) => {
+                if (snapshot.exists()) {
+                    drawRoomRef.child('players/' + playerName).set({ joined: true, score: 0 });
+                    document.getElementById('drawDisplayRoomCode').innerText = drawRoomCode + " 📋";
+                    listenToDrawRoom();
+                    switchDrawSubView('drawLobbyView');
+                    document.getElementById('drawStartGameBtn').style.display = 'none';
+                    document.getElementById('drawWaitingHostText').style.display = 'block';
+                } else {
+                    alert('رمز الغرفة غير صحيح!');
+                }
+            });
+        }
+
+        function listenToDrawRoom() {
+            drawRoomRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (!data) return;
+
+                if (data.players) {
+                    const players = Object.keys(data.players);
+                    const container = document.getElementById('drawConnectedPlayersContainer');
+                    container.innerHTML = players.map(p => `<div style="padding:4px; font-weight:700;">👤 ${p}</div>`).join('');
+                }
+
+                if (data.state === 'playing') {
+                    currentDrawer = data.currentDrawer;
+                    currentDrawWord = data.currentWord;
+                    isMyTurnToDraw = (currentDrawer === playerName);
+                    setupDrawRoundUI(data.settings.selectedTime);
+                    switchDrawSubView('drawGamePlayView');
+                } else if (data.state === 'finished') {
+                    renderDrawWinnerScreen(data.players);
+                }
+
+                if (data.lastReaction && data.lastReaction.timestamp > lastHandledReaction) {
+                    lastHandledReaction = data.lastReaction.timestamp;
+                    triggerFloatingEmoji(data.lastReaction.emoji);
+                }
+            });
+
+            drawRoomRef.child('canvasData').on('value', (snapshot) => {
+                const drawLine = snapshot.val();
+                if (drawLine && !isMyTurnToDraw) {
+                    drawOnCanvasFromData(drawLine);
+                }
+            });
+
+            drawRoomRef.child('chat').on('child_added', (snapshot) => {
+                const msg = snapshot.val();
+                appendChatMessage(msg.sender, msg.text, msg.isCorrect);
+            });
+        }
+
+        function drawCopyCode() {
+            navigator.clipboard.writeText(drawRoomCode);
+            alert('تم نسخ الرمز!');
+        }
+
+        function drawHostStartGame() {
+            if (!isHost) return;
+            drawRoomRef.get().then(snapshot => {
+                const data = snapshot.val();
+                const players = Object.keys(data.players);
+                const randomDrawer = players[Math.floor(Math.random() * players.length)];
+                const randomWord = drawWords[Math.floor(Math.random() * drawWords.length)];
+
+                drawRoomRef.update({
+                    state: 'playing',
+                    currentDrawer: randomDrawer,
+                    currentWord: randomWord
+                });
+            });
+        }
+
+        function setupDrawRoundUI(roundTime) {
+            hasGuessedCorrectly = false;
+            document.getElementById('drawerInfoDisplay').innerText = `الرسّام: ${currentDrawer}`;
+            
+            const tools = document.getElementById('drawerToolsArea');
+            const guessInput = document.getElementById('guesserInputArea');
+            const hintDisplay = document.getElementById('drawWordHintDisplay');
+
+            if (isMyTurnToDraw) {
+                tools.style.display = 'flex';
+                guessInput.style.display = 'none';
+                hintDisplay.innerText = `كلمتك للرسم: (${currentDrawWord})`;
+            } else {
+                tools.style.display = 'none';
+                guessInput.style.display = 'flex';
+                hintDisplay.innerText = `الكلمة تتكون من (${currentDrawWord.length}) حروف`;
+            }
+
+            clearCanvasLocal();
+            startDrawTimer(roundTime);
+        }
+
+        function startDrawTimer(seconds) {
+            let timeLeft = seconds;
+            document.getElementById('drawTimer').innerText = timeLeft + "s";
+            clearInterval(drawTimerInterval);
+
+            drawTimerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('drawTimer').innerText = timeLeft + "s";
+                if (timeLeft <= 0) {
+                    clearInterval(drawTimerInterval);
+                    if (isHost) {
+                        drawRoomRef.update({ state: 'finished' });
+                    }
+                }
+            }, 1000);
+        }
+
+        function initCanvas() {
+            paintCanvas = document.getElementById('paintCanvas');
+            if (!paintCanvas) return;
+            canvasCtx = paintCanvas.getContext('2d');
+
+            function resizeCanvas() {
+                paintCanvas.width = paintCanvas.parentElement.clientWidth;
+                paintCanvas.height = 320;
+            }
+            resizeCanvas();
+
+            paintCanvas.addEventListener('mousedown', startDrawing);
+            paintCanvas.addEventListener('mousemove', draw);
+            paintCanvas.addEventListener('mouseup', stopDrawing);
+
+            paintCanvas.addEventListener('touchstart', (e) => { startDrawing(e.touches[0]); e.preventDefault(); });
+            paintCanvas.addEventListener('touchmove', (e) => { draw(e.touches[0]); e.preventDefault(); });
+            paintCanvas.addEventListener('touchend', stopDrawing);
+        }
+
+        function startDrawing(e) {
+            if (!isMyTurnToDraw) return;
+            isDrawing = true;
+            const rect = paintCanvas.getBoundingClientRect();
+            canvasCtx.beginPath();
+            canvasCtx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+        }
+
+        function draw(e) {
+            if (!isDrawing || !isMyTurnToDraw) return;
+            const rect = paintCanvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            canvasCtx.lineWidth = 4;
+            canvasCtx.lineCap = 'round';
+            canvasCtx.strokeStyle = currentBrushColor;
+
+            canvasCtx.lineTo(x, y);
+            canvasCtx.stroke();
+
+            drawRoomRef.child('canvasData').set({
+                x: x / paintCanvas.width,
+                y: y / paintCanvas.height,
+                color: currentBrushColor,
+                isNewPath: false
+            });
+        }
+
+        function stopDrawing() { isDrawing = false; }
+
+        function drawOnCanvasFromData(data) {
+            canvasCtx.lineWidth = 4;
+            canvasCtx.lineCap = 'round';
+            canvasCtx.strokeStyle = data.color;
+            canvasCtx.lineTo(data.x * paintCanvas.width, data.y * paintCanvas.height);
+            canvasCtx.stroke();
+        }
+
+        function selectBrushColor(color, el) {
+            currentBrushColor = color;
+            document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function clearCanvasAction() {
+            if (!isMyTurnToDraw) return;
+            clearCanvasLocal();
+            drawRoomRef.child('canvasData').remove();
+        }
+
+        function clearCanvasLocal() {
+            if (canvasCtx) canvasCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
+        }
+
+        function submitGuessWord() {
+            const input = document.getElementById('guessTextInput');
+            const word = input.value.trim();
+            if (!word || hasGuessedCorrectly) return;
+
+            const isCorrect = (word === currentDrawWord);
+            if (isCorrect) {
+                hasGuessedCorrectly = true;
+                drawRoomRef.child('players/' + playerName + '/score').transaction(s => (s || 0) + 100);
+            }
+
+            drawRoomRef.child('chat').push({
+                sender: playerName,
+                text: isCorrect ? 'حزر الكلمة صحيحة! 🎉' : word,
+                isCorrect: isCorrect
+            });
+
+            input.value = '';
+        }
+
+        function appendChatMessage(sender, text, isCorrect) {
+            const box = document.getElementById('drawChatBox');
+            const msgEl = document.createElement('div');
+            msgEl.className = 'chat-msg' + (isCorrect ? ' correct' : '');
+            msgEl.innerText = `${sender}: ${text}`;
+            box.appendChild(msgEl);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function sendDrawEmojiReaction(emoji) {
+            if (!drawRoomRef) return;
+            drawRoomRef.child('lastReaction').set({ emoji, sender: playerName, timestamp: Date.now() });
+        }
+
+        function triggerFloatingEmoji(emoji) {
+            const el = document.createElement('div');
+            el.className = 'flying-emoji';
+            el.innerText = emoji;
+            el.style.left = (20 + Math.random() * 60) + 'vw';
+            el.style.bottom = '10vh';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 2000);
+        }
+
+        function renderDrawWinnerScreen(players) {
+            switchDrawSubView('drawWinnerView');
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+
+            const sorted = Object.keys(players).map(k => ({ name: k, score: players[k].score || 0 })).sort((a,b) => b.score - a.score);
+            const podium = document.getElementById('drawPodiumDisplay');
+            podium.innerHTML = '';
+
+            if (sorted[1]) podium.innerHTML += `<div class="podium-step podium-2">${sorted[1].name}<br>${sorted[1].score}ن</div>`;
+            if (sorted[0]) podium.innerHTML += `<div class="podium-step podium-1">👑 ${sorted[0].name}<br>${sorted[0].score}ن</div>`;
+            if (sorted[2]) podium.innerHTML += `<div class="podium-step podium-3">${sorted[2].name}<br>${sorted[2].score}ن</div>`;
+
+            const fullList = document.getElementById('drawFullFinalScores');
+            fullList.innerHTML = sorted.map((p, i) => `<div style="padding:4px;">#${i+1} ${p.name} - ${p.score} نقطة</div>`).join('');
+        }
+    </script>
+</body>
+</html>
