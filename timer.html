@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <link rel="manifest" href="manifest.json">
+    <meta name="application-name" content="فكرة">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="فكرة">
+    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="icon" type="image/png" href="logo.png">
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>فِكْرَة 💡 | تحدي الأسرع كتابةً</title>
+    <!-- خط تجوال -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/canvas-confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary-orange: #FF5E36;
+            --orange-gradient: linear-gradient(135deg, #FF5E36 0%, #FFA036 100%);
+            --orange-glow: rgba(255, 94, 54, 0.35);
+            --text-main: #1D2029;
+            --text-muted: #6C757D;
+            --green-success: #2E7D32;
+            --red-danger: #D32F2F;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #F8F9FA;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(255, 94, 54, 0.15) 0px, transparent 40%),
+                radial-gradient(at 100% 0%, rgba(255, 160, 54, 0.2) 0px, transparent 45%),
+                radial-gradient(at 50% 50%, rgba(255, 255, 255, 0.8) 0px, transparent 100%),
+                radial-gradient(at 80% 100%, rgba(255, 94, 54, 0.12) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(255, 183, 3, 0.15) 0px, transparent 40%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .ambient-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            z-index: -1;
+            animation: float 10s infinite alternate ease-in-out;
+            pointer-events: none;
+        }
+        .orb-1 { width: 350px; height: 350px; background: rgba(255, 94, 54, 0.25); top: -50px; right: -50px; }
+        .orb-2 { width: 400px; height: 400px; background: rgba(255, 160, 54, 0.2); bottom: -100px; left: -100px; animation-delay: -5s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 50px) scale(1.1); }
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+        }
+
+        .logo {
+            font-size: 1.7rem;
+            font-weight: 900;
+            background: var(--orange-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .logo span {
+            filter: drop-shadow(0 4px 10px rgba(255, 94, 54, 0.4));
+            -webkit-text-fill-color: initial;
+        }
+
+        .back-btn-container {
+            max-width: 600px;
+            margin: 0.8rem auto 0;
+            padding: 0 0.8rem;
+        }
+        .btn-back {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--text-main);
+            border: 1px solid #E2E8F0;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .btn-back:hover { background: #FFF; border-color: var(--primary-orange); color: var(--primary-orange); }
+
+        .btn {
+            padding: 0.7rem 1.2rem; border-radius: 50px; font-weight: 700; cursor: pointer;
+            border: none; transition: all 0.3s; text-decoration: none; font-size: 0.95rem;
+            display: inline-flex; justify-content: center; align-items: center; gap: 0.4rem;
+        }
+        .btn-primary { background: var(--orange-gradient); color: white; box-shadow: 0 8px 20px var(--orange-glow); }
+        .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 25px rgba(255, 94, 54, 0.45); }
+        .btn:disabled { background: #CBD5E1 !important; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9); border-radius: 20px; padding: 1.4rem 1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #E2E8F0; margin-bottom: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .title { text-align: center; font-weight: 900; font-size: 1.7rem; color: var(--primary-orange); margin-bottom: 0.3rem; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 1.2rem; font-size: 0.88rem; font-weight: 700;}
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main); font-size: 0.9rem; }
+        input[type="text"], select {
+            width: 100%; padding: 0.8rem 1rem; border-radius: 12px; border: 2px solid #E2E8F0;
+            font-size: 0.95rem; outline: none; transition: all 0.3s ease; background: #FAFAFA; font-weight: 700;
+        }
+        input[type="text"]:focus, select:focus { border-color: var(--primary-orange); background: #FFF; box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.15); }
+        
+        .categories-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-top: 0.3rem;
+        }
+        .category-checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #F8FAFC;
+            border: 2px solid #E2E8F0;
+            padding: 0.6rem 0.8rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+        .category-checkbox-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-orange);
+            cursor: pointer;
+        }
+        .category-checkbox-label:hover {
+            border-color: var(--primary-orange);
+            background: #FFF3EF;
+        }
+
+        .header-status { display: flex; justify-content: space-between; align-items: center; background: #F8FAFC; padding: 0.8rem; border-radius: 14px; margin-bottom: 1.2rem; border: 1px solid #E2E8F0; }
+        .timer-display { font-size: 1.8rem; font-weight: 900; color: var(--primary-orange); }
+        .player-chip { display: flex; justify-content: space-between; align-items: center; background: #F1F5F9; padding: 0.5rem 0.8rem; border-radius: 10px; margin-bottom: 0.4rem; font-weight: 800; font-size: 0.88rem; }
+        
+        .challenge-box {
+            background: #FFF3EF;
+            border: 3px dashed var(--primary-orange);
+            border-radius: 18px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            margin-bottom: 1.2rem;
+        }
+        .target-question {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+        .target-subtext {
+            font-size: 0.9rem;
+            color: var(--primary-orange);
+            font-weight: 800;
+        }
+
+        .podium-container { display: flex; justify-content: center; align-items: flex-end; gap: 0.6rem; height: 170px; margin: 1.5rem 0; }
+        .podium-step { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 0.6rem; border-radius: 12px 12px 0 0; color: white; font-weight: 900; width: 31%; position: relative; }
+        .podium-1 { height: 100%; background: linear-gradient(180deg, #FFD700, #E6B800); }
+        .podium-2 { height: 75%; background: linear-gradient(180deg, #C0C0C0, #A8A8A8); }
+        .podium-3 { height: 55%; background: linear-gradient(180deg, #CD7F32, #B36B25); }
+        
+        .toast { 
+            position: fixed; 
+            bottom: -100px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: #FFFFFF; 
+            color: var(--text-main); 
+            border: 2px solid var(--primary-orange);
+            padding: 12px 24px; 
+            border-radius: 50px; 
+            font-weight: 800; 
+            z-index: 9999; 
+            box-shadow: 0 10px 25px var(--orange-glow);
+            transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+            text-align: center;
+            max-width: 90%;
+        }
+        .toast.show { bottom: 30px; }
+
+        @keyframes pulse-timer {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1.4); opacity: 1; color: var(--primary-orange); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .timer-pop { animation: pulse-timer 0.4s ease-in-out; }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="toast" id="toastMessage">تنبيه!</div>
+
+    <header>
+        <div class="logo" onclick="goBackStep()">
+            <span>💡</span> فِكْرَة
+        </div>
+    </header>
+
+    <div class="back-btn-container">
+        <button class="btn-back" onclick="goBackStep()">⬅️ رجوع للخلف</button>
+    </div>
+
+    <div id="gameContainerView" style="max-width: 600px; margin: 1rem auto; padding: 0 0.8rem;">
+        
+        <div id="roomSelectionView" class="glass-card">
+            <h1 class="title">⌨️ تحدي الأسرع كتابةً</h1>
+            <p class="subtitle">اكتب الإجابة المطلوبة في الصندوق بأسرع وقت لتفوز بالجولة! 🚀</p>
+
+            <div class="form-group">
+                <label>اسمك في اللعبة</label>
+                <input type="text" id="playerNameInput" placeholder="أدخل اسمك هنا..." maxlength="15">
+            </div>
+
+            <div class="form-group">
+                <label>تصنيفات التحدي:</label>
+                <div class="categories-grid">
+                    <label class="category-checkbox-label">
+                        <input type="checkbox" id="catGeneral" value="general" checked> 🔥 عامة ومنوعة
+                    </label>
+                    <label class="category-checkbox-label">
+                        <input type="checkbox" id="catFoods" value="foods" checked> 🍔 أطعمة ومأكولات
+                    </label>
+                    <label class="category-checkbox-label">
+                        <input type="checkbox" id="catAnimals" value="animals" checked> 🦁 حيوانات وطبيعة
+                    </label>
+                    <label class="category-checkbox-label">
+                        <input type="checkbox" id="catPlaces" value="places" checked> 🏙️ دول وأماكن
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>وقت الجولة (بالثواني - الحد الأدنى 10 ثواني)</label>
+                <select id="roundTimeSelect">
+                    <option value="10" selected>10 ثواني (سريع جداً 🔥)</option>
+                    <option value="15">15 ثانية</option>
+                    <option value="20">20 ثانية</option>
+                    <option value="30">30 ثانية</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>عدد الجولات الكلي</label>
+                <select id="roundsSelect">
+                    <option value="3">3 جولات</option>
+                    <option value="5" selected>5 جولات</option>
+                    <option value="10">10 جولات</option>
+                </select>
+            </div>
+
+            <button onclick="hostCreateRoom()" class="btn btn-primary" style="width: 100%;">إنشاء غرفة تحدي 🚀</button>
+            
+            <div style="margin: 1rem 0; text-align: center; font-weight: 700; color: #888; font-size: 0.85rem;">أو</div>
+
+            <div class="form-group">
+                <input type="text" id="roomCodeInput" placeholder="أدخل رمز الغرفة" maxlength="6" style="text-align: center; letter-spacing: 2px; font-weight: 900;">
+            </div>
+            <button onclick="guestJoinRoom()" class="btn btn-primary" style="width: 100%;">انضمام لغرفة 🔗</button>
+        </div>
+
+        <div id="lobbyView" class="glass-card" style="display: none; text-align: center;">
+            <h2 style="margin-bottom: 0.3rem; font-size: 1.3rem;">غرفة انتظار التحدي ⏱️</h2>
+            <p style="color: #666; font-size: 0.85rem;">اضغط على مفتاح الغرفة لنسخه ومشاركته مع أصدقائك:</p>
+            <div id="displayRoomCode" onclick="copyRoomCode()" style="font-size: 2rem; font-weight: 900; color: var(--primary-orange); background: #FFF3EF; padding: 0.6rem; border-radius: 12px; border: 2px dashed var(--primary-orange); margin: 0.8rem 0; letter-spacing: 3px; cursor: pointer; transition: 0.2s;" title="اضغط للنسخ">
+                0000 📋
+            </div>
+
+            <div style="margin-bottom: 0.8rem; text-align: right;">
+                <label>إعدادات الغرفة الحالية:</label>
+                <div id="roomSettingsSummary" style="background: #F8FAFC; padding: 0.6rem; border-radius: 10px; font-size: 0.85rem; font-weight: 700; color: #475569; margin-bottom: 0.8rem; border: 1px solid #E2E8F0;"></div>
+
+                <label>اللاعبون المتصلون:</label>
+                <div id="connectedPlayersContainer" style="margin-top: 0.4rem;"></div>
+            </div>
+
+            <button id="startGameBtn" onclick="hostStartGame()" class="btn btn-primary" style="display: none; margin-top: 1.2rem; width: 100%;">بدء اللعبة 🛫</button>
+            <p id="waitingHostText" style="color: #888; font-weight: 700; display: none; margin-top: 0.8rem; font-size: 0.85rem;">في انتظار الهوست ليحرك اللعبة...</p>
+        </div>
+
+        <div id="gamePlayView" class="glass-card" style="display: none;">
+            <div class="header-status">
+                <div>
+                    <span id="roundDisplay" style="font-size: 0.85rem; font-weight: 800; color: #666;">الجولة</span>
+                    <div id="activePlayerIndicator" style="font-weight: 900; font-size: 1.1rem; margin-top: 0.1rem; color: var(--primary-orange);">الكل يتنافس الآن! ⚡</div>
+                </div>
+                <div class="timer-display" id="timer">10s</div>
+            </div>
+
+            <div class="challenge-box">
+                <div class="target-subtext">اكتب الإجابة المطلوبة بأسرع ما يمكنك:</div>
+                <div class="target-question" id="targetQuestionText">...</div>
+                <div id="sampleHint" style="font-size: 0.78rem; color: #777; margin-top: 6px; font-weight: 700;"></div>
+            </div>
+
+            <div class="form-group">
+                <input type="text" id="playerAnswerInput" placeholder="اكتب إجابتك هنا بسرعة..." onkeydown="checkPlayerSubmit(event)">
+            </div>
+            <button id="submitAnswerBtn" onclick="submitAnswer()" class="btn btn-primary" style="width: 100%;">إرسال الإجابة 🚀</button>
+        </div>
+
+        <div id="resultsView" class="glass-card" style="display: none; text-align: center;">
+            <h2 id="resultTitle" style="margin-bottom: 0.5rem; font-size: 1.5rem;">انتهت الجولة! ⏱️</h2>
+            <div id="roundWinnerAnnouncement" style="font-size: 1.1rem; font-weight: 900; color: var(--green-success); margin-bottom: 1rem; background: #E8F5E9; padding: 10px; border-radius: 12px; border: 1px dashed var(--green-success);"></div>
+
+            <div id="roundScoresContainer" style="text-align: right; margin-bottom: 1.5rem;"></div>
+
+            <div id="nextRoundTimerContainer" style="display: none; font-size: 1.1rem; font-weight: 900; color: #475569;">
+                الجولة التالية تبدأ بعد<br>
+                <span id="nextRoundTimerDisplay" style="font-size: 3.5rem; color: var(--primary-orange); display: inline-block; margin-top: 10px;">3</span>
+            </div>
+        </div>
+
+        <div id="winnerView" class="glass-card" style="display: none; text-align: center;">
+            <h1 class="title" style="font-size: 1.5rem;">🎉 أساطير السرعة والكتابة 🎉</h1>
+            <p class="subtitle">مين أسرع واحد طقطق على الكيبورد؟ 😂</p>
+
+            <div id="podiumDisplay" class="podium-container"></div>
+
+            <button onclick="window.location.reload()" class="btn btn-primary" style="margin-top: 1.2rem; width: 100%;">لعب مرة ثانية 🔄</button>
+        </div>
+
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCg29LG4HI-vas93dBFIMqKEfzeYUAx-o0",
+            authDomain: "fikrh-cf0ff.firebaseapp.com",
+            databaseURL: "https://fikrh-cf0ff-default-rtdb.firebaseio.com",
+            projectId: "fikrh-cf0ff",
+            storageBucket: "fikrh-cf0ff.firebasestorage.app",
+            messagingSenderId: "523229194032",
+            appId: "1:523229194032:web:29e3a5ef0ce27d8b3d0af5"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // مفتاح الذكاء الاصطناعي (Groq AI API Key)
+        const GROQ_API_KEY = "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";
+
+        let audioCtx = null;
+        function playTickSound(isFinal = false) {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = isFinal ? 'sawtooth' : 'sine';
+                osc.frequency.setValueAtTime(isFinal ? 150 : 600, audioCtx.currentTime);
+                if(isFinal) osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.3);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + (isFinal ? 0.3 : 0.1));
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + (isFinal ? 0.3 : 0.1));
+            } catch(e) {}
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('currentUser') || 
+                              localStorage.getItem('fikrh_username') || 
+                              localStorage.getItem('username') || 
+                              localStorage.getItem('playerName');
+            if(savedUser) document.getElementById('playerNameInput').value = savedUser;
+        });
+
+        let backAttemptTime = 0;
+        function goBackStep() {
+            const lobbyView = document.getElementById('lobbyView');
+            const gamePlayView = document.getElementById('gamePlayView');
+            const resultsView = document.getElementById('resultsView');
+            const winnerView = document.getElementById('winnerView');
+
+            if ((lobbyView && lobbyView.style.display === 'block') || 
+                (gamePlayView && gamePlayView.style.display === 'block') || 
+                (resultsView && resultsView.style.display === 'block') || 
+                (winnerView && winnerView.style.display === 'block')) {
+                
+                let now = Date.now();
+                if (now - backAttemptTime > 10000) {
+                    backAttemptTime = now;
+                    showToast('⚠️ اضغط مرة أخرى خلال 10 ثواني لتأكيد الخروج من الغرفة!');
+                    return;
+                }
+
+                if(roomRef && currentRoomCode) {
+                    let pName = document.getElementById('playerNameInput').value.trim();
+                    if(pName) {
+                        roomRef.child('players/' + pName).remove().then(() => {
+                            roomRef.child('players').get().then((snap) => {
+                                if(!snap.exists() || Object.keys(snap.val()).length === 0) roomRef.remove();
+                            });
+                        });
+                    }
+                }
+                switchView('roomSelectionView');
+            } else {
+                if (window.history.length > 1) window.history.back();
+                else window.location.href = 'index.html';
+            }
+        }
+
+        // بنك الأسئلة (معدل ليطلب كلمة/إجابة واحدة بدلاً من ثلاث)
+        const questionsDB = [
+            { q: "اذكر اسم سيارة مشهورة", category: "general" },
+            { q: "اذكر لوناً يبدأ بحرف الميم", category: "general" },
+            { q: "اذكر اسم تطبيق جوال تستخدمه يومياً", category: "general" },
+            { q: "اذكر نادياً رياضياً سعودياً", category: "general" },
+            { q: "اذكر ماركة جوالات عالمية", category: "general" },
+            { q: "اذكر شيئاً تشتريه من البقالة", category: "general" },
+
+            { q: "اذكر نوع فاكهة أحمر", category: "foods" },
+            { q: "اذكر أكلة شعبية خليجية", category: "foods" },
+            { q: "اذكر مشروباً بارداً تفضله", category: "foods" },
+            { q: "اذكر نوع حلا مشهور", category: "foods" },
+            { q: "اذكر خضاراً يدخل في السلطة", category: "foods" },
+
+            { q: "اذكر حيواناً مفترساً", category: "animals" },
+            { q: "اذكر طائراً يستطيع الطيران", category: "animals" },
+            { q: "اذكر حيواناً يعيش في الصحراء", category: "animals" },
+            { q: "اذكر حيواناً أليفاً يربي بالمنزل", category: "animals" },
+
+            { q: "اذكر دولة عربية تبدأ بحرف الميم", category: "places" },
+            { q: "اذكر مدينة سعودية كبرى", category: "places" },
+            { q: "اذكر عاصمة أوروبية", category: "places" },
+            { q: "اذكر قارة في العالم", category: "places" }
+        ];
+
+        let isHost = false;
+        let currentRoomCode = "";
+        let roomRef = null;
+        let playerName = "";
+        let roundsPerPlayer = 5;
+        let roundTimeLimit = 10;
+        let timerInterval = null;
+        let nextRoundTimerInterval = null;
+        let playersList = [];
+        let gameQuestions = [];
+        let currentRoundIndex = 0;
+
+        let toastTimeout;
+        function showToast(msg) {
+            const t = document.getElementById('toastMessage');
+            t.innerText = msg;
+            t.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => { t.classList.remove('show'); }, 3000);
+        }
+
+        function copyRoomCode() {
+            if (!currentRoomCode) return;
+            navigator.clipboard.writeText(currentRoomCode).then(() => {
+                showToast('📋 تم نسخ رمز الغرفة بنجاح: ' + currentRoomCode);
+            }).catch(err => {
+                showToast('❌ تعذر النسخ تلقائياً');
+            });
+        }
+
+        function switchView(viewId) {
+            document.querySelectorAll('#gameContainerView .glass-card').forEach(c => c.style.display = 'none');
+            document.getElementById(viewId).style.display = 'block';
+        }
+
+        function hostCreateRoom() {
+            playerName = document.getElementById('playerNameInput').value.trim() || "الهوست";
+            roundsPerPlayer = parseInt(document.getElementById('roundsSelect').value);
+            roundTimeLimit = parseInt(document.getElementById('roundTimeSelect').value);
+            isHost = true;
+
+            let selectedCategories = [];
+            if(document.getElementById('catGeneral').checked) selectedCategories.push('general');
+            if(document.getElementById('catFoods').checked) selectedCategories.push('foods');
+            if(document.getElementById('catAnimals').checked) selectedCategories.push('animals');
+            if(document.getElementById('catPlaces').checked) selectedCategories.push('places');
+
+            if(selectedCategories.length === 0) return showToast('اختر تصنيف واحد على الأقل يا بطل! ⚠️');
+
+            let filtered = questionsDB.filter(q => selectedCategories.includes(q.category));
+            if(filtered.length === 0) filtered = questionsDB;
+
+            // خلط الأسئلة واختيار عدد غير متكرر للجولات الكلية بدون أخطاء أو حذف
+            let shuffled = [...filtered].sort(() => 0.5 - Math.random());
+            let generatedQuestions = [];
+            for(let i = 0; i < roundsPerPlayer; i++) {
+                generatedQuestions.push(shuffled[i % shuffled.length]);
+            }
+            gameQuestions = generatedQuestions;
+
+            currentRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
+            document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
+
+            roomRef = db.ref('fast_write_rooms/' + currentRoomCode);
+            roomRef.set({
+                host: playerName,
+                state: 'lobby',
+                settings: { roundsPerPlayer, roundTimeLimit, questions: gameQuestions },
+                players: { [playerName]: { score: 0 } }
+            }).then(() => {
+                listenToFirebase();
+                switchView('lobbyView');
+                document.getElementById('startGameBtn').style.display = 'block';
+                document.getElementById('waitingHostText').style.display = 'none';
+            });
+        }
+
+        function guestJoinRoom() {
+            playerName = document.getElementById('playerNameInput').value.trim() || "الضيف";
+            const code = document.getElementById('roomCodeInput').value.trim();
+            if(!code) return showToast('أدخل رمز الغرفة يا كابتن!');
+
+            isHost = false;
+            currentRoomCode = code;
+            roomRef = db.ref('fast_write_rooms/' + currentRoomCode);
+
+            roomRef.get().then((snap) => {
+                if(snap.exists()) {
+                    roomRef.child('players/' + playerName).set({ score: 0 });
+                    document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
+                    listenToFirebase();
+                    switchView('lobbyView');
+                    document.getElementById('startGameBtn').style.display = 'none';
+                    document.getElementById('waitingHostText').style.display = 'block';
+                } else {
+                    showToast('الغرفة غير موجودة، تأكد من الرمز!');
+                }
+            });
+        }
+
+        function listenToFirebase() {
+            roomRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                
+                if(!data || !data.players || Object.keys(data.players).length === 0) {
+                    if(document.getElementById('roomSelectionView').style.display !== 'block') {
+                        showToast('انتهت الغرفة لخروج كل اللاعبين! 🚪');
+                        clearInterval(timerInterval);
+                        clearInterval(nextRoundTimerInterval);
+                        switchView('roomSelectionView');
+                    }
+                    return;
+                }
+
+                if(data.players) {
+                    playersList = Object.keys(data.players);
+                    updatePlayersUI(data.players);
+                }
+                
+                if(data.settings) {
+                    roundsPerPlayer = data.settings.roundsPerPlayer;
+                    roundTimeLimit = data.settings.roundTimeLimit || 10;
+                    gameQuestions = data.settings.questions;
+                    document.getElementById('roomSettingsSummary').innerHTML = `
+                        ⏱️ وقت الجولة: ${roundTimeLimit} ثواني | 🏁 إجمالي الجولات: ${roundsPerPlayer}
+                    `;
+                }
+
+                if(data.state === 'playing') {
+                    if(data.roundIndex !== currentRoundIndex || document.getElementById('gamePlayView').style.display !== 'block') {
+                        currentRoundIndex = data.roundIndex;
+                        startRoundPlay(data.roundIndex, data.roundStartTime, data.questionIndex);
+                    }
+                } else if (data.state === 'results') {
+                    showRoundResults(data);
+                } else if (data.state === 'finished') {
+                    showFinalWinner(data.players);
+                }
+            });
+        }
+
+        function updatePlayersUI(playersObj) {
+            const container = document.getElementById('connectedPlayersContainer');
+            container.innerHTML = '';
+            for(let p in playersObj) {
+                container.innerHTML += `<div class="player-chip">👤 ${p} <span style="color:var(--primary-orange);">${playersObj[p].score} نقطة</span></div>`;
+            }
+        }
+
+        function hostStartGame() {
+            if(!isHost) return;
+            currentRoundIndex = 0;
+            hostNextRound();
+        }
+
+        function hostNextRound() {
+            let nextIndex = (currentRoundIndex || 0) + 1;
+            if(nextIndex > roundsPerPlayer) {
+                roomRef.update({ state: 'finished' });
+            } else {
+                // اختيار مؤشر السؤال التسلسلي بناءً على رقم الجولة لضمان عدم تكرار الأسئلة نهائياً في الجلسة
+                let questionIndex = nextIndex - 1;
+                if(questionIndex >= gameQuestions.length) questionIndex = questionIndex % gameQuestions.length;
+
+                roomRef.update({
+                    state: 'playing',
+                    roundIndex: nextIndex,
+                    questionIndex: questionIndex,
+                    roundStartTime: Date.now(),
+                    roundWinner: null
+                });
+            }
+        }
+
+        function startRoundPlay(roundIdx, startTime, qIndex) {
+            if(timerInterval) clearInterval(timerInterval);
+            if(nextRoundTimerInterval) clearInterval(nextRoundTimerInterval);
+
+            let qObj = gameQuestions[qIndex] || { q: "اذكر شيئاً مشهوراً" };
+            document.getElementById('roundDisplay').innerText = `الجولة ${roundIdx} من ${roundsPerPlayer}`;
+            document.getElementById('targetQuestionText').innerText = qObj.q;
+            
+            let inputField = document.getElementById('playerAnswerInput');
+            inputField.value = '';
+            inputField.disabled = false;
+            inputField.focus();
+
+            document.getElementById('submitAnswerBtn').disabled = false;
+            switchView('gamePlayView');
+
+            let lastPlayedSec = roundTimeLimit;
+            timerInterval = setInterval(() => {
+                let elapsed = Math.floor((Date.now() - startTime) / 1000);
+                let timeLeft = roundTimeLimit - elapsed;
+                
+                if(timeLeft < 0) timeLeft = 0;
+
+                if (timeLeft !== lastPlayedSec) {
+                    lastPlayedSec = timeLeft;
+                    if (timeLeft > 0) playTickSound(false);
+                    else playTickSound(true);
+                }
+
+                let timerEl = document.getElementById('timer');
+                timerEl.classList.remove('timer-pop');
+                void timerEl.offsetWidth;
+                timerEl.classList.add('timer-pop');
+                timerEl.innerText = timeLeft + "s";
+
+                if(timeLeft === 0) {
+                    clearInterval(timerInterval);
+                    if(isHost) {
+                        roomRef.get().then((snap) => {
+                            let data = snap.val();
+                            if(data && data.state === 'playing' && !data.roundWinner) {
+                                roomRef.update({
+                                    state: 'results',
+                                    roundWinner: null,
+                                    roundMessage: "انتهى الوقت وما أحد جابها صح! ⌛"
+                                });
+                            }
+                        });
+                    }
+                }
+            }, 500);
+        }
+
+        function checkPlayerSubmit(e) {
+            if (e.key === 'Enter') {
+                submitAnswer();
+            }
+        }
+
+        // دالة التحقق الذكي المرن عبر Groq AI API
+        async function submitAnswer() {
+            let answerText = document.getElementById('playerAnswerInput').value.trim();
+            if(!answerText) return showToast('اكتب إجابتك أولاً يا بطل! ⚠️');
+
+            document.getElementById('submitAnswerBtn').disabled = true;
+            showToast('🤖 الحكم الآلي يتحقق من إجابتك...');
+
+            roomRef.get().then(async (snap) => {
+                let data = snap.val();
+                if(!data || data.state !== 'playing' || data.roundWinner) {
+                    document.getElementById('submitAnswerBtn').disabled = false;
+                    return;
+                }
+
+                let qIndex = data.questionIndex;
+                let qObj = gameQuestions[qIndex];
+                let questionText = qObj.q;
+
+                let systemPrompt = "أنت حكم مرن وسريع للعبة سرعة كتابة باللغة العربية. إذا كانت إجابة اللاعب صحيحة وتطابق السؤال المطلوب (إجابة مفردة صحيحة)، فاعتبرها صحيحة.";
+                let userPrompt = `السؤال هو: "${questionText}"\nإجابة اللاعب هي: "${answerText}"\n\nهل إجابة اللاعب صحيحة وتتناسب مع السؤال؟ أجب بكلمة واحدة فقط: "نعم" أو "لا".`;
+
+                let isCorrect = false;
+                try {
+                    let response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                        method: "POST",
+                        headers: {
+                            "Authorization": `Bearer ${GROQ_API_KEY}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            model: "llama-3.3-70b-versatile",
+                            messages: [
+                                { role: "system", content: systemPrompt },
+                                { role: "user", content: userPrompt }
+                            ],
+                            temperature: 0.1,
+                            max_tokens: 5
+                        })
+                    });
+
+                    let resJson = await response.json();
+                    let aiReply = resJson.choices && resJson.choices[0] && resJson.choices[0].message ? resJson.choices[0].message.content.trim() : "";
+                    
+                    if (aiReply.includes("نعم")) {
+                        isCorrect = true;
+                    }
+                } catch(err) {
+                    if(answerText.length > 0) isCorrect = true;
+                }
+
+                if(isCorrect) {
+                    let currentScore = (data.players && data.players[playerName] && data.players[playerName].score) || 0;
+                    let updates = {
+                        state: 'results',
+                        roundWinner: playerName,
+                        roundMessage: `الكابتن ${playerName} جابها صح وكان الأسرع! 🏆`,
+                        ['players/' + playerName + '/score']: currentScore + 100
+                    };
+                    roomRef.update(updates);
+                    document.getElementById('playerAnswerInput').disabled = true;
+                } else {
+                    document.getElementById('submitAnswerBtn').disabled = false;
+                    showToast('❌ الحكم الآلي يقول: حاول مرة ثانية بإجابة أدق!');
+                }
+            });
+        }
+
+        function showRoundResults(data) {
+            if(timerInterval) clearInterval(timerInterval);
+            if(nextRoundTimerInterval) clearInterval(nextRoundTimerInterval);
+
+            let winnerBox = document.getElementById('roundWinnerAnnouncement');
+            let resultTitle = document.getElementById('resultTitle');
+            
+            if(data.roundWinner) {
+                resultTitle.innerText = "انتهت الجولة بفوز أسرع كاتب! 🚀";
+                winnerBox.innerHTML = `👑 البطل: ${data.roundWinner} (+100 نقطة)`;
+                winnerBox.style.display = 'block';
+                try { confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } }); } catch(e){}
+            } else {
+                resultTitle.innerText = "انتهى الوقت بدون فائز! ⌛";
+                winnerBox.innerHTML = "ما حالفكم الحظ في هذه الجولة.";
+                winnerBox.style.display = 'block';
+            }
+
+            let container = document.getElementById('roundScoresContainer');
+            container.innerHTML = '<label style="margin-bottom:0.4rem;">مجموع النقاط الحالي:</label>';
+
+            if(data.players) {
+                for(let p in data.players) {
+                    container.innerHTML += `
+                        <div class="player-chip">
+                            <span>👤 ${p}</span>
+                            <span style="color: var(--primary-orange); font-weight: 900;">${data.players[p].score} نقطة</span>
+                        </div>
+                    `;
+                }
+            }
+
+            switchView('resultsView');
+
+            let countdown = 3;
+            let displayElement = document.getElementById('nextRoundTimerDisplay');
+            document.getElementById('nextRoundTimerContainer').style.display = 'block';
+            displayElement.innerText = countdown;
+
+            nextRoundTimerInterval = setInterval(() => {
+                countdown--;
+                displayElement.innerText = countdown;
+                displayElement.classList.remove('timer-pop');
+                void displayElement.offsetWidth; 
+                displayElement.classList.add('timer-pop');
+
+                if(countdown <= 0) {
+                    clearInterval(nextRoundTimerInterval);
+                    if(isHost) hostNextRound();
+                }
+            }, 1000);
+        }
+
+        function showFinalWinner(playersObj) {
+            if(timerInterval) clearInterval(timerInterval);
+            if(nextRoundTimerInterval) clearInterval(nextRoundTimerInterval);
+
+            showToast('🏁 انتهت اللعبة بفوز الأبطال! 🎉');
+
+            let sorted = Object.entries(playersObj || {}).sort((a, b) => b[1].score - a[1].score);
+            let podiumHTML = '';
+            
+            if(sorted.length > 0) {
+                podiumHTML += `<div class="podium-step podium-2" style="order: 1;"><div style="font-size:1.5rem">🥈</div><div>${sorted[1] ? sorted[1][0] : '-'}</div><div>${sorted[1] ? sorted[1][1].score : ''}</div></div>`;
+                podiumHTML += `<div class="podium-step podium-1" style="order: 2; z-index:2; box-shadow: 0 -10px 20px rgba(255,215,0,0.5);"><div style="font-size:2rem; position:absolute; top:-35px;">👑</div><div>${sorted[0][0]}</div><div>${sorted[0][1].score}</div></div>`;
+                podiumHTML += `<div class="podium-step podium-3" style="order: 3;"><div style="font-size:1.5rem">🥉</div><div>${sorted[2] ? sorted[2][0] : '-'}</div><div>${sorted[2] ? sorted[2][1].score : ''}</div></div>`;
+            }
+            
+            document.getElementById('podiumDisplay').innerHTML = podiumHTML;
+            try { confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } }); } catch(e){}
+            switchView('winnerView');
+        }
+    </script>
+</body>
+</html>

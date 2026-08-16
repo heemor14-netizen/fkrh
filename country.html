@@ -190,10 +190,36 @@
             border-radius: 16px;
             padding: 2rem 1rem;
             text-align: center;
-            font-size: 3.5rem;
+            font-size: 3rem;
             margin-bottom: 1.5rem;
-            letter-spacing: 15px;
+            letter-spacing: 10px;
             box-shadow: inset 0 0 20px rgba(255, 94, 54, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        /* تنسيق بارز ورايق لرمز الدولة بخلفية بيضاء وتأثير الماوس البرتقالي */
+        .country-code-badge {
+            background: #FFFFFF;
+            color: var(--primary-orange);
+            border: 2px solid #E2E8F0;
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+            display: inline-block;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        .country-code-badge:hover {
+            border-color: var(--primary-orange);
+            box-shadow: 0 6px 15px var(--orange-glow);
+            transform: translateY(-2px);
         }
 
         .hint-box {
@@ -288,7 +314,7 @@
                     <select id="difficultySelect" onchange="toggleDifficultyOptions()">
                         <option value="easy">سهل 🍼 (3 إيموجي)</option>
                         <option value="medium" selected>وسط ⚖️ (2 إيموجي)</option>
-                        <option value="hard">صعب 💀 (2 إيموجي بدون تلميح)</option>
+                        <option value="hard">صعب 💀 (بدون تلميحات مساعدة)</option>
                     </select>
                 </div>
                 <!-- خيار التلميح يظهر للسهل والوسط فقط -->
@@ -296,6 +322,22 @@
                     <label class="category-checkbox-label" style="margin: 0; background: transparent; border: none;">
                         <input type="checkbox" id="useHintCheckbox" checked> 
                         تفعيل الحروف والتلميح المساعد 💡
+                    </label>
+                </div>
+            </div>
+
+            <!-- خيارات الهوست الإضافية: رمز الدولة وعلم الدولة -->
+            <div style="display: grid; grid-template-columns: 1fr; gap: 0.6rem; margin-bottom: 1rem;">
+                <div style="background: #F8FAFC; padding: 0.6rem; border-radius: 10px; border: 1px solid #E2E8F0;">
+                    <label class="category-checkbox-label" style="margin: 0; background: transparent; border: none;">
+                        <input type="checkbox" id="showCountryCodeCheckbox" checked> 
+                        📌 إظهار رمز الدولة (اختياري)
+                    </label>
+                </div>
+                <div style="background: #F8FAFC; padding: 0.6rem; border-radius: 10px; border: 1px solid #E2E8F0;">
+                    <label class="category-checkbox-label" style="margin: 0; background: transparent; border: none;">
+                        <input type="checkbox" id="showFlagInsteadCheckbox" checked> 
+                        🏴 استبدال أحد الإيموجيات بعلم الدولة الأساسي
                     </label>
                 </div>
             </div>
@@ -382,7 +424,11 @@
                 <div class="timer-display" id="timer">30s</div>
             </div>
 
-            <div class="emoji-display-box" id="emojiDisplay"></div>
+            <!-- صندوق الإيموجيات ورمز الدولة بجانبها -->
+            <div class="emoji-display-box" id="emojiDisplayBoxContainer">
+                <div id="emojiDisplay"></div>
+                <div id="countryCodeBadgeContainer"></div>
+            </div>
 
             <!-- صندوق التلميح عند تبقي 10 ثواني -->
             <div id="hintBox" class="hint-box">
@@ -476,7 +522,6 @@
                 (winnerView && winnerView.style.display === 'block')) {
                 
                 let now = Date.now();
-                // نظام مهلة الـ 10 ثواني لتأكيد الخروج من الغرفة
                 if (now - backAttemptTime > 10000) {
                     backAttemptTime = now;
                     showToast('⚠️ اضغط مرة أخرى خلال 10 ثواني لتأكيد الخروج من الغرفة!');
@@ -487,7 +532,6 @@
                     let pName = document.getElementById('playerNameInput').value.trim();
                     if(pName) {
                         roomRef.child('players/' + pName).remove().then(() => {
-                            // التحقق إذا فرغت الغرفة تماماً يتم تنظيفها
                             roomRef.child('players').get().then((snap) => {
                                 if(!snap.exists() || Object.keys(snap.val()).length === 0) {
                                     roomRef.remove();
@@ -508,72 +552,72 @@
 
         const countriesDB = [
             // دول عربية
-            { name: "السعودية", hint: "تبدأ بحرف السين وتشتهر بالحرمين الشريفين", emojis: "🇸🇦 🕋 🐪 ☕", category: "arab" },
-            { name: "مصر", hint: "تقع في قارتين وتبدأ بحرف الميم وتشتهر بالأهرامات", emojis: "🇪🇬 🐪 🔺 🎬", category: "arab" },
-            { name: "الإمارات", hint: "دولة خليجية تضم برج خليفة ودبي", emojis: "🇦🇪 🏙️ 🦅 🐪", category: "arab" },
-            { name: "المغرب", hint: "دولة مغاربية عاصمتها الرباط", emojis: "🇲🇦 🫖 🏜️ 🕌", category: "arab" },
-            { name: "فلسطين", hint: "عاصمتها القدس الشريف", emojis: "🇵🇸 🕌 🫒 🍉", category: "arab" },
-            { name: "الجزائر", hint: "أكبر دولة عربية من حيث المساحة", emojis: "🇩🇿 🏜️ ⚽ 🏛️", category: "arab" },
-            { name: "العراق", hint: "بلد الرافدين وبابل التاريخية", emojis: "🇮🇶 🦁 🌴 🏺", category: "arab" },
-            { name: "الأردن", hint: "تشتهر بمدينة البتراء الأثرية", emojis: "🇯🇴 🏛️ 🐪 🦅", category: "arab" },
-            { name: "الكويت", hint: "دولة خليجية تقع على الخليج العربي وأبراجها شهيرة", emojis: "🇰🇼 ⛵ 🛢️ 🐪", category: "arab" },
-            { name: "قطر", hint: "استضافت كأس العالم 2022", emojis: "🇶🇦 ⚽ 🏙️ 🦅", category: "arab" },
-            { name: "البحرين", hint: "أرض اللؤلؤ وخليجية جزيرية صغيرة", emojis: "🇧🇭 🦙 🌴 🌊", category: "arab" },
-            { name: "عمان", hint: "سلطنة تقع في شبه الجزيرة العربية عاصمتها مسقط", emojis: "🇴🇲 ⛵ 🏜️ ☕", category: "arab" },
-            { name: "لبنان", hint: "تشتهر بأشجار الأرز وعاصمتها بيروت", emojis: "🇱🇧 🌲 🏛️ ☕", category: "arab" },
-            { name: "تونس", hint: "تقع في شمال إفريقيا وعاصمتها تحمل نفس الاسم", emojis: "🇹🇳 🏛️ 🌊 🫒", category: "arab" },
-            { name: "سوريا", hint: "بلد الشام وعاصمتها دمشق التاريخية", emojis: "🇸🇾 🏛️ 🌹 🏺", category: "arab" },
-            { name: "السودان", hint: "تقع جنوب مصر ويخترقها نهر النيل", emojis: "🇸🇩 🐪 🏺 🌴", category: "arab" },
-            { name: "اليمن", hint: "بلد المذاق العريق والبن واليمن السعيد", emojis: "🇾🇪 ⛰️ ☕ 🍯", category: "arab" },
-            { name: "ليبيا", hint: "تقع في شمال إفريقيا على ساحل البحر المتوسط وتشتهر بالنفط", emojis: "🇱🇾 🏜️ 🏛️ 🛢️", category: "arab" },
-            { name: "موريتانيا", hint: "تقع في غرب إفريقيا المطلة على المحيط الأطلسي", emojis: "🇲🇷 🏜️ 🐪 📜", category: "arab" },
-            { name: "الصومال", hint: "تقع في القرن الإفريقي ولها أطول ساحل إفريقي", emojis: "🇸🇴 🌊 🐪 🌴", category: "arab" },
+            { name: "السعودية", code: "SA", flag: "🇸🇦", hint: "تبدأ بحرف السين وتشتهر بالحرمين الشريفين", emojis: "🇸🇦 🕋 🐪 ☕", category: "arab" },
+            { name: "مصر", code: "EG", flag: "🇪🇬", hint: "تقع في قارتين وتبدأ بحرف الميم وتشتهر بالأهرامات", emojis: "🇪🇬 🐪 🔺 🎬", category: "arab" },
+            { name: "الإمارات", code: "AE", flag: "🇦🇪", hint: "دولة خليجية تضم برج خليفة ودبي", emojis: "🇦🇪 🏙️ 🦅 🐪", category: "arab" },
+            { name: "المغرب", code: "MA", flag: "🇲🇦", hint: "دولة مغاربية عاصمتها الرباط", emojis: "🇲🇦 🫖 🏜️ 🕌", category: "arab" },
+            { name: "فلسطين", code: "PS", flag: "🇵🇸", hint: "عاصمتها القدس الشريف", emojis: "🇵🇸 🕌 🫒 🍉", category: "arab" },
+            { name: "الجزائر", code: "DZ", flag: "🇩🇿", hint: "أكبر دولة عربية من حيث المساحة", emojis: "🇩🇿 🏜️ ⚽ 🏛️", category: "arab" },
+            { name: "العراق", code: "IQ", flag: "🇮🇶", hint: "بلد الرافدين وبابل التاريخية", emojis: "🇮🇶 🦁 🌴 🏺", category: "arab" },
+            { name: "الأردن", code: "JO", flag: "🇯🇴", hint: "تشتهر بمدينة البتراء الأثرية", emojis: "🇯🇴 🏛️ 🐪 🦅", category: "arab" },
+            { name: "الكويت", code: "KW", flag: "🇰🇼", hint: "دولة خليجية تقع على الخليج العربي وأبراجها شهيرة", emojis: "🇰🇼 ⛵ 🛢️ 🐪", category: "arab" },
+            { name: "قطر", code: "QA", flag: "🇶🇦", hint: "استضافت كأس العالم 2022", emojis: "🇶🇦 ⚽ 🏙️ 🦅", category: "arab" },
+            { name: "البحرين", code: "BH", flag: "🇧🇭", hint: "أرض اللؤلؤ وخليجية جزيرية صغيرة", emojis: "🇧🇭 🦙 🌴 🌊", category: "arab" },
+            { name: "عمان", code: "OM", flag: "🇴🇲", hint: "سلطنة تقع في شبه الجزيرة العربية عاصمتها مسقط", emojis: "🇴🇲 ⛵ 🏜️ ☕", category: "arab" },
+            { name: "لبنان", code: "LB", flag: "🇱🇧", hint: "تشتهر بأشجار الأرز وعاصمتها بيروت", emojis: "🇱🇧 🌲 🏛️ ☕", category: "arab" },
+            { name: "تونس", code: "TN", flag: "🇹🇳", hint: "تقع في شمال إفريقيا وعاصمتها تحمل نفس الاسم", emojis: "🇹🇳 🏛️ 🌊 🫒", category: "arab" },
+            { name: "سوريا", code: "SY", flag: "🇸🇾", hint: "بلد الشام وعاصمتها دمشق التاريخية", emojis: "🇸🇾 🏛️ 🌹 🏺", category: "arab" },
+            { name: "السودان", code: "SD", flag: "🇸🇩", hint: "تقع جنوب مصر ويخترقها نهر النيل", emojis: "🇸🇩 🐪 🏺 🌴", category: "arab" },
+            { name: "اليمن", code: "YE", flag: "🇾🇪", hint: "بلد المذاق العريق والبن واليمن السعيد", emojis: "🇾🇪 ⛰️ ☕ 🍯", category: "arab" },
+            { name: "ليبيا", code: "LY", flag: "🇱🇾", hint: "تقع في شمال إفريقيا على ساحل البحر المتوسط وتشتهر بالنفط", emojis: "LY 🏜️ 🏛️ 🛢️", category: "arab" },
+            { name: "موريتانيا", code: "MR", flag: "🇲🇷", hint: "تقع في غرب إفريقيا المطلة على المحيط الأطلسي", emojis: "🇲🇷 🏜️ 🐪 📜", category: "arab" },
+            { name: "الصومال", code: "SO", flag: "🇸🇴", hint: "تقع في القرن الإفريقي ولها أطول ساحل إفريقي", emojis: "🇸🇴 🌊 🐪 🌴", category: "arab" },
             
             // دول أوروبية
-            { name: "فرنسا", hint: "عاصمتها باريس وبرج إيفل", emojis: "🇫🇷 🗼 🥐 🎨", category: "euro" },
-            { name: "إيطاليا", hint: "تشبه شكل الجزيرة المعزولة أو الحذاء وتشتهر بالبيتزا", emojis: "🇮🇹 🍕 🍝 🏛️", category: "euro" },
-            { name: "إسبانيا", hint: "مشهورة بمصارعة الثيران وكرة القدم في جنوب أوروبا", emojis: "🇪🇸 🐂 🥘 💃", category: "euro" },
-            { name: "بريطانيا", hint: "تشمل إنجلترا وعاصمتها لندن وساعة بيج بن", emojis: "🇬🇧 ☕ 💂‍♂️ 🎡", category: "euro" },
-            { name: "ألمانيا", hint: "أكبر قوة اقتصادية في أوروبا وتشتهر بالسيارات والكرة", emojis: "🇩🇪 🍺 🏰 ⚽", category: "euro" },
-            { name: "روسيا", hint: "أكبر دولة في العالم مساحة وتمتد عبر قارتين", emojis: "🇷🇺 🐻 ❄️ 🏰", category: "euro" },
-            { name: "البرتغال", hint: "موطن اللاعب كريستيانو رونالدو غرب أوروبا", emojis: "🇵🇹 ⚽ 🌊 🍷", category: "euro" },
-            { name: "هولندا", hint: "دولة الطواحين والورود والتوليد", emojis: "🇳🇱 🌷 🚲 🧀", category: "euro" },
-            { name: "اليونان", hint: "مهد الحضارة القديمة والأساطير في جنوب أوروبا", emojis: "🇬🇷 🏛️ 🌊 🫒", category: "euro" },
-            { name: "سويسرا", hint: "بلد الجبال السويسرية، الشوكولاتة والساعات", emojis: "🇨🇭 🏔️ 🍫 ⌚", category: "euro" },
-            { name: "السويد", hint: "دولة اسكندنافية باردة وتشتهر بـ آيكيا", emojis: "🇸🇪 🌲 🦌 ❄️", category: "euro" },
-            { name: "بلجيكا", hint: "عاصمتها بروكسل وتشتهر بالشوكولاتة والبطاطس", emojis: "🇧🇪 🍫 🍟 🏰", category: "euro" },
-            { name: "أوكرانيا", hint: "مشهورة بزراعة عباد الشمس وشرق أوروبا", emojis: "🇺🇦 🌻 🌾 🏰", category: "euro" },
+            { name: "فرنسا", code: "FR", flag: "🇫🇷", hint: "عاصمتها باريس وبرج إيفل", emojis: "🇫🇷 🗼 🥐 🎨", category: "euro" },
+            { name: "إيطاليا", code: "IT", flag: "🇮🇹", hint: "تشبه شكل الجزيرة المعزولة أو الحذاء وتشتهر بالبيتزا", emojis: "🇮🇹 🍕 🍝 🏛️", category: "euro" },
+            { name: "إسبانيا", code: "ES", flag: "🇪🇸", hint: "مشهورة بمصارعة الثيران وكرة القدم في جنوب أوروبا", emojis: "🇪🇸 🐂 🥘 💃", category: "euro" },
+            { name: "بريطانيا", code: "GB", flag: "🇬🇧", hint: "تشمل إنجلترا وعاصمتها لندن وساعة بيج بن", emojis: "🇬🇧 ☕ 🇬🇧 🎡", category: "euro" },
+            { name: "ألمانيا", code: "DE", flag: "🇩🇪", hint: "أكبر قوة اقتصادية في أوروبا وتشتهر بالسيارات والكرة", emojis: "🇩🇪 🍺 🏰 ⚽", category: "euro" },
+            { name: "روسيا", code: "RU", flag: "🇷🇺", hint: "أكبر دولة في العالم مساحة وتمتد عبر قارتين", emojis: "🇷🇺 🐻 ❄️ 🏰", category: "euro" },
+            { name: "البرتغال", code: "PT", flag: "🇵🇹", hint: "موطن اللاعب كريستيانو رونالدو غرب أوروبا", emojis: "🇵🇹 ⚽ 🌊 🍷", category: "euro" },
+            { name: "هولندا", code: "NL", flag: "🇳🇱", hint: "دولة الطواحين والورود والتوليد", emojis: "🇳🇱 🌷 🚲 🧀", category: "euro" },
+            { name: "اليونان", code: "GR", flag: "🇬🇷", hint: "مهد الحضارة القديمة والأساطير في جنوب أوروبا", emojis: "🇬🇷 🏛️ 🌊 🫒", category: "euro" },
+            { name: "سويسرا", code: "CH", flag: "🇨🇭", hint: "بلد الجبال السويسرية، الشوكولاتة والساعات", emojis: "🇨🇭 🏔️ 🍫 ⌚", category: "euro" },
+            { name: "السويد", code: "SE", flag: "🇸🇪", hint: "دولة اسكندنافية باردة وتشتهر بـ آيكيا", emojis: "🇸🇪 🌲 🦌 ❄️", category: "euro" },
+            { name: "بلجيكا", code: "BE", flag: "🇧🇪", hint: "عاصمتها بروكسل وتشتهر بالشوكولاتة والبطاطس", emojis: "🇧🇪 🍫 🍟 🏰", category: "euro" },
+            { name: "أوكرانيا", code: "UA", flag: "🇺🇦", hint: "مشهورة بزراعة عباد الشمس وشرق أوروبا", emojis: "🇺🇦 🌻 🌾 🏰", category: "euro" },
 
             // دول لاتينية وأمريكية
-            { name: "أمريكا", hint: "الولايات المتحدة الأمريكية، تمثال الحرية", emojis: "🇺🇸 🗽 🍔 🦅", category: "latin" },
-            { name: "البرازيل", hint: "عملاق أمريكا الجنوبية وساحر السامبا وكرة القدم", emojis: "🇧🇷 ⚽ 💃 🦜", category: "latin" },
-            { name: "المكسيك", hint: "موطن التاكو والأكل الحار شمال أمريكا اللاتينية", emojis: "🇲🇽 🌮 🌵 🎸", category: "latin" },
-            { name: "كندا", hint: "ثاني أكبر دولة في العالم مساحة في أمريكا الشمالية", emojis: "🇨🇦 🍁 🏒 🐻", category: "latin" },
-            { name: "الأرجنتين", hint: "موطن ميسي وتانغو ولحم البقر الشهير", emojis: "🇦🇷 ⚽ 🥩 💃", category: "latin" },
-            { name: "كولومبيا", hint: "مشهورة بإنتاج أجود أنواع القهوة في أمريكا الجنوبية", emojis: "🇨🇴 ☕ 🦜 ⛰️", category: "latin" },
-            { name: "تشيلي", hint: "دولة طويلة وضيقة على ساحل المحيط الهادئ", emojis: "🇨🇱 ⛰️ 🍷 🗿", category: "latin" },
-            { name: "بيرو", hint: "موطن حضارة الإنكا وجبال الأنديز", emojis: "🇵🇪 🦙 🏔️ 🌽", category: "latin" },
+            { name: "أمريكا", code: "US", flag: "🇺🇸", hint: "الولايات المتحدة الأمريكية، تمثال الحرية", emojis: "🇺🇸 🗽 🍔 🦅", category: "latin" },
+            { name: "البرازيل", code: "BR", flag: "🇧🇷", hint: "عملاق أمريكا الجنوبية وساحر السامبا وكرة القدم", emojis: "🇧🇷 ⚽ 💃 🦜", category: "latin" },
+            { name: "المكسيك", code: "MX", flag: "🇲🇽", hint: "موطن التاكو والأكل الحار شمال أمريكا اللاتينية", emojis: "🇲🇽 🌮 🌵 🎸", category: "latin" },
+            { name: "كندا", code: "CA", flag: "🇨🇦", hint: "ثاني أكبر دولة في العالم مساحة في أمريكا الشمالية", emojis: "🇨🇦 🍁 🏒 🐻", category: "latin" },
+            { name: "الأرجنتين", code: "AR", flag: "🇦🇷", hint: "موطن ميسي وتانغو ولحم البقر الشهير", emojis: "🇦🇷 ⚽ 🥩 💃", category: "latin" },
+            { name: "كولومبيا", code: "CO", flag: "🇨🇴", hint: "مشهورة بإنتاج أجود أنواع القهوة في أمريكا الجنوبية", emojis: "🇨🇴 ☕ 🦜 ⛰️", category: "latin" },
+            { name: "تشيلي", code: "CL", flag: "🇨🇱", hint: "دولة طويلة وضيقة على ساحل المحيط الهادئ", emojis: "🇨🇱 ⛰️ 🍷 🗿", category: "latin" },
+            { name: "بيرو", code: "PE", flag: "🇵🇪", hint: "موطن حضارة الإنكا وجبال الأنديز", emojis: "🇵🇪 🦙 🏔️ 🌽", category: "latin" },
 
             // دول آسيوية وأفريقية أخرى
-            { name: "اليابان", hint: "بلد الشمس المشرقة والأنمي والساموراي", emojis: "🇯🇵 🍣 🌸 🗻", category: "asia" },
-            { name: "الصين", hint: "أكبر دولة سكاناً وسورها العظيم شهير", emojis: "🇨🇳 🐼 🐉 🏯", category: "asia" },
-            { name: "الهند", hint: "بلد الألوان، التوابل الكثيرة وتاج محل", emojis: "🇮🇳 🐘 🥻 🍛", category: "asia" },
-            { name: "كوريا الجنوبية", hint: "عاصمتها سيول ومشهورة بالثقافة والبوب الكوري", emojis: "🇰🇷 🐯 🎤 🍜", category: "asia" },
-            { name: "تركيا", hint: "جسر بين آسيا وأوروبا وعاصمتها إسطنبول وأنقرة", emojis: "🇹🇷 ☕ 🧿 🏛️", category: "asia" },
-            { name: "إندونيسيا", hint: "أكبر دولة إسلامية من حيث السكان وجزرها كثيرة بالي", emojis: "🇮🇩 🏝️ 🌋 🐅", category: "asia" },
-            { name: "باكستان", hint: "تقع جنوب آسيا ولها حدود مع الهند وتشتهر بالجبال", emojis: "🇵🇰 🏔️ 🏏 🍛", category: "asia" },
-            { name: "إيران", hint: "بلد فارس التاريخي وعاصمتها طهران", emojis: "🇮🇷 🐈 🏺 🏛️", category: "asia" },
-            { name: "ماليزيا", hint: "تشتهر بأبراج بتروناس وجزيرة لنكاوي", emojis: "🇲🇾 🏙️ 🌴 🦧", category: "asia" },
-            { name: "تايلاند", hint: "تسمى بلد الأفيال وتشتهر بالسياحة الآسيوية", emojis: "🇹🇭 🐘 🛕 🍜", category: "asia" },
-            { name: "فيتنام", hint: "تقع في جنوب شرق آسيا ومشهورة بالمناظر الطبيعية والأرز", emojis: "🇻🇳 🍜 🌾 🚲", category: "asia" },
-            { name: "الفلبين", hint: "أرخبيل جزيري كبير في جنوب شرق آسيا", emojis: "🇵🇭 🏝️ 🥭 🐒", category: "asia" },
-            { name: "أستراليا", hint: "دولة قارة في أقصى الجنوب وتشتهر بالكنغر", emojis: "🇦🇺 🦘 🐨 🏄‍♂️", category: "asia" },
-            { name: "نيوزيلندا", hint: "مشهورة بطبيعتها الخلابة وطائر الكيوي في أوقيانوسيا", emojis: "🇳🇿 🥝 🏉 🏔️", category: "asia" },
-            { name: "جنوب إفريقيا", hint: "تقع في أقصى جنوب القرن الإفريقي ومنجم للذهب والماس", emojis: "🇿🇦 🦁 💎 🏉", category: "asia" },
-            { name: "نيجيريا", hint: "أكثر دولة إفريقية سكاناً وعاصمة السينما نوليوود", emojis: "🇳🇬 🦅 🎬 🌴", category: "asia" },
-            { name: "إثيوبيا", hint: "موطن البقر والقهوة التاريخية في شرق إفريقيا", emojis: "🇪🇹 ☕ 🏃‍♂️ 🏔️", category: "asia" },
-            { name: "كينيا", hint: "مشهورة بالسفاري والحيوانات البرية وعدائي المسافات", emojis: "🇰🇪 🦁 🏃‍♂️ ☕", category: "asia" },
-            { name: "غانا", hint: "تقع في غرب إفريقيا وتشتهر بإنتاج الكاكاو", emojis: "🇬🇭 🍫 ⚽ 🥁", category: "asia" }
+            { name: "اليابان", code: "JP", flag: "🇯🇵", hint: "بلد الشمس المشرقة والأنمي والساموراي", emojis: "🇯🇵 🍣 🌸 🗻", category: "asia" },
+            { name: "الصين", code: "CN", flag: "🇨🇳", hint: "أكبر دولة سكاناً وسورها العظيم شهير", emojis: "🇨🇳 🐼 🐉 🏯", category: "asia" },
+            { name: "الهند", code: "IN", flag: "🇮🇳", hint: "بلد الألوان، التوابل الكثيرة وتاج محل", emojis: "🇮🇳 🐘 🥻 🍛", category: "asia" },
+            { name: "كوريا الجنوبية", code: "KR", flag: "🇰🇷", hint: "عاصمتها سيول ومشهورة بالثقافة والبوب الكوري", emojis: "🇰🇷 🐯 🎤 🍜", category: "asia" },
+            { name: "تركيا", code: "TR", flag: "🇹🇷", hint: "جسر بين آسيا وأوروبا وعاصمتها إسطنبول وأنقرة", emojis: "🇹🇷 ☕ 🧿 🏛️", category: "asia" },
+            { name: "إندونيسيا", code: "ID", flag: "🇮🇩", hint: "أكبر دولة إسلامية من حيث السكان وجزرها كثيرة بالي", emojis: "🇮🇩 🏝️ 🌋 🐅", category: "asia" },
+            { name: "باكستان", code: "PK", flag: "🇵🇰", hint: "تقع جنوب آسيا ولها حدود مع الهند وتشتهر بالجبال", emojis: "🇵🇰 🏔️ 🏏 🍛", category: "asia" },
+            { name: "إيران", code: "IR", flag: "🇮🇷", hint: "بلد فارس التاريخي وعاصمتها طهران", emojis: "🇮🇷 🐈 🏺 🏛️", category: "asia" },
+            { name: "ماليزيا", code: "MY", flag: "🇲🇾", hint: "تشتهر بأبراج بتروناس وجزيرة لنكاوي", emojis: "🇲🇾 🏙️ 🌴 🦧", category: "asia" },
+            { name: "تايلاند", code: "TH", flag: "🇹🇭", hint: "تسمى بلد الأفيال وتشتهر بالسياحة الآسيوية", emojis: "🇹🇭 🐘 🛕 🍜", category: "asia" },
+            { name: "فيتنام", code: "VN", flag: "🇻🇳", hint: "تقع في جنوب شرق آسيا ومشهورة بالمناظر الطبيعية والأرز", emojis: "🇻🇳 🍜 🌾 🚲", category: "asia" },
+            { name: "الفلبين", code: "PH", flag: "🇵🇭", hint: "أرخبيل جزيري كبير في جنوب شرق آسيا", emojis: "🇵🇭 🏝️ 🥭 🐒", category: "asia" },
+            { name: "أستراليا", code: "AU", flag: "🇦🇺", hint: "دولة قارة في أقصى الجنوب وتشتهر بالكنغر", emojis: "🇦🇺 🦘 🐨 🏄‍♂️", category: "asia" },
+            { name: "نيوزيلندا", code: "NZ", flag: "🇳🇿", hint: "مشهورة بطبيعتها الخلابة وطائر الكيوي في أوقيانوسيا", emojis: "🇳🇿 🥝 🏉 🏔️", category: "asia" },
+            { name: "جنوب إفريقيا", code: "ZA", flag: "🇿🇦", hint: "تقع في أقصى جنوب القرن الإفريقي ومنجم للذهب والماس", emojis: "🇿🇦 🦁 💎 🏉", category: "asia" },
+            { name: "نيجيريا", code: "NG", flag: "🇳🇬", hint: "أكثر دولة إفريقية سكاناً وعاصمة السينما نوليوود", emojis: "🇳🇬 🦅 🎬 🌴", category: "asia" },
+            { name: "إثيوبيا", code: "ET", flag: "🇪🇹", hint: "موطن البقر والقهوة التاريخية في شرق إفريقيا", emojis: "🇪🇹 ☕ 🏃‍♂️ 🏔️", category: "asia" },
+            { name: "كينيا", code: "KE", flag: "🇰🇪", hint: "مشهورة بالسفاري والحيوانات البرية وعدائي المسافات", emojis: "🇰🇪 🦁 🏃‍♂️ ☕", category: "asia" },
+            { name: "غانا", code: "GH", flag: "🇬🇭", hint: "تقع في غرب إفريقيا وتشتهر بإنتاج الكاكاو", emojis: "🇬🇭 🍫 ⚽ 🥁", category: "asia" }
         ];
 
         let isHost = false;
@@ -622,6 +666,8 @@
             roundTime = parseInt(document.getElementById('timeSelect').value);
             let difficulty = document.getElementById('difficultySelect').value;
             let useHint = document.getElementById('useHintCheckbox').checked;
+            let showCountryCode = document.getElementById('showCountryCodeCheckbox').checked;
+            let showFlagInstead = document.getElementById('showFlagInsteadCheckbox').checked;
             isHost = true;
 
             let selectedCategories = [];
@@ -650,7 +696,7 @@
             roomRef.set({
                 host: playerName,
                 state: 'lobby',
-                settings: { totalRounds, roundTime, difficulty, useHint, questions: gameQuestions },
+                settings: { totalRounds, roundTime, difficulty, useHint, showCountryCode, showFlagInstead, questions: gameQuestions },
                 players: { [playerName]: { score: 0 } }
             }).then(() => {
                 listenToFirebase();
@@ -687,7 +733,6 @@
             roomRef.on('value', (snapshot) => {
                 const data = snapshot.val();
                 
-                // إذا تم حذف الغرفة أو لم يبق فيها لاعبون، يتم إعادة توجيه الجميع وتصفير اللعبة
                 if(!data || !data.players || Object.keys(data.players).length === 0) {
                     if(document.getElementById('roomSelectionView').style.display !== 'block') {
                         showToast('انتهت الغرفة لخروج كل اللاعبين! 🚪');
@@ -710,8 +755,12 @@
 
                     let diffText = data.settings.difficulty === 'easy' ? 'سهل (3 إيموجي)' : data.settings.difficulty === 'medium' ? 'وسط (2 إيموجي)' : 'صعب (بدون تلميح)';
                     let hintText = data.settings.useHint ? 'مفعلة' : 'معطلة';
+                    let codeText = data.settings.showCountryCode ? 'مفعل' : 'معطل';
+                    let flagText = data.settings.showFlagInstead ? 'مفعل' : 'معطل';
+
                     document.getElementById('roomSettingsSummary').innerHTML = `
-                        🎯 الصعوبة: ${diffText} | ⏱️ الوقت: ${roundTime} ثانية | 💡 التلميح: ${hintText} | 🏁 الجولات: ${totalRounds}
+                        🎯 الصعوبة: ${diffText} | ⏱️ الوقت: ${roundTime} ث | 💡 التلميح: ${hintText}<br>
+                        📌 رمز الدولة: ${codeText} | 🏴 علم الدولة بدل إيموجي: ${flagText} | 🏁 الجولات: ${totalRounds}
                     `;
                 }
 
@@ -764,24 +813,45 @@
             
             let diff = settings?.difficulty || 'medium';
             let useHint = settings?.useHint ?? true;
+            let showCountryCode = settings?.showCountryCode ?? true;
+            let showFlagInstead = settings?.showFlagInstead ?? true;
 
-            let emojisArray = currentQ.emojis.split(' ');
-            let displayEmojis = currentQ.emojis;
-
-            if (diff === 'hard') {
-                displayEmojis = emojisArray.slice(0, 2).join(' ');
+            let emojisArray = currentQ.emojis.split(' ').filter(e => e !== currentQ.flag);
+            
+            let finalEmojisList = [];
+            if (diff === 'easy') {
+                finalEmojisList = emojisArray.slice(0, 3);
+                if (showFlagInstead && finalEmojisList.length > 0) {
+                    finalEmojisList[0] = currentQ.flag;
+                }
             } else if (diff === 'medium') {
-                displayEmojis = emojisArray.slice(0, 2).join(' ');
+                finalEmojisList = emojisArray.slice(0, 2);
+                if (showFlagInstead && finalEmojisList.length > 0) {
+                    finalEmojisList[0] = currentQ.flag;
+                }
             } else {
-                displayEmojis = emojisArray.slice(0, 3).join(' ');
+                finalEmojisList = emojisArray.slice(0, 2);
             }
+
+            let displayEmojis = finalEmojisList.join(' ');
 
             document.getElementById('roundDisplay').innerText = `الدولة ${roundNum} من ${totalRounds} (${diff.toUpperCase()})`;
             document.getElementById('emojiDisplay').innerText = displayEmojis;
             
+            // تم إزالة الكود النصي للرمز من بجانب الإيموجي والاعتماد فقط على البادج بالأسفل إذا كان مفعلاً
+            let codeBadgeContainer = document.getElementById('countryCodeBadgeContainer');
+            if (showCountryCode && currentQ.code) {
+                codeBadgeContainer.innerHTML = `<div class="country-code-badge">📌 رمز الدولة: ${currentQ.code}</div>`;
+                codeBadgeContainer.style.display = 'block';
+            } else {
+                codeBadgeContainer.innerHTML = '';
+                codeBadgeContainer.style.display = 'none';
+            }
+
             let hintBox = document.getElementById('hintBox');
             let hintTextEl = document.getElementById('hintText');
             hintBox.style.display = 'none';
+            
             hintTextEl.innerText = currentQ.hint;
 
             let inputEl = document.getElementById('answerInput');
@@ -878,7 +948,8 @@
 
             let currentQ = gameQuestions[currentRound - 1];
             if(currentQ) {
-                document.getElementById('correctCountryDisplay').innerText = currentQ.name;
+                let codePart = currentQ.code ? ` (${currentQ.code})` : '';
+                document.getElementById('correctCountryDisplay').innerText = `${currentQ.flag || ''} ${currentQ.name}${codePart}`;
             }
             
             let winnerBox = document.getElementById('winnerAnnouncement');
@@ -944,7 +1015,6 @@
             clearInterval(timerInterval);
             clearInterval(nextRoundTimerInterval);
 
-            // إظهار تنبيه رايق وجميل باننهاء اللعبة بنجاح
             showToast('🏁 انتهت اللعبة بنجاح، إليكم منصة التتويج! 🎉');
 
             let sorted = Object.entries(playersObj).sort((a, b) => b[1].score - a[1].score);
