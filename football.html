@@ -11,7 +11,7 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>فِكْرَة 💡 | تحدي الأسرع كتابةً</title>
+    <title>فِكْرَة 💡 | تحدي كرة القدم الخارق</title>
     <!-- خط تجوال -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/canvas-confetti.browser.min.js"></script>
@@ -185,12 +185,26 @@
             padding: 1.5rem 1rem;
             text-align: center;
             margin-bottom: 1.2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .difficulty-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--primary-orange);
+            color: #fff;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 900;
         }
         .target-question {
             font-size: 1.3rem;
             font-weight: 900;
             color: var(--text-main);
             margin-bottom: 0.5rem;
+            margin-top: 0.5rem;
         }
         .target-subtext {
             font-size: 0.9rem;
@@ -250,40 +264,50 @@
 
     <div id="gameContainerView" style="max-width: 600px; margin: 1rem auto; padding: 0 0.8rem;">
         
+        <!-- صفحة إنشاء أو انضمام الغرفة -->
         <div id="roomSelectionView" class="glass-card">
-            <h1 class="title">⌨️ تحدي الأسرع كتابةً</h1>
-            <p class="subtitle">اكتب الإجابة المطلوبة في الصندوق بأسرع وقت لتفوز بالجولة! 🚀</p>
+            <h1 class="title">⚽ تحدي كرة القدم الخارق</h1>
+            <p class="subtitle">اختبر معلوماتك الكروية، توقع نتائج، وتنافس مع أصدقائك لتفوز بكأس الدوري! 🏆</p>
 
             <div class="form-group">
                 <label>اسمك في اللعبة</label>
-                <input type="text" id="playerNameInput" placeholder="أدخل اسمك هنا..." maxlength="15">
+                <input type="text" id="playerNameInput" placeholder="أدخل اسمك الكروي هنا..." maxlength="15">
             </div>
 
             <div class="form-group">
-                <label>تصنيفات التحدي:</label>
+                <label>مستوى صعوبة الأسئلة ⚡</label>
+                <select id="difficultySelect">
+                    <option value="easy">🟢 سهل (عشاق الكرة الجدد)</option>
+                    <option value="medium" selected>🟡 وسط (متوسط الثقافة الكروية)</option>
+                    <option value="hard">🔴 صعب (للأسطورة والكشافة فقط 🔥)</option>
+                    <option value="mixed">🔀 مكس (جميع المستويات متضمنة)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>تصنيفات التحدي الكروي:</label>
                 <div class="categories-grid">
                     <label class="category-checkbox-label">
-                        <input type="checkbox" id="catGeneral" value="general" checked> 🔥 عامة ومنوعة
+                        <input type="checkbox" id="catLeagues" value="leagues" checked> 🏆 دوريات وأطقم
                     </label>
                     <label class="category-checkbox-label">
-                        <input type="checkbox" id="catFoods" value="foods" checked> 🍔 أطعمة ومأكولات
+                        <input type="checkbox" id="catPlayers" value="players" checked> 👤 أساطير ونجوم
                     </label>
                     <label class="category-checkbox-label">
-                        <input type="checkbox" id="catAnimals" value="animals" checked> 🦁 حيوانات وطبيعة
+                        <input type="checkbox" id="catHistory" value="history" checked> 📜 تاريخ ومونديال
                     </label>
                     <label class="category-checkbox-label">
-                        <input type="checkbox" id="catPlaces" value="places" checked> 🏙️ دول وأماكن
+                        <input type="checkbox" id="catTactics" value="tactics" checked> 🧠 خطط وأندية
                     </label>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>وقت الجولة (بالثواني - الحد الأدنى 10 ثواني)</label>
+                <label>وقت الجولة (بالثواني)</label>
                 <select id="roundTimeSelect">
-                    <option value="10" selected>10 ثواني (سريع جداً 🔥)</option>
-                    <option value="15">15 ثانية</option>
+                    <option value="10">10 ثواني (سريع 🔥)</option>
+                    <option value="15" selected>15 ثانية</option>
                     <option value="20">20 ثانية</option>
-                    <option value="30">30 ثانية</option>
                 </select>
             </div>
 
@@ -296,75 +320,82 @@
                 </select>
             </div>
 
-            <button onclick="hostCreateRoom()" class="btn btn-primary" style="width: 100%;">إنشاء غرفة تحدي 🚀</button>
+            <button onclick="hostCreateRoom()" class="btn btn-primary" style="width: 100%;">إنشاء غرفة دوري ⚽</button>
             
             <div style="margin: 1rem 0; text-align: center; font-weight: 700; color: #888; font-size: 0.85rem;">أو</div>
 
             <div class="form-group">
                 <input type="text" id="roomCodeInput" placeholder="أدخل رمز الغرفة" maxlength="6" style="text-align: center; letter-spacing: 2px; font-weight: 900;">
             </div>
-            <button onclick="guestJoinRoom()" class="btn btn-primary" style="width: 100%;">انضمام لغرفة 🔗</button>
+            <button onclick="guestJoinRoom()" class="btn btn-primary" style="width: 100%;">انضمام لغرفة الدوري 🔗</button>
         </div>
 
+        <!-- غرفة الانتظار -->
         <div id="lobbyView" class="glass-card" style="display: none; text-align: center;">
-            <h2 style="margin-bottom: 0.3rem; font-size: 1.3rem;">غرفة انتظار التحدي ⏱️</h2>
-            <p style="color: #666; font-size: 0.85rem;">اضغط على مفتاح الغرفة لنسخه ومشاركته مع أصدقائك:</p>
+            <h2 style="margin-bottom: 0.3rem; font-size: 1.3rem;">غرفة انتظار الدوري الكروي 🏟️</h2>
+            <p style="color: #666; font-size: 0.85rem;">اضغط على رمز الغرفة لنسخه ومشاركته مع زملائك:</p>
             <div id="displayRoomCode" onclick="copyRoomCode()" style="font-size: 2rem; font-weight: 900; color: var(--primary-orange); background: #FFF3EF; padding: 0.6rem; border-radius: 12px; border: 2px dashed var(--primary-orange); margin: 0.8rem 0; letter-spacing: 3px; cursor: pointer; transition: 0.2s;" title="اضغط للنسخ">
                 0000 📋
             </div>
 
             <div style="margin-bottom: 0.8rem; text-align: right;">
-                <label>إعدادات الغرفة الحالية:</label>
+                <label>إعدادات الغرفة:</label>
                 <div id="roomSettingsSummary" style="background: #F8FAFC; padding: 0.6rem; border-radius: 10px; font-size: 0.85rem; font-weight: 700; color: #475569; margin-bottom: 0.8rem; border: 1px solid #E2E8F0;"></div>
 
                 <label>اللاعبون المتصلون:</label>
                 <div id="connectedPlayersContainer" style="margin-top: 0.4rem;"></div>
             </div>
 
-            <button id="startGameBtn" onclick="hostStartGame()" class="btn btn-primary" style="display: none; margin-top: 1.2rem; width: 100%;">بدء اللعبة 🛫</button>
-            <p id="waitingHostText" style="color: #888; font-weight: 700; display: none; margin-top: 0.8rem; font-size: 0.85rem;">في انتظار الهوست ليحرك اللعبة...</p>
+            <button id="startGameBtn" onclick="hostStartGame()" class="btn btn-primary" style="display: none; margin-top: 1.2rem; width: 100%;">صافرة البداية ⚽🛫</button>
+            <p id="waitingHostText" style="color: #888; font-weight: 700; display: none; margin-top: 0.8rem; font-size: 0.85rem;">في انتظار الهوست ليطلق صافرة البداية...</p>
         </div>
 
+        <!-- واجهة اللعب الرئيسية -->
         <div id="gamePlayView" class="glass-card" style="display: none;">
             <div class="header-status">
                 <div>
                     <span id="roundDisplay" style="font-size: 0.85rem; font-weight: 800; color: #666;">الجولة</span>
-                    <div id="activePlayerIndicator" style="font-weight: 900; font-size: 1.1rem; margin-top: 0.1rem; color: var(--primary-orange);">الكل يتنافس الآن! ⚡</div>
+                    <div id="activePlayerIndicator" style="font-weight: 900; font-size: 1.1rem; margin-top: 0.1rem; color: var(--primary-orange);">التحدي الكروي اشتعل! 🔥</div>
                 </div>
-                <div class="timer-display" id="timer">10s</div>
+                <div class="timer-display" id="timer">15s</div>
             </div>
 
             <div class="challenge-box">
-                <div class="target-subtext">اكتب الإجابة المطلوبة بأسرع ما يمكنك:</div>
+                <div class="difficulty-badge" id="difficultyBadge">وسط</div>
+                <div class="target-subtext">سؤال المباراة الذكي:</div>
                 <div class="target-question" id="targetQuestionText">...</div>
                 <div id="sampleHint" style="font-size: 0.78rem; color: #777; margin-top: 6px; font-weight: 700;"></div>
             </div>
 
             <div class="form-group">
-                <input type="text" id="playerAnswerInput" placeholder="اكتب إجابتك هنا بسرعة..." onkeydown="checkPlayerSubmit(event)">
+                <input type="text" id="playerAnswerInput" placeholder="اكتب إجابتك الكروية هنا بسرعة..." onkeydown="checkPlayerSubmit(event)">
             </div>
-            <button id="submitAnswerBtn" onclick="submitAnswer()" class="btn btn-primary" style="width: 100%;">إرسال الإجابة 🚀</button>
+            <button id="submitAnswerBtn" onclick="submitAnswer()" class="btn btn-primary" style="width: 100%;">تسجيل هدف (إرسال) ⚡</button>
         </div>
 
+        <!-- نتائج الجولة -->
         <div id="resultsView" class="glass-card" style="display: none; text-align: center;">
             <h2 id="resultTitle" style="margin-bottom: 0.5rem; font-size: 1.5rem;">انتهت الجولة! ⏱️</h2>
-            <div id="roundWinnerAnnouncement" style="font-size: 1.1rem; font-weight: 900; color: var(--green-success); margin-bottom: 1rem; background: #E8F5E9; padding: 10px; border-radius: 12px; border: 1px dashed var(--green-success);"></div>
+            <div id="roundWinnerAnnouncement" style="font-size: 1.1rem; font-weight: 900; color: var(--green-success); margin-bottom: 0.8rem; background: #E8F5E9; padding: 10px; border-radius: 12px; border: 1px dashed var(--green-success);"></div>
+            
+            <div id="roundAnswerReveal" style="font-size: 1rem; font-weight: 800; color: var(--text-main); margin-bottom: 1.2rem; background: #FFF3EF; padding: 10px; border-radius: 12px; border: 1px dashed var(--primary-orange);"></div>
 
             <div id="roundScoresContainer" style="text-align: right; margin-bottom: 1.5rem;"></div>
 
             <div id="nextRoundTimerContainer" style="display: none; font-size: 1.1rem; font-weight: 900; color: #475569;">
-                الجولة التالية تبدأ بعد<br>
+                صافرة الجولة التالية بعد<br>
                 <span id="nextRoundTimerDisplay" style="font-size: 3.5rem; color: var(--primary-orange); display: inline-block; margin-top: 10px;">3</span>
             </div>
         </div>
 
+        <!-- منصة التتويج النهائية -->
         <div id="winnerView" class="glass-card" style="display: none; text-align: center;">
-            <h1 class="title" style="font-size: 1.5rem;">🎉 أساطير السرعة والكتابة 🎉</h1>
-            <p class="subtitle">مين أسرع واحد طقطق على الكيبورد؟ 😂</p>
+            <h1 class="title" style="font-size: 1.5rem;">🏆 أساطير كرة القدم والتحليل 🏆</h1>
+            <p class="subtitle">مين بطل الدوري وملك التكتيك؟ 😂⚽</p>
 
             <div id="podiumDisplay" class="podium-container"></div>
 
-            <button onclick="window.location.reload()" class="btn btn-primary" style="margin-top: 1.2rem; width: 100%;">لعب مرة ثانية 🔄</button>
+            <button onclick="window.location.reload()" class="btn btn-primary" style="margin-top: 1.2rem; width: 100%;">لعب دوري جديد 🔄</button>
         </div>
 
     </div>
@@ -385,7 +416,6 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // مفتاح الذكاء الاصطناعي (Groq AI API Key)
         const GROQ_API_KEY = "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";
 
         let audioCtx = null;
@@ -451,118 +481,46 @@
             }
         }
 
-const questionsDB = [
-    { q: "اذكر اسم سيارة مشهورة", category: "general" },
-    { q: "اذكر لوناً يبدأ بحرف الميم", category: "general" },
-    { q: "اذكر اسم تطبيق جوال تستخدمه يومياً", category: "general" },
-    { q: "اذكر نادياً رياضياً سعودياً", category: "general" },
-    { q: "اذكر ماركة جوالات عالمية", category: "general" },
-    { q: "اذكر شيئاً تشتريه من البقالة", category: "general" },
-    { q: "اذكر نوع طراز سيارة دفع رباعي", category: "general" },
-    { q: "اذكر موقع تسوق إلكتروني مشهور", category: "general" },
-    { q: "اذكر لعبة فيديو تحبها", category: "general" },
-    { q: "اذكر منصة بث مرئي مشهورة", category: "general" },
-    { q: "اذكر علامة تجارية للأجهزة الكهربائية", category: "general" },
-    { q: "اذكر وسيلة مواصلات عامة", category: "general" },
-    { q: "اذكر أداة تستخدمها في الكتابة", category: "general" },
-    { q: "اذكر قطعة ملابس شتوية", category: "general" },
-    { q: "اذكر نوع ساعة يد مشهورة", category: "general" },
-    { q: "اذكر ماركة عطور عالمية", category: "general" },
-    { q: "اذكر منصة تواصل اجتماعي", category: "general" },
-    { q: "اذكر لوناً غامقاً", category: "general" },
-    { q: "اذكر قطعة أثاث منزلية أساسية", category: "general" },
-    { q: "اذكر أداة نجار مشهورة", category: "general" },
-    { q: "اذكر نوع قماش للملابس", category: "general" },
-    { q: "اذكر جهاز إلكتروني لوحي", category: "general" },
-    { q: "اذكر لوناً فاتحاً", category: "general" },
-    { q: "اذكر نوع رياضة فردية", category: "general" },
-    { q: "اذكر علامة تجارية للمستلزمات الرياضية", category: "general" },
+        // قاعدة بيانات الأسئلة المصنفة حسب المستويات (سهل، وسط، صعب)
+        const footballQuestionsDB = [
+            // أسئلة سهلة
+            { q: "اذكر نادي إسباني يحظى بشعبية جارفة ويلقب بالملكي", answer: "ريال مدريد", category: "leagues", diff: "easy" },
+            { q: "اذكر لاعباً أرجنتينيًا أسطورياً فاز بكأس العالم 2022", answer: "ليونيل ميسي", category: "players", diff: "easy" },
+            { q: "اذكر دولة استضافت مونديال كأس العالم 2022", answer: "قطر", category: "history", diff: "easy" },
+            { q: "اذكر نادي إنجليزي يلقب بالشياطين الحمر", answer: "مانشستر يونايتد", category: "leagues", diff: "easy" },
+            { q: "اذكر لاعباً برتغالياً شهيراً يرتدي رقم 7 ويلقب بالدون", answer: "كريستيانو رونالدو", category: "players", diff: "easy" },
+            { q: "اذكر دولة فازت بأكبر عدد من بطولات كأس العالم تاريخياً", answer: "البرازيل", category: "history", diff: "easy" },
+            { q: "اذكر نادي سعودي عريق يلقب بالزعيم", answer: "الهلال", category: "leagues", diff: "easy" },
+            { q: "اذكر ملعب نادي برشلونة الشهير", answer: "كامب نو", category: "leagues", diff: "easy" },
 
-    { q: "اذكر نوع فاكهة أحمر", category: "foods" },
-    { q: "اذكر أكلة شعبية خليجية", category: "foods" },
-    { q: "اذكر مشروباً بارداً تفضله", category: "foods" },
-    { q: "اذكر نوع حلا مشهور", category: "foods" },
-    { q: "اذكر خضاراً يدخل في السلطة", category: "foods" },
-    { q: "اذكر طبق وجبة سريعة مفضل", category: "foods" },
-    { q: "اذكر نوع توابل أو بهار رئيسي بالطبخ", category: "foods" },
-    { q: "اذكر نوع شوربة رمضانية", category: "foods" },
-    { q: "اذكر فاكهة حمضية", category: "foods" },
-    { q: "اذكر نوع مكسرات شهير", category: "foods" },
-    { q: "اذكر مشروباً ساخناً", category: "foods" },
-    { q: "اذكر نوع معجنات تفضلها", category: "foods" },
-    { q: "اذكر نوع لحم أبيض", category: "foods" },
-    { q: "اذكر خضاراً ورقياً أخضر", category: "foods" },
-    { q: "اذكر نوع صوص أو صلصة طعام", category: "foods" },
-    { q: "اذكر مكوناً أساسياً في الكيك", category: "foods" },
-    { q: "اذكر نوع أجبان مشهور", category: "foods" },
-    { q: "اذكر نوع فاكهة استوائية", category: "foods" },
-    { q: "اذكر وجبة إفطار صباحية", category: "foods" },
-    { q: "اذكر نوع سمك بحري مشهور", category: "foods" },
-    { q: "اذكر نوع إضافات بيتزا مفضلة", category: "foods" },
-    { q: "اذكر نوع عصائر طبيعية منعشة", category: "foods" },
-    { q: "اذكر نوع حلويات شرقية", category: "foods" },
-    { q: "اذكر وجبة عشاء خفيفة", category: "foods" },
-    { q: "اذكر نوع حبوب غذائية مفيدة", category: "foods" },
+            // أسئلة متوسطة
+            { q: "اذكر خطة لعب شهيرة تتكون من ثلاثة أرقام (دفاع وسط هجوم)", answer: "4-3-3", category: "tactics", diff: "medium" },
+            { q: "اذكر نادياً إيطالياً يلقب بالسيدة العجوز", answer: "يوفنتوس", category: "leagues", diff: "medium" },
+            { q: "اذكر حارس مرمى ألماني أسطوري اشتهر بمهارته الكبيرة بالقدمين وخروج المرمى", answer: "مانويل نوير", category: "players", diff: "medium" },
+            { q: "اذكر البلد الذي أقيمت فيه أول بطولة كأس عالم عام 1930", answer: "أوروغواي", category: "history", diff: "medium" },
+            { q: "اذكر نادي فرنسي يعتبر الأقوى محلياً في العهد الحديث", answer: "باريس سان جيرمان", category: "leagues", diff: "medium" },
+            { q: "اذكر لاعباً برازيلياً أسطورياً لقب بالجوهرة السوداء وفاز بثلاثة كؤوس عالم", answer: "بيليه", category: "players", diff: "medium" },
+            { q: "اذكر نادياً ألمانيًا يسيطر على الدوري المحلي بوضوح تام", answer: "بايرن ميونخ", category: "leagues", diff: "medium" },
+            { q: "اذكر المنتخب الذي فاز بكأس العالم 2014 في البرازيل", answer: "ألمانيا", category: "history", diff: "medium" },
+            { q: "اذكر طريقة حسم مباريات كرة القدم في الأدوار الإقصائية عند تعادل الفريقين", answer: "ركلات الترجيح", category: "tactics", diff: "medium" },
 
-    { q: "اذكر حيواناً مفترساً", category: "animals" },
-    { q: "اذكر طائراً يستطيع الطيران", category: "animals" },
-    { q: "اذكر حيواناً يعيش في الصحراء", category: "animals" },
-    { q: "اذكر حيواناً أليفاً يربي بالمنزل", category: "animals" },
-    { q: "اذكر حشرة تعيش في جماعات منظمة", category: "animals" },
-    { q: "اذكر حيواناً بحرياً ضخماً", category: "animals" },
-    { q: "اذكر طائراً لا يستطيع الطيران", category: "animals" },
-    { q: "اذكر حيواناً زاحفاً", category: "animals" },
-    { q: "اذكر حيواناً ينام مقلوباً", category: "animals" },
-    { q: "اذكر حيواناً بطيئ الحركة", category: "animals" },
-    { q: "اذكر حيواناً يعيش في القطب الشمالي", category: "animals" },
-    { q: "اذكر نوع حشرة مزعجة", category: "animals" },
-    { q: "اذكر حيواناً يمتلك قروناً", category: "animals" },
-    { q: "اذكر حيواناً من البرمائيات", category: "animals" },
-    { q: "اذكر حيواناً قارضاً", category: "animals" },
-    { q: "اذكر نوع كلب شهير", category: "animals" },
-    { q: "اذكر سمكة زينة منزلية", category: "animals" },
-    { q: "اذكر حيواناً ينشط ليلاً", category: "animals" },
-    { q: "اذكر طائراً جارحاً", category: "animals" },
-    { q: "اذكر حيواناً ثديياً مائياً", category: "animals" },
-    { q: "اذكر حيواناً يتغذى على الأوراق فقط", category: "animals" },
-    { q: "اذكر نوع قطط أليف", category: "animals" },
-    { q: "اذكر حيواناً ضخماً منقرضاً", category: "animals" },
-    { q: "اذكر حيواناً يغير لون جلده", category: "animals" },
-    { q: "اذكر حشرة منتجة لادة نافعة", category: "animals" },
-
-    { q: "اذكر دولة عربية تبدأ بحرف الميم", category: "places" },
-    { q: "اذكر مدينة سعودية كبرى", category: "places" },
-    { q: "اذكر عاصمة أوروبية", category: "places" },
-    { q: "اذكر قارة في العالم", category: "places" },
-    { q: "اذكر معلماً سياحياً عالمياً مشهوراً", category: "places" },
-    { q: "اذكر اسماً لحي في مدينة سعودية", category: "places" },
-    { q: "اذكر دولة آسيوية غير عربية", category: "places" },
-    { q: "اذكر دولة في قارة أفريقيا", category: "places" },
-    { q: "اذكر عاصمة عربية شهيرة", category: "places" },
-    { q: "اذكر اسماً لجزيرة سياحية", category: "places" },
-    { q: "اذكر دولة أوروبية مشهورة بالسياحة", category: "places" },
-    { q: "اذكر اسماً لبرج عالمي ضخم", category: "places" },
-    { q: "اذكر اسماً لمحيط في العالم", category: "places" },
-    { q: "اذكر دولة لاتينية أمريكية", category: "places" },
-    { q: "اذكر اسماً لنهر عظيم", category: "places" },
-    { q: "اذكر اسماً لسلسلة جبال شهيرة", category: "places" },
-    { q: "اذكر اسماً لملعب كرة قدم عالمي", category: "places" },
-    { q: "اذكر دولة خليجية عربية", category: "places" },
-    { q: "اذكر اسماً لصحراء كبرى", category: "places" },
-    { q: "اذكر اسماً لمطار دولي معروف", category: "places" },
-    { q: "اذكر اسماً لقناة مائية عالمية", category: "places" },
-    { q: "اذكر اسماً لمنتزه ترفيهي مشهور", category: "places" },
-    { q: "اذكر دولة في أمريكا الشمالية", category: "places" },
-    { q: "اذكر عاصمة أسترالية أو أوقيانوسية", category: "places" },
-    { q: "اذكر اسماً لمتحف عالمي شهير", category: "places" }
-];
+            // أسئلة صعبة
+            { q: "اذكر الفريق الوحيد الذي فاز بـ 3 ألقاب متتالية في دوري أبطال أوروبا بنظامها الحديث", answer: "ريال مدريد", category: "leagues", diff: "hard" },
+            { q: "اذكر المنتخب الذي فاز بأول نسختين متتاليتين لكأس العالم عامي 1934 و 1938", answer: "إيطاليا", category: "history", diff: "hard" },
+            { q: "اذكر المدرب الذي ابتكر خطة (التيكي تاكا) وأحدث ثورة مع برشلونة وإسبانيا", answer: "بيب جوارديولا", category: "tactics", diff: "hard" },
+            { q: "اذكر اللاعب الذي سجل أسرع هدف في تاريخ نهائيات كأس العالم (سجله بعد 11 ثانية عام 2002)", answer: "هاكان شوكور", category: "history", diff: "hard" },
+            { q: "اذكر النادي الإنجليزي الوحيد الذي حقق الدوري بدون أي هزيمة طوال الموسم (لازم اللاحقة الذهبية)", answer: "آرسنال", category: "leagues", diff: "hard" },
+            { q: "اذكر اللاعب الهاتريك الوحيد الذي سجل في نهائي كأس العالم للرجال (عام 1966)", answer: "جيف هيرست", category: "history", diff: "hard" },
+            { q: "اذكر النادي اللاتيني الذي فاز ببطولة كوبا ليبرتادوريس أطول سلسلة تاريخية مرعبة", answer: "إنديبندينتي", category: "history", diff: "hard" },
+            { q: "اذكر خطة الدفاع المرتد التكتيكية المعقدة التي عُرفت بـ (الكيناتشيو) الإيطالية", answer: "كتيناتشيو", category: "tactics", diff: "hard" }
+        ];
 
         let isHost = false;
         let currentRoomCode = "";
         let roomRef = null;
         let playerName = "";
         let roundsPerPlayer = 5;
-        let roundTimeLimit = 10;
+        let roundTimeLimit = 15;
         let timerInterval = null;
         let nextRoundTimerInterval = null;
         let playersList = [];
@@ -593,23 +551,33 @@ const questionsDB = [
         }
 
         function hostCreateRoom() {
-            playerName = document.getElementById('playerNameInput').value.trim() || "الهوست";
+            playerName = document.getElementById('playerNameInput').value.trim() || "الكابتن";
             roundsPerPlayer = parseInt(document.getElementById('roundsSelect').value);
             roundTimeLimit = parseInt(document.getElementById('roundTimeSelect').value);
+            let selectedDiff = document.getElementById('difficultySelect').value;
             isHost = true;
 
             let selectedCategories = [];
-            if(document.getElementById('catGeneral').checked) selectedCategories.push('general');
-            if(document.getElementById('catFoods').checked) selectedCategories.push('foods');
-            if(document.getElementById('catAnimals').checked) selectedCategories.push('animals');
-            if(document.getElementById('catPlaces').checked) selectedCategories.push('places');
+            if(document.getElementById('catLeagues').checked) selectedCategories.push('leagues');
+            if(document.getElementById('catPlayers').checked) selectedCategories.push('players');
+            if(document.getElementById('catHistory').checked) selectedCategories.push('history');
+            if(document.getElementById('catTactics').checked) selectedCategories.push('tactics');
 
-            if(selectedCategories.length === 0) return showToast('اختر تصنيف واحد على الأقل يا بطل! ⚠️');
+            if(selectedCategories.length === 0) return showToast('اختر تصنيفاً كروياً واحداً على الأقل! ⚠️');
 
-            let filtered = questionsDB.filter(q => selectedCategories.includes(q.category));
-            if(filtered.length === 0) filtered = questionsDB;
+            // تصفية الأسئلة بناءً على التصنيفات ومستوى الصعوبة المختار
+            let filtered = footballQuestionsDB.filter(q => {
+                let matchCat = selectedCategories.includes(q.category);
+                let matchDiff = (selectedDiff === 'mixed') ? true : (q.diff === selectedDiff);
+                return matchCat && matchDiff;
+            });
 
-            // خلط الأسئلة واختيار عدد غير متكرر للجولات الكلية بدون أخطاء أو حذف
+            // لو ما حصلنا أسئلة كافية بالمستوى الدقيق، نرجع للتصنيف العام كاحتياط
+            if(filtered.length === 0) {
+                filtered = footballQuestionsDB.filter(q => selectedCategories.includes(q.category));
+            }
+            if(filtered.length === 0) filtered = footballQuestionsDB;
+
             let shuffled = [...filtered].sort(() => 0.5 - Math.random());
             let generatedQuestions = [];
             for(let i = 0; i < roundsPerPlayer; i++) {
@@ -620,11 +588,11 @@ const questionsDB = [
             currentRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
             document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
 
-            roomRef = db.ref('fast_write_rooms/' + currentRoomCode);
+            roomRef = db.ref('football_rooms/' + currentRoomCode);
             roomRef.set({
                 host: playerName,
                 state: 'lobby',
-                settings: { roundsPerPlayer, roundTimeLimit, questions: gameQuestions },
+                settings: { roundsPerPlayer, roundTimeLimit, difficulty: selectedDiff, questions: gameQuestions },
                 players: { [playerName]: { score: 0 } }
             }).then(() => {
                 listenToFirebase();
@@ -635,13 +603,13 @@ const questionsDB = [
         }
 
         function guestJoinRoom() {
-            playerName = document.getElementById('playerNameInput').value.trim() || "الضيف";
+            playerName = document.getElementById('playerNameInput').value.trim() || "المشجع";
             const code = document.getElementById('roomCodeInput').value.trim();
             if(!code) return showToast('أدخل رمز الغرفة يا كابتن!');
 
             isHost = false;
             currentRoomCode = code;
-            roomRef = db.ref('fast_write_rooms/' + currentRoomCode);
+            roomRef = db.ref('football_rooms/' + currentRoomCode);
 
             roomRef.get().then((snap) => {
                 if(snap.exists()) {
@@ -678,10 +646,11 @@ const questionsDB = [
                 
                 if(data.settings) {
                     roundsPerPlayer = data.settings.roundsPerPlayer;
-                    roundTimeLimit = data.settings.roundTimeLimit || 10;
+                    roundTimeLimit = data.settings.roundTimeLimit || 15;
                     gameQuestions = data.settings.questions;
+                    let diffNameText = {easy: '🟢 سهل', medium: '🟡 وسط', hard: '🔴 صعب', mixed: '🔀 مكس'}[data.settings.difficulty] || '🟡 وسط';
                     document.getElementById('roomSettingsSummary').innerHTML = `
-                        ⏱️ وقت الجولة: ${roundTimeLimit} ثواني | 🏁 إجمالي الجولات: ${roundsPerPlayer}
+                        ⚡ الصعوبة: ${diffNameText} | ⏱️ الوقت: ${roundTimeLimit}ث | 🏁 الجولات: ${roundsPerPlayer}
                     `;
                 }
 
@@ -702,7 +671,7 @@ const questionsDB = [
             const container = document.getElementById('connectedPlayersContainer');
             container.innerHTML = '';
             for(let p in playersObj) {
-                container.innerHTML += `<div class="player-chip">👤 ${p} <span style="color:var(--primary-orange);">${playersObj[p].score} نقطة</span></div>`;
+                container.innerHTML += `<div class="player-chip">⚽ ${p} <span style="color:var(--primary-orange);">${playersObj[p].score} نقطة</span></div>`;
             }
         }
 
@@ -717,7 +686,6 @@ const questionsDB = [
             if(nextIndex > roundsPerPlayer) {
                 roomRef.update({ state: 'finished' });
             } else {
-                // اختيار مؤشر السؤال التسلسلي بناءً على رقم الجولة لضمان عدم تكرار الأسئلة نهائياً في الجلسة
                 let questionIndex = nextIndex - 1;
                 if(questionIndex >= gameQuestions.length) questionIndex = questionIndex % gameQuestions.length;
 
@@ -735,9 +703,13 @@ const questionsDB = [
             if(timerInterval) clearInterval(timerInterval);
             if(nextRoundTimerInterval) clearInterval(nextRoundTimerInterval);
 
-            let qObj = gameQuestions[qIndex] || { q: "اذكر شيئاً مشهوراً" };
+            let qObj = gameQuestions[qIndex] || { q: "اذكر نادياً مشهوراً", answer: "غير متوفر", diff: "medium" };
             document.getElementById('roundDisplay').innerText = `الجولة ${roundIdx} من ${roundsPerPlayer}`;
             document.getElementById('targetQuestionText').innerText = qObj.q;
+            
+            // تحديث شارة الصعوبة للداخل
+            let diffTagMap = { easy: '🟢 سهل', medium: '🟡 وسط', hard: '🔴 صعب' };
+            document.getElementById('difficultyBadge').innerText = diffTagMap[qObj.diff] || '🟡 وسط';
             
             let inputField = document.getElementById('playerAnswerInput');
             inputField.value = '';
@@ -775,7 +747,7 @@ const questionsDB = [
                                 roomRef.update({
                                     state: 'results',
                                     roundWinner: null,
-                                    roundMessage: "انتهى الوقت وما أحد جابها صح! ⌛"
+                                    roundMessage: "انتهى الوقت وما أحد سجل هدفاً! ⌛"
                                 });
                             }
                         });
@@ -790,13 +762,12 @@ const questionsDB = [
             }
         }
 
-        // دالة التحقق الذكي المرن عبر Groq AI API
         async function submitAnswer() {
             let answerText = document.getElementById('playerAnswerInput').value.trim();
-            if(!answerText) return showToast('اكتب إجابتك أولاً يا بطل! ⚠️');
+            if(!answerText) return showToast('اكتب إجابتك الكروية أولاً يا كابتن! ⚠️');
 
             document.getElementById('submitAnswerBtn').disabled = true;
-            showToast('🤖 الحكم الآلي يتحقق من إجابتك...');
+            showToast('⚽ الحكم يتحقق من صحة الهدف...');
 
             roomRef.get().then(async (snap) => {
                 let data = snap.val();
@@ -809,8 +780,8 @@ const questionsDB = [
                 let qObj = gameQuestions[qIndex];
                 let questionText = qObj.q;
 
-                let systemPrompt = "أنت حكم مرن وسريع للعبة سرعة كتابة باللغة العربية. إذا كانت إجابة اللاعب صحيحة وتطابق السؤال المطلوب (إجابة مفردة صحيحة)، فاعتبرها صحيحة.";
-                let userPrompt = `السؤال هو: "${questionText}"\nإجابة اللاعب هي: "${answerText}"\n\nهل إجابة اللاعب صحيحة وتتناسب مع السؤال؟ أجب بكلمة واحدة فقط: "نعم" أو "لا".`;
+                let systemPrompt = "أنت حكم كروي ذكي ومرن باللغة العربية. إذا كانت إجابة اللاعب صحيحة وتتطابق مع السؤال الكروي المطلوب، فاعتبرها صحيحة وسجل هدفاً.";
+                let userPrompt = `السؤال الكروي هو: "${questionText}"\nإجابة اللاعب هي: "${answerText}"\n\nهل إجابة اللاعب صحيحة وتتناسب مع السؤال؟ أجب بكلمة واحدة فقط: "نعم" أو "لا".`;
 
                 let isCorrect = false;
                 try {
@@ -846,14 +817,14 @@ const questionsDB = [
                     let updates = {
                         state: 'results',
                         roundWinner: playerName,
-                        roundMessage: `الكابتن ${playerName} جابها صح وكان الأسرع! 🏆`,
+                        roundMessage: `الكابتن ${playerName} سجل هدفاً رائعاً وكان الأسرع! ⚽🎯`,
                         ['players/' + playerName + '/score']: currentScore + 100
                     };
                     roomRef.update(updates);
                     document.getElementById('playerAnswerInput').disabled = true;
                 } else {
                     document.getElementById('submitAnswerBtn').disabled = false;
-                    showToast('❌ الحكم الآلي يقول: حاول مرة ثانية بإجابة أدق!');
+                    showToast('❌ الحكم يقول: تسلل أو إجابة خاطئة، جرب مجدداً!');
                 }
             });
         }
@@ -864,26 +835,33 @@ const questionsDB = [
 
             let winnerBox = document.getElementById('roundWinnerAnnouncement');
             let resultTitle = document.getElementById('resultTitle');
+            let answerRevealBox = document.getElementById('roundAnswerReveal');
             
+            let qIndex = data.questionIndex;
+            let currentQObj = gameQuestions[qIndex] || {};
+            let modelAnswer = currentQObj.answer || "الإجابة النموذجية غير متوفرة";
+
+            answerRevealBox.innerHTML = `💡 الإجابة الصحيحة: <span style="color: var(--primary-orange);">${modelAnswer}</span>`;
+
             if(data.roundWinner) {
-                resultTitle.innerText = "انتهت الجولة بفوز أسرع كاتب! 🚀";
-                winnerBox.innerHTML = `👑 البطل: ${data.roundWinner} (+100 نقطة)`;
+                resultTitle.innerText = "هدف مذهل في هذه الجولة! ⚽🚀";
+                winnerBox.innerHTML = `👑 الهداف: ${data.roundWinner} (+100 نقطة)`;
                 winnerBox.style.display = 'block';
                 try { confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } }); } catch(e){}
             } else {
-                resultTitle.innerText = "انتهى الوقت بدون فائز! ⌛";
-                winnerBox.innerHTML = "ما حالفكم الحظ في هذه الجولة.";
+                resultTitle.innerText = "انتهت الجولة بدون أهداف! ⌛";
+                winnerBox.innerHTML = "انتهى الوقت ولم يسجل أحد.";
                 winnerBox.style.display = 'block';
             }
 
             let container = document.getElementById('roundScoresContainer');
-            container.innerHTML = '<label style="margin-bottom:0.4rem;">مجموع النقاط الحالي:</label>';
+            container.innerHTML = '<label style="margin-bottom:0.4rem;">جدول ترتيب النقاط الحالي:</label>';
 
             if(data.players) {
                 for(let p in data.players) {
                     container.innerHTML += `
                         <div class="player-chip">
-                            <span>👤 ${p}</span>
+                            <span>⚽ ${p}</span>
                             <span style="color: var(--primary-orange); font-weight: 900;">${data.players[p].score} نقطة</span>
                         </div>
                     `;
@@ -915,7 +893,7 @@ const questionsDB = [
             if(timerInterval) clearInterval(timerInterval);
             if(nextRoundTimerInterval) clearInterval(nextRoundTimerInterval);
 
-            showToast('🏁 انتهت اللعبة بفوز الأبطال! 🎉');
+            showToast('🏁 انتهى الدوري الكروي وتوج البطل! 🏆');
 
             let sorted = Object.entries(playersObj || {}).sort((a, b) => b[1].score - a[1].score);
             let podiumHTML = '';
