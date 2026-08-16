@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <link rel="manifest" href="manifest.json">
+    <meta name="application-name" content="فكرة">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="فكرة">
+    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="icon" type="image/png" href="logo.png">
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>فِكْرَة 💡 | كمل الشطر</title>
+    <!-- خط تجوال -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/canvas-confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary-orange: #FF5E36;
+            --orange-gradient: linear-gradient(135deg, #FF5E36 0%, #FFA036 100%);
+            --orange-glow: rgba(255, 94, 54, 0.35);
+            --text-main: #1D2029;
+            --text-muted: #6C757D;
+            --green-success: #2E7D32;
+            --red-danger: #D32F2F;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #F8F9FA;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(255, 94, 54, 0.15) 0px, transparent 40%),
+                radial-gradient(at 100% 0%, rgba(255, 160, 54, 0.2) 0px, transparent 45%),
+                radial-gradient(at 50% 50%, rgba(255, 255, 255, 0.8) 0px, transparent 100%),
+                radial-gradient(at 80% 100%, rgba(255, 94, 54, 0.12) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(255, 183, 3, 0.15) 0px, transparent 40%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .ambient-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            z-index: -1;
+            animation: float 10s infinite alternate ease-in-out;
+            pointer-events: none;
+        }
+        .orb-1 { width: 350px; height: 350px; background: rgba(255, 94, 54, 0.25); top: -50px; right: -50px; }
+        .orb-2 { width: 400px; height: 400px; background: rgba(255, 160, 54, 0.2); bottom: -100px; left: -100px; animation-delay: -5s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 50px) scale(1.1); }
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+        }
+
+        .logo {
+            font-size: 1.7rem;
+            font-weight: 900;
+            background: var(--orange-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .logo span {
+            filter: drop-shadow(0 4px 10px rgba(255, 94, 54, 0.4));
+            -webkit-text-fill-color: initial;
+        }
+
+        .back-btn-container {
+            max-width: 600px;
+            margin: 0.8rem auto 0;
+            padding: 0 0.8rem;
+        }
+        .btn-back {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--text-main);
+            border: 1px solid #E2E8F0;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .btn-back:hover { background: #FFF; border-color: var(--primary-orange); color: var(--primary-orange); }
+
+        .btn {
+            padding: 0.55rem 1.2rem; border-radius: 50px; font-weight: 700; cursor: pointer;
+            border: none; transition: all 0.3s; text-decoration: none; font-size: 0.9rem;
+            display: inline-flex; justify-content: center; align-items: center; gap: 0.4rem;
+        }
+        .btn-primary { background: var(--orange-gradient); color: white; box-shadow: 0 8px 20px var(--orange-glow); }
+        .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 25px rgba(255, 94, 54, 0.45); }
+        .btn-secondary { background: #475569; color: white; }
+        .btn-danger { background: var(--red-danger); color: white; }
+        .btn:disabled { background: #CBD5E1 !important; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9); border-radius: 20px; padding: 1.4rem 1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #E2E8F0; margin-bottom: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .title { text-align: center; font-weight: 900; font-size: 1.7rem; color: var(--primary-orange); margin-bottom: 0.3rem; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 1.2rem; font-size: 0.88rem; font-weight: 700;}
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main); font-size: 0.9rem; }
+        input[type="text"], select {
+            width: 100%; padding: 0.8rem 1rem; border-radius: 12px; border: 2px solid #E2E8F0;
+            font-size: 0.95rem; outline: none; transition: all 0.3s ease; background: #FAFAFA; font-weight: 700;
+        }
+        input[type="text"]:focus, select:focus { border-color: var(--primary-orange); background: #FFF; box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.15); }
+        
+        .categories-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-top: 0.3rem;
+        }
+        .category-checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #F8FAFC;
+            border: 2px solid #E2E8F0;
+            padding: 0.6rem 0.8rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.88rem;
+            transition: all 0.2s ease;
+        }
+        .category-checkbox-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-orange);
+            cursor: pointer;
+        }
+        .category-checkbox-label:hover {
+            border-color: var(--primary-orange);
+            background: #FFF3EF;
+        }
+
+        .header-status { display: flex; justify-content: space-between; align-items: center; background: #F8FAFC; padding: 0.8rem; border-radius: 14px; margin-bottom: 1.2rem; border: 1px solid #E2E8F0; }
+        .timer-display { font-size: 1.5rem; font-weight: 900; color: var(--text-main); }
+        .player-chip { display: flex; justify-content: space-between; align-items: center; background: #F1F5F9; padding: 0.5rem 0.8rem; border-radius: 10px; margin-bottom: 0.4rem; font-weight: 800; font-size: 0.88rem; }
+        
+        .phrase-display-box {
+            background: #FFF3EF;
+            border: 2px dashed var(--primary-orange);
+            border-radius: 16px;
+            padding: 2rem 1rem;
+            text-align: center;
+            font-size: 1.6rem;
+            margin-bottom: 1.5rem;
+            font-weight: 900;
+            color: var(--text-main);
+            box-shadow: inset 0 0 20px rgba(255, 94, 54, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            line-height: 1.5;
+        }
+        
+        .missing-word {
+            color: var(--primary-orange);
+            text-decoration: underline;
+            text-decoration-style: dotted;
+        }
+
+        .category-badge {
+            background: #FFFFFF;
+            color: var(--primary-orange);
+            border: 2px solid #E2E8F0;
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 900;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+            display: inline-block;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        .category-badge:hover {
+            border-color: var(--primary-orange);
+            box-shadow: 0 6px 15px var(--orange-glow);
+            transform: translateY(-2px);
+        }
+
+        .hint-box {
+            background: #FEF3C7;
+            border: 2px solid #F59E0B;
+            border-radius: 12px;
+            padding: 0.8rem;
+            text-align: center;
+            font-weight: 800;
+            color: #92400E;
+            margin-bottom: 1rem;
+            display: none;
+            font-size: 0.95rem;
+            animation: pulse-hint 1s infinite alternate;
+        }
+        @keyframes pulse-hint {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.02); }
+        }
+        
+        .podium-container { display: flex; justify-content: center; align-items: flex-end; gap: 0.6rem; height: 170px; margin: 1.5rem 0; }
+        .podium-step { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 0.6rem; border-radius: 12px 12px 0 0; color: white; font-weight: 900; width: 31%; position: relative; }
+        .podium-1 { height: 100%; background: linear-gradient(180deg, #FFD700, #E6B800); }
+        .podium-2 { height: 75%; background: linear-gradient(180deg, #C0C0C0, #A8A8A8); }
+        .podium-3 { height: 55%; background: linear-gradient(180deg, #CD7F32, #B36B25); }
+        
+        .toast { 
+            position: fixed; 
+            bottom: -100px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: #FFFFFF; 
+            color: var(--text-main); 
+            border: 2px solid var(--primary-orange);
+            padding: 12px 24px; 
+            border-radius: 50px; 
+            font-weight: 800; 
+            z-index: 9999; 
+            box-shadow: 0 10px 25px var(--orange-glow);
+            transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+            text-align: center;
+            max-width: 90%;
+        }
+        .toast.show { bottom: 30px; }
+
+        @keyframes pulse-timer {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1.4); opacity: 1; color: var(--primary-orange); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .timer-pop { animation: pulse-timer 0.4s ease-in-out; }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="toast" id="toastMessage">تنبيه!</div>
+
+    <header>
+        <div class="logo" onclick="goBackStep()">
+            <span>💡</span> فِكْرَة
+        </div>
+    </header>
+
+    <div class="back-btn-container">
+        <button class="btn-back" onclick="goBackStep()">⬅️ رجوع للخلف</button>
+    </div>
+
+    <div id="gameContainerView" style="max-width: 600px; margin: 1rem auto; padding: 0 0.8rem;">
+        
+        <!-- واجهة اختيار الغرفة -->
+        <div id="roomSelectionView" class="glass-card">
+            <h1 class="title">🎤 كمل الشطر</h1>
+            <p class="subtitle">شيلة، أغنية، أو مثل قديم.. الذيب اللي يكملها أول! (3 محاولات)</p>
+
+            <div class="form-group">
+                <label>اسمك في اللعبة</label>
+                <input type="text" id="playerNameInput" placeholder="أدخل اسمك هنا..." maxlength="15">
+            </div>
+
+            <!-- إعدادات الصعوبة والتلميحات -->
+            <div style="display: grid; grid-template-columns: 1fr; gap: 0.6rem; margin-bottom: 1rem;">
+                <div>
+                    <label>مستوى الصعوبة 🎯</label>
+                    <select id="difficultySelect" onchange="toggleDifficultyOptions()">
+                        <option value="easy">سهل 🍼 (تلميح + أول حرف)</option>
+                        <option value="medium" selected>وسط ⚖️ (تلميح مساعد فقط)</option>
+                        <option value="hard">صعب 💀 (بدون تلميحات نهائياً)</option>
+                    </select>
+                </div>
+                <div id="hintOptionsContainer" style="background: #F8FAFC; padding: 0.6rem; border-radius: 10px; border: 1px solid #E2E8F0;">
+                    <label class="category-checkbox-label" style="margin: 0; background: transparent; border: none;">
+                        <input type="checkbox" id="useHintCheckbox" checked> 
+                        تفعيل التلميحات عند تبقي 10 ثواني 💡
+                    </label>
+                </div>
+            </div>
+
+            <div style="background: #F8FAFC; padding: 0.6rem; border-radius: 10px; border: 1px solid #E2E8F0; margin-bottom: 1rem;">
+                <label class="category-checkbox-label" style="margin: 0; background: transparent; border: none;">
+                    <input type="checkbox" id="showCategoryCheckbox" checked> 
+                    📌 إظهار تصنيف السؤال (مثال: أغنية، مثل...)
+                </label>
+            </div>
+
+            <!-- تصنيفات الكلمات بالـ Checkboxes -->
+            <div class="form-group">
+                <label>التصنيفات المتاحة:</label>
+                <div class="categories-grid">
+                    <label class="category-checkbox-label">
+                        <input type="checkbox" id="catProverbs" value="proverbs" checked> 
+                        📜 أمثال شعبية
+                    </label>
+                    <label class="category-checkbox-label">
+                        <input type="checkbox" id="catSongs" value="songs" checked> 
+                        🎵 أغاني مشهورة
+                    </label>
+                    <label class="category-checkbox-label">
+                        <input type="checkbox" id="catShielas" value="shielas" checked> 
+                        📻 شيلات وحماس
+                    </label>
+                    <label class="category-checkbox-label">
+                        <input type="checkbox" id="catPoetry" value="poetry" checked> 
+                        🖋️ قصائد وشعر
+                    </label>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1rem;">
+                <div>
+                    <label>عدد الجولات</label>
+                    <select id="roundsSelect">
+                        <option value="3">3 جولات (سريع ⚡)</option>
+                        <option value="5" selected>5 جولات</option>
+                        <option value="10">10 جولات (للأساطير 💀)</option>
+                    </select>
+                </div>
+                <div>
+                    <label>وقت التخمين</label>
+                    <select id="timeSelect">
+                        <option value="15">15 ثانية (نار 🔥)</option>
+                        <option value="30" selected>30 ثانية</option>
+                        <option value="45">45 ثانية</option>
+                    </select>
+                </div>
+            </div>
+
+            <button onclick="hostCreateRoom()" class="btn btn-primary" style="width: 100%;">إنشاء غرفة لعب 🚀</button>
+            
+            <div style="margin: 1rem 0; text-align: center; font-weight: 700; color: #888; font-size: 0.85rem;">أو</div>
+
+            <div class="form-group">
+                <input type="text" id="roomCodeInput" placeholder="أدخل رمز الغرفة" maxlength="6" style="text-align: center; letter-spacing: 2px; font-weight: 900;">
+            </div>
+            <button onclick="guestJoinRoom()" class="btn btn-primary" style="width: 100%;">انضمام لغرفة 🔗</button>
+        </div>
+
+        <!-- لوبي الانتظار -->
+        <div id="lobbyView" class="glass-card" style="display: none; text-align: center;">
+            <h2 style="margin-bottom: 0.3rem; font-size: 1.3rem;">غرفة الانتظار ☕</h2>
+            <p style="color: #666; font-size: 0.85rem;">شارك هذا الرمز مع أصدقائك:</p>
+            <div id="displayRoomCode" style="font-size: 2rem; font-weight: 900; color: var(--primary-orange); background: #FFF3EF; padding: 0.6rem; border-radius: 12px; border: 2px dashed var(--primary-orange); margin: 0.8rem 0; letter-spacing: 3px;">
+                0000 📋
+            </div>
+
+            <div style="margin-bottom: 0.8rem; text-align: right;">
+                <label>إعدادات الغرفة الحالية:</label>
+                <div id="roomSettingsSummary" style="background: #F8FAFC; padding: 0.6rem; border-radius: 10px; font-size: 0.85rem; font-weight: 700; color: #475569; margin-bottom: 0.8rem; border: 1px solid #E2E8F0;"></div>
+
+                <label>اللاعبون الجاهزون:</label>
+                <div id="connectedPlayersContainer" style="margin-top: 0.4rem;"></div>
+            </div>
+
+            <button id="startGameBtn" onclick="hostStartGame()" class="btn btn-primary" style="display: none; margin-top: 1.2rem; width: 100%;">إقلاع الرحلة 🛫</button>
+            <p id="waitingHostText" style="color: #888; font-weight: 700; display: none; margin-top: 0.8rem; font-size: 0.85rem;">في انتظار كابتن الطيارة (الهوست) ليبدأ...</p>
+        </div>
+
+        <!-- واجهة اللعب -->
+        <div id="gamePlayView" class="glass-card" style="display: none;">
+            <div class="header-status">
+                <div>
+                    <span id="roundDisplay" style="font-size: 0.85rem; font-weight: 800; color: #666;">الجولة 1 من 5</span>
+                    <div style="font-weight: 800; font-size: 1rem; margin-top: 0.1rem; color: var(--primary-orange);">كمل الفراغ:</div>
+                </div>
+                <div class="timer-display" id="timer">30s</div>
+            </div>
+
+            <!-- صندوق النص ورمز التصنيف -->
+            <div class="phrase-display-box" id="phraseDisplayBoxContainer">
+                <div id="phraseTextDisplay"></div>
+                <div id="categoryBadgeContainer"></div>
+            </div>
+
+            <!-- صندوق التلميح عند تبقي 10 ثواني -->
+            <div id="hintBox" class="hint-box">
+                💡 <strong>تلميح:</strong> <span id="hintText">...</span>
+            </div>
+
+            <div class="form-group">
+                <input type="text" id="answerInput" placeholder="اكتب التكملة هنا بسرعة! ✍️" onkeydown="if(event.key === 'Enter') submitAnswer()">
+            </div>
+            
+            <button id="submitAnswerBtn" onclick="submitAnswer()" class="btn btn-primary" style="width: 100%;">إرسال الإجابة 🚀</button>
+            <div id="answerFeedback" style="text-align: center; font-weight: 800; margin-top: 1rem; display: none;"></div>
+        </div>
+
+        <!-- واجهة نتيجة الجولة -->
+        <div id="resultsView" class="glass-card" style="display: none; text-align: center;">
+            <h2 id="resultTitle" style="margin-bottom: 0.5rem; font-size: 1.5rem;">انتهى الوقت! ⏱️</h2>
+            <div style="font-size: 1.2rem; font-weight: 900; color: var(--primary-orange); margin-bottom: 1rem;">
+                الجواب هو: <span id="correctPhraseDisplay" style="color: var(--text-main);">...</span>
+            </div>
+
+            <div id="winnerAnnouncement" style="font-size: 1.2rem; font-weight: 900; color: var(--green-success); margin-bottom: 1rem; display: none; background: #E8F5E9; padding: 10px; border-radius: 12px; border: 1px dashed var(--green-success);"></div>
+
+            <div id="roundScoresContainer" style="text-align: right; margin-bottom: 1.5rem;"></div>
+
+            <div id="nextRoundTimerContainer" style="display: none; font-size: 1.1rem; font-weight: 900; color: #475569;">
+                الجولة الجاية بتبدأ بعد<br>
+                <span id="nextRoundTimerDisplay" style="font-size: 3.5rem; color: var(--primary-orange); display: inline-block; margin-top: 10px;">3</span>
+            </div>
+        </div>
+
+        <!-- واجهة التتويج -->
+        <div id="winnerView" class="glass-card" style="display: none; text-align: center;">
+            <h1 class="title" style="font-size: 1.5rem;">🎉 أساطير الذاكرة 🎉</h1>
+            <p class="subtitle">شوفوا مين اللي ختم الثقافة! 😂</p>
+
+            <div id="podiumDisplay" class="podium-container"></div>
+
+            <button onclick="window.location.reload()" class="btn btn-primary" style="margin-top: 1.2rem; width: 100%;">لعب مرة ثانية 🔄</button>
+        </div>
+
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCg29LG4HI-vas93dBFIMqKEfzeYUAx-o0",
+            authDomain: "fikrh-cf0ff.firebaseapp.com",
+            databaseURL: "https://fikrh-cf0ff-default-rtdb.firebaseio.com",
+            projectId: "fikrh-cf0ff",
+            storageBucket: "fikrh-cf0ff.firebasestorage.app",
+            messagingSenderId: "523229194032",
+            appId: "1:523229194032:web:29e3a5ef0ce27d8b3d0af5"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('currentUser') || 
+                              localStorage.getItem('fikrh_username') || 
+                              localStorage.getItem('username') || 
+                              localStorage.getItem('playerName');
+            if(savedUser) {
+                document.getElementById('playerNameInput').value = savedUser;
+            }
+        });
+
+        function toggleDifficultyOptions() {
+            let diff = document.getElementById('difficultySelect').value;
+            let hintContainer = document.getElementById('hintOptionsContainer');
+            if(diff === 'hard') {
+                hintContainer.style.display = 'none';
+            } else {
+                hintContainer.style.display = 'block';
+            }
+        }
+
+        let backAttemptTime = 0;
+        function goBackStep() {
+            const lobbyView = document.getElementById('lobbyView');
+            const gamePlayView = document.getElementById('gamePlayView');
+            const resultsView = document.getElementById('resultsView');
+            const winnerView = document.getElementById('winnerView');
+
+            if ((lobbyView && lobbyView.style.display === 'block') || 
+                (gamePlayView && gamePlayView.style.display === 'block') || 
+                (resultsView && resultsView.style.display === 'block') || 
+                (winnerView && winnerView.style.display === 'block')) {
+                
+                let now = Date.now();
+                if (now - backAttemptTime > 10000) {
+                    backAttemptTime = now;
+                    showToast('⚠️ اضغط مرة أخرى خلال 10 ثواني لتأكيد الخروج من الغرفة!');
+                    return;
+                }
+
+                if(roomRef && currentRoomCode) {
+                    let pName = document.getElementById('playerNameInput').value.trim();
+                    if(pName) {
+                        roomRef.child('players/' + pName).remove().then(() => {
+                            roomRef.child('players').get().then((snap) => {
+                                if(!snap.exists() || Object.keys(snap.val()).length === 0) {
+                                    roomRef.remove();
+                                }
+                            });
+                        });
+                    }
+                }
+                switchView('roomSelectionView');
+            } else {
+                if (window.history.length > 1) {
+                    window.history.back();
+                } else {
+                    window.location.href = 'index.html';
+                }
+            }
+        }
+
+       const phrasesDB = [
+    // أغاني محمد عبده
+    { text: "الأماكن كلها مشتاقة", answer: "لك", hint: "شوق للمكان والراحلين", category: "songs", catName: "🎵 محمد عبده" },
+    { text: "مظلمة كانت زوايا هالـ", answer: "مكان", hint: "عن غياب الضوء والوجوه", category: "songs", catName: "🎵 محمد عبده" },
+    { text: "يا مستجيب للداعي.. جب دعوتي", answer: "باسراعي", hint: "طلب الاستجابة دون تأخير", category: "songs", catName: "🎵 محمد عبده" },
+    { text: "لنا الله يا خالي من", answer: "الشوق", hint: "عن المشاعر الباردة والتغلي", category: "songs", catName: "🎵 محمد عبده" },
+    { text: "ابعاد كنتم ولا", answer: "قريبين", hint: "تعبير عن المسافة والحيرة", category: "songs", catName: "🎵 محمد عبده" },
+    { text: "أنت محبوبي ولا غيرك", answer: "أحد", hint: "إثبات الحصرية في العشق", category: "songs", catName: "🎵 محمد عبده" },
+    { text: "أرق الرياض وتصديق", answer: "الوعد", hint: "عن ليالي العاصمة والوفاء", category: "songs", catName: "🎵 محمد عبده" },
+    { text: "مقادير يا قلب", answer: "العنا", hint: "من أشهر أغاني الحزن والقدر", category: "songs", catName: "🎵 محمد عبده" },
+    { text: "ليلة خميس طرز بها نور", answer: "القمر", hint: "ليلة الويكند الشهيرة عند أبو نورة", category: "songs", catName: "🎵 محمد عبده" },
+    { text: "مجموعة إنسان من كل أمة", answer: "شعب", hint: "عن التناقضات وتعدد الشخصية", category: "songs", catName: "🎵 محمد عبده" },
+    { text: "يا ضايق الصدر بالله توسع", answer: "الخاطر", hint: "دعوة لترك الهموم والملاحة", category: "songs", catName: "🎵 محمد عبده" },
+    { text: "أرسل لقلبي أمل ووعدني بـ", answer: "اللقا", hint: "انتظار موعد المحبوب", category: "songs", catName: "🎵 محمد عبده" },
+    { text: "صوتك يناديني تذكرت", answer: "أمس", hint: "الحنين إلى الذكريات القديمة", category: "songs", catName: "🎵 محمد عبده" },
+    { text: "أيوه قلبك في المودة ما", answer: "صدق", hint: "عن الخيانة والتراجع عن العهد", category: "songs", catName: "🎵 محمد عبده" },
+    { text: "شبيه الريح وش باقي من", answer: "الآلام", hint: "قصيدة مشهورة عن الأذى والجراح", category: "songs", catName: "🎵 محمد عبده" },
+    { text: "اسمحيلي يا غرامي معذرة من قسوة", answer: "كلامي", hint: "اعتذار بعد لحظة غضب", category: "songs", catName: "🎵 محمد عبده" },
+    { text: "كفاني عذاب الله يجازي", answer: "الظروف", hint: "عن معاناته مع الأسباب والقدر", category: "songs", catName: "🎵 محمد عبده" },
+    { text: "جمر الهوى لو ما طفيته", answer: "حرقني", hint: "عن حرارة الشوق والغرام", category: "songs", catName: "🎵 محمد عبده" },
+    { text: "يا شوق هزتك الذكرى ورا ما", answer: "تميل", hint: "عن الحنين للانحناء والتأثر", category: "songs", catName: "🎵 محمد عبده" },
+
+    // أغاني مشهورة أخرى
+    { text: "يا طيب القلب وينك حرام تهجر", answer: "ضنينك", hint: "نداء لحبيبك وعزيزك", category: "songs", catName: "🎵 أغنية" },
+    { text: "أما براوة براوة أما براوة دوار", answer: "الدار", hint: "من الفلكلور المصري القديم", category: "songs", catName: "🎵 أغنية" },
+    { text: "وينك يا درب", answer: "المحبة", hint: "البحث عن طريق العشاق", category: "songs", catName: "🎵 أغنية" },
+    { text: "سرى الليل يا أبو", answer: "ثلاثة", hint: "أغنية شعبية قديمة وسهرة ليلية", category: "songs", catName: "🎵 أغنية" },
+    { text: "انا وليفي جفاني مدري وش اللي", answer: "حصله", hint: "عن تغير أحوال الصاحب فجأة", category: "songs", catName: "🎵 أغنية" },
+
+    // أمثال شعبية
+    { text: "اللي ما يعرف الصقر", answer: "يشويه", hint: "عن عدم تقدير قيمة الأشياء الثمينة", category: "proverbs", catName: "📜 مثل شعبي" },
+    { text: "باب النجار", answer: "مخلع", hint: "إهمال المتخصص لبيته أو أدواته", category: "proverbs", catName: "📜 مثل شعبي" },
+    { text: "عصفور في اليد ولا عشرة على", answer: "الشجرة", hint: "القناعة بالمضمون أفضل من الطمع", category: "proverbs", catName: "📜 مثل شعبي" },
+    { text: "جا يكحلها", answer: "عماها", hint: "حاول يصلح الشغلة وخربها زيادتين", category: "proverbs", catName: "📜 مثل شعبي" },
+    { text: "مد رجلك على قد", answer: "لحافك", hint: "عش على قد إمكانياتك", category: "proverbs", catName: "📜 مثل شعبي" },
+    { text: "الطيور على أشكالها", answer: "تقع", hint: "الناس المتشابهين يجتمعون دائماً", category: "proverbs", catName: "📜 مثل شعبي" },
+    { text: "وقت الفزعة مالك إلا", answer: "ربعك", hint: "عن أهمية الأهل والأقارب بالمواقف", category: "proverbs", catName: "📜 مثل شعبي" },
+    { text: "من طلع من داره قل", answer: "مقداره", hint: "عن أهمية التمسك بالأصل والمكان", category: "proverbs", catName: "📜 مثل شعبي" },
+    { text: "لو تجري جري الوحوش غير رزقك ما", answer: "تحوش", hint: "عن القناعة والإيمان بالقدر", category: "proverbs", catName: "📜 مثل شعبي" },
+    { text: "يا شين السرج على البقر ويا شين الكحل في", answer: "العمش", hint: "شيء لا يليق بصاحبه إطلاقاً", category: "proverbs", catName: "📜 مثل شعبي" },
+
+    // شيلات
+    { text: "يا كنترول يا كنترول سجل لنا أقوى", answer: "دخول", hint: "شيلة حماسية للحضور والسيطرة", category: "shielas", catName: "📻 شيلة" },
+    { text: "زلزلة أنتم شيوخ", answer: "الزلزلة", hint: "شيلة حماس وفخر بالقبيلة", category: "shielas", catName: "📻 شيلة" },
+    { text: "سرها يا هاجسي صوب", answer: "الجنوب", hint: "توجه بالفكر والشعر نحو الديار", category: "shielas", catName: "📻 شيلة" },
+    { text: "تحزم تحزم خويي", answer: "تحزم", hint: "دعوة للاستعداد والمظاهرة مع الخوي", category: "shielas", catName: "📻 شيلة" },
+    { text: "صقور بالجو", answer: "تعتلي", hint: "عن الارتفاع والشموخ العالي", category: "shielas", catName: "📻 شيلة" },
+    { text: "ابسط حقوقي", answer: "ومطالبي", hint: "عن التمسك بالحق الواجب", category: "shielas", catName: "📻 شيلة" },
+    { text: "شمر ليا من زعلت", answer: "دول", hint: "عن غضب القوم وقوتهم", category: "shielas", catName: "📻 شيلة" },
+    { text: "العب طرب والعب", answer: "قزوعي", hint: "فن شعبي وتراثي حماسي", category: "shielas", catName: "📻 شيلة" },
+
+    // قصائد وشعر
+    { text: "الخيل والليل والبيداء تعرفني والسيف والرمح والقرطاس", answer: "والقلم", hint: "بيت فخر شهير لأبو الطيب المتنبي", category: "poetry", catName: "🖋️ بيت شعر" },
+    { text: "نعيب زماننا والعيب فينا وما لزماننا عيب", answer: "سوانا", hint: "حكمة شائعة للإمام الشافعي", category: "poetry", catName: "🖋️ بيت شعر" },
+    { text: "إذا الشعب يوما أراد الحياة فلا بد أن يستجيب", answer: "القدر", hint: "قصيدة تونسية شهيرة عن الإرادة", category: "poetry", catName: "🖋️ بيت شعر" },
+    { text: "وما نيل المطالب بالتمني ولكن تؤخذ الدنيا", answer: "غلابا", hint: "عن السعي والعمل للحصول على المراد", category: "poetry", catName: "🖋️ بيت شعر" },
+    { text: "قم للمعلم وفه التبجيلا كاد المعلم أن يكون", answer: "رسولا", hint: "أحمد شوقي وتبجيل أصحاب العلم", category: "poetry", catName: "🖋️ بيت شعر" },
+    { text: "لا تشك للناس جرحاً أنت صاحبه لا يؤلم الجرح إلا من به", answer: "ألم", hint: "عن كتمان الشكوى وعدم التباهي بالحزن", category: "poetry", catName: "🖋️ بيت شعر" },
+    { text: "دقات قلب المرء قائلة له إن الحياة دقائق", answer: "وثواني", hint: "عن سرعة مضي العمر والوقت", category: "poetry", catName: "🖋️ بيت شعر" }
+];
+
+        let isHost = false;
+        let currentRoomCode = "";
+        let roomRef = null;
+        let playerName = "";
+        let totalRounds = 5;
+        let roundTime = 30;
+        let currentRound = 0;
+        let timerInterval;
+        let nextRoundTimerInterval;
+        let playersList = [];
+        let gameQuestions = [];
+        let remainingAttempts = 3;
+
+        let toastTimeout;
+        function showToast(msg) {
+            const t = document.getElementById('toastMessage');
+            t.innerText = msg;
+            t.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                t.classList.remove('show');
+            }, 3000);
+        }
+
+        function switchView(viewId) {
+            document.querySelectorAll('#gameContainerView .glass-card').forEach(c => c.style.display = 'none');
+            document.getElementById(viewId).style.display = 'block';
+        }
+
+        function normalizeString(str) {
+            if (!str) return '';
+            let cleaned = str.trim().toLowerCase();
+            // نشيل ال التعريف ونوحد الحروف لتفادي الأخطاء الإملائية
+            cleaned = cleaned.replace(/^(ال)/g, '');
+            return cleaned
+                .replace(/أ|إ|آ/g, 'ا')
+                .replace(/ة/g, 'ه')
+                .replace(/ي/g, 'ى')
+                .replace(/\s+/g, '');
+        }
+
+        function hostCreateRoom() {
+            playerName = document.getElementById('playerNameInput').value.trim() || "الهوست";
+            totalRounds = parseInt(document.getElementById('roundsSelect').value);
+            roundTime = parseInt(document.getElementById('timeSelect').value);
+            let difficulty = document.getElementById('difficultySelect').value;
+            let useHint = document.getElementById('useHintCheckbox').checked;
+            let showCategory = document.getElementById('showCategoryCheckbox').checked;
+            isHost = true;
+
+            let selectedCategories = [];
+            if(document.getElementById('catProverbs').checked) selectedCategories.push('proverbs');
+            if(document.getElementById('catSongs').checked) selectedCategories.push('songs');
+            if(document.getElementById('catShielas').checked) selectedCategories.push('shielas');
+            if(document.getElementById('catPoetry').checked) selectedCategories.push('poetry');
+
+            if(selectedCategories.length === 0) {
+                return showToast('اختر تصنيف واحد على الأقل يا كابتن! ⚠️');
+            }
+
+            let filteredPhrases = phrasesDB.filter(p => selectedCategories.includes(p.category));
+
+            if(filteredPhrases.length < totalRounds) {
+                return showToast(`عدد الأسئلة المتاحة (${filteredPhrases.length}) أقل من عدد الجولات (${totalRounds})! اختر تصنيفات أكثر.`);
+            }
+
+            let shuffled = [...filteredPhrases].sort(() => 0.5 - Math.random());
+            gameQuestions = shuffled.slice(0, totalRounds);
+
+            currentRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
+            document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
+
+            roomRef = db.ref('complete_rooms/' + currentRoomCode);
+            roomRef.set({
+                host: playerName,
+                state: 'lobby',
+                settings: { totalRounds, roundTime, difficulty, useHint, showCategory, questions: gameQuestions },
+                players: { [playerName]: { score: 0 } }
+            }).then(() => {
+                listenToFirebase();
+                switchView('lobbyView');
+                document.getElementById('startGameBtn').style.display = 'block';
+                document.getElementById('waitingHostText').style.display = 'none';
+            });
+        }
+
+        function guestJoinRoom() {
+            playerName = document.getElementById('playerNameInput').value.trim() || "الضيف";
+            const code = document.getElementById('roomCodeInput').value.trim();
+            if(!code) return showToast('أدخل رمز الغرفة يا كابتن!');
+
+            isHost = false;
+            currentRoomCode = code;
+            roomRef = db.ref('complete_rooms/' + currentRoomCode);
+
+            roomRef.get().then((snap) => {
+                if(snap.exists()) {
+                    roomRef.child('players/' + playerName).set({ score: 0 });
+                    document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
+                    listenToFirebase();
+                    switchView('lobbyView');
+                    document.getElementById('startGameBtn').style.display = 'none';
+                    document.getElementById('waitingHostText').style.display = 'block';
+                } else {
+                    showToast('الغرفة غير موجودة، تأكد من الرمز!');
+                }
+            });
+        }
+
+        function listenToFirebase() {
+            roomRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                
+                if(!data || !data.players || Object.keys(data.players).length === 0) {
+                    if(document.getElementById('roomSelectionView').style.display !== 'block') {
+                        showToast('انتهت الغرفة لخروج كل اللاعبين! 🚪');
+                        clearInterval(timerInterval);
+                        clearInterval(nextRoundTimerInterval);
+                        switchView('roomSelectionView');
+                    }
+                    return;
+                }
+
+                if(data.players) {
+                    playersList = Object.keys(data.players);
+                    updatePlayersUI(data.players);
+                }
+                
+                if(data.settings) {
+                    totalRounds = data.settings.totalRounds;
+                    roundTime = data.settings.roundTime;
+                    gameQuestions = data.settings.questions;
+
+                    let diffText = data.settings.difficulty === 'easy' ? 'سهل 🍼' : data.settings.difficulty === 'medium' ? 'وسط ⚖️' : 'صعب 💀';
+                    let hintText = data.settings.useHint ? 'مفعلة' : 'معطلة';
+                    let catText = data.settings.showCategory ? 'مفعل' : 'معطل';
+
+                    document.getElementById('roomSettingsSummary').innerHTML = `
+                        🎯 الصعوبة: ${diffText} | ⏱️ الوقت: ${roundTime} ث | 💡 التلميح: ${hintText}<br>
+                        📌 إظهار التصنيف: ${catText} | 🏁 الجولات: ${totalRounds}
+                    `;
+                }
+
+                if(data.state === 'playing' && data.currentRound !== currentRound) {
+                    currentRound = data.currentRound;
+                    startRoundPlay(data.currentRound, data.roundStartTime, data.settings);
+                } else if (data.state === 'results') {
+                    showRoundResults(data);
+                } else if (data.state === 'finished') {
+                    showFinalWinner(data.players);
+                }
+            });
+        }
+
+        function updatePlayersUI(playersObj) {
+            const container = document.getElementById('connectedPlayersContainer');
+            container.innerHTML = '';
+            for(let p in playersObj) {
+                container.innerHTML += `<div class="player-chip">👤 ${p} <span style="color:var(--primary-orange);">${playersObj[p].score} نقطة</span></div>`;
+            }
+        }
+
+        function hostStartGame() {
+            if(!isHost) return;
+            currentRound = 0;
+            hostNextRound();
+        }
+
+        function hostNextRound() {
+            let nextRound = currentRound + 1;
+            if(nextRound > totalRounds) {
+                roomRef.update({ state: 'finished' });
+            } else {
+                roomRef.child('round_answers').remove();
+                roomRef.child('roundWinner').remove();
+                roomRef.update({
+                    state: 'playing',
+                    currentRound: nextRound,
+                    roundStartTime: Date.now()
+                });
+            }
+        }
+
+        function startRoundPlay(roundNum, startTime, settings) {
+            clearInterval(timerInterval);
+            clearInterval(nextRoundTimerInterval);
+
+            remainingAttempts = 3;
+            let currentQ = gameQuestions[roundNum - 1];
+            
+            let diff = settings?.difficulty || 'medium';
+            let useHint = settings?.useHint ?? true;
+            let showCategory = settings?.showCategory ?? true;
+
+            document.getElementById('roundDisplay').innerText = `الجولة ${roundNum} من ${totalRounds} (${diff.toUpperCase()})`;
+            
+            // عرض النص مع مسافة ونقاط للكلمة الناقصة
+            document.getElementById('phraseTextDisplay').innerHTML = `${currentQ.text} <span class="missing-word">.........</span>`;
+            
+            let badgeContainer = document.getElementById('categoryBadgeContainer');
+            if (showCategory && currentQ.catName) {
+                badgeContainer.innerHTML = `<div class="category-badge">${currentQ.catName}</div>`;
+                badgeContainer.style.display = 'block';
+            } else {
+                badgeContainer.innerHTML = '';
+                badgeContainer.style.display = 'none';
+            }
+
+            let hintBox = document.getElementById('hintBox');
+            let hintTextEl = document.getElementById('hintText');
+            hintBox.style.display = 'none';
+            
+            if(diff === 'easy') {
+                hintTextEl.innerText = `${currentQ.hint} (أول حرف: ${currentQ.answer.charAt(0)})`;
+            } else {
+                hintTextEl.innerText = currentQ.hint;
+            }
+
+            let inputEl = document.getElementById('answerInput');
+            inputEl.value = '';
+            inputEl.disabled = false;
+            inputEl.focus();
+            
+            let btnEl = document.getElementById('submitAnswerBtn');
+            btnEl.disabled = false;
+            btnEl.innerText = 'إرسال الإجابة 🚀 (باقي لك 3 محاولات)';
+
+            let feedbackEl = document.getElementById('answerFeedback');
+            feedbackEl.style.display = 'none';
+
+            switchView('gamePlayView');
+
+            timerInterval = setInterval(() => {
+                let elapsed = Math.floor((Date.now() - startTime) / 1000);
+                let timeLeft = roundTime - elapsed;
+                
+                if (timeLeft <= 10 && timeLeft > 0 && diff !== 'hard' && useHint) {
+                    hintBox.style.display = 'block';
+                }
+
+                if(timeLeft <= 0) {
+                    timeLeft = 0;
+                    clearInterval(timerInterval);
+                    if(isHost) {
+                        roomRef.get().then((snap) => {
+                            let data = snap.val();
+                            if(data && data.state === 'playing') {
+                                roomRef.update({ state: 'results' });
+                            }
+                        });
+                    }
+                }
+                document.getElementById('timer').innerText = timeLeft + "s";
+            }, 1000);
+        }
+
+        function submitAnswer() {
+            if(remainingAttempts <= 0) return;
+            
+            let input = document.getElementById('answerInput').value.trim();
+            if(!input) return;
+
+            let currentQ = gameQuestions[currentRound - 1];
+            let isCorrect = normalizeString(input) === normalizeString(currentQ.answer);
+            
+            let feedbackEl = document.getElementById('answerFeedback');
+            feedbackEl.style.display = 'block';
+
+            if(isCorrect) {
+                roomRef.child('players/' + playerName + '/score').transaction((currentScore) => {
+                    return (currentScore || 0) + 100;
+                });
+                roomRef.child('round_answers/' + playerName).set({ correct: true, time: Date.now() });
+                
+                document.getElementById('answerInput').disabled = true;
+                document.getElementById('submitAnswerBtn').disabled = true;
+
+                roomRef.get().then((snap) => {
+                    let data = snap.val();
+                    if(data && data.state === 'playing') {
+                        roomRef.update({ state: 'results', roundWinner: playerName });
+                    }
+                });
+
+                feedbackEl.innerText = "كفوووو! أنت الذيب اللي كملها 🐺✅";
+                feedbackEl.style.color = "var(--green-success)";
+                confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
+            } else {
+                remainingAttempts--;
+                roomRef.child('round_answers/' + playerName).set({ correct: false });
+
+                if(remainingAttempts > 0) {
+                    feedbackEl.innerText = `غلط يا وحش! ❌ باقي لك (${remainingAttempts}) محاولات`;
+                    feedbackEl.style.color = "var(--red-danger)";
+                    document.getElementById('submitAnswerBtn').innerText = `إرسال الإجابة 🚀 (باقي لك ${remainingAttempts} محاولات)`;
+                    document.getElementById('answerInput').value = '';
+                    document.getElementById('answerInput').focus();
+                } else {
+                    document.getElementById('answerInput').disabled = true;
+                    document.getElementById('submitAnswerBtn').disabled = true;
+                    feedbackEl.innerText = "خلصت محاولاتك الثلاث في هذه الجولة! ⛔ انتظر النتائج";
+                    feedbackEl.style.color = "var(--red-danger)";
+                }
+            }
+        }
+
+        function showRoundResults(data) {
+            clearInterval(timerInterval);
+            clearInterval(nextRoundTimerInterval);
+
+            let currentQ = gameQuestions[currentRound - 1];
+            if(currentQ) {
+                document.getElementById('correctPhraseDisplay').innerText = `${currentQ.text} [${currentQ.answer}]`;
+            }
+            
+            let winnerBox = document.getElementById('winnerAnnouncement');
+            let resultTitle = document.getElementById('resultTitle');
+            
+            if(data.roundWinner) {
+                resultTitle.innerText = "تم حل الجولة بنجاح! 🥊";
+                winnerBox.innerHTML = `البطل اللي فاز بالجولة: 👑 ${data.roundWinner}`;
+                winnerBox.style.display = 'block';
+            } else {
+                resultTitle.innerText = "انتهى الوقت للأسف! ⏱️";
+                winnerBox.style.display = 'none';
+            }
+
+            let answers = data.round_answers || {};
+            let container = document.getElementById('roundScoresContainer');
+            container.innerHTML = '';
+
+            for(let p in data.players) {
+                let status = "لم يجب ⏳";
+                let color = "#888";
+                if(answers[p]) {
+                    if(answers[p].correct) { status = "صح ✅ (+100)"; color = "var(--green-success)"; }
+                    else { status = "خطأ بالمحاولات ❌"; color = "var(--red-danger)"; }
+                }
+                container.innerHTML += `
+                    <div class="player-chip">
+                        <span>👤 ${p} (المجموع: ${data.players[p].score})</span>
+                        <span style="color: ${color}; font-weight: 900;">${status}</span>
+                    </div>
+                `;
+            }
+
+            switchView('resultsView');
+
+            let countdown = 3;
+            let displayElement = document.getElementById('nextRoundTimerDisplay');
+            document.getElementById('nextRoundTimerContainer').style.display = 'block';
+            
+            displayElement.innerText = countdown;
+            displayElement.classList.remove('timer-pop');
+            void displayElement.offsetWidth; 
+            displayElement.classList.add('timer-pop');
+
+            nextRoundTimerInterval = setInterval(() => {
+                countdown--;
+                displayElement.innerText = countdown;
+                
+                displayElement.classList.remove('timer-pop');
+                void displayElement.offsetWidth; 
+                displayElement.classList.add('timer-pop');
+
+                if(countdown <= 0) {
+                    clearInterval(nextRoundTimerInterval);
+                    if(isHost) {
+                        hostNextRound();
+                    }
+                }
+            }, 1000);
+        }
+
+        function showFinalWinner(playersObj) {
+            clearInterval(timerInterval);
+            clearInterval(nextRoundTimerInterval);
+
+            showToast('🏁 انتهت اللعبة بنجاح، إليكم منصة التتويج! 🎉');
+
+            let sorted = Object.entries(playersObj).sort((a, b) => b[1].score - a[1].score);
+            let podiumHTML = '';
+            
+            if(sorted.length > 0) {
+                podiumHTML += `<div class="podium-step podium-2" style="order: 1;"><div style="font-size:1.5rem">🥈</div><div>${sorted[1] ? sorted[1][0] : '-'}</div><div>${sorted[1] ? sorted[1][1].score : ''}</div></div>`;
+                podiumHTML += `<div class="podium-step podium-1" style="order: 2; z-index:2; box-shadow: 0 -10px 20px rgba(255,215,0,0.5);"><div style="font-size:2rem; position:absolute; top:-35px;">👑</div><div>${sorted[0][0]}</div><div>${sorted[0][1].score}</div></div>`;
+                podiumHTML += `<div class="podium-step podium-3" style="order: 3;"><div style="font-size:1.5rem">🥉</div><div>${sorted[2] ? sorted[2][0] : '-'}</div><div>${sorted[2] ? sorted[2][1].score : ''}</div></div>`;
+            }
+            
+            document.getElementById('podiumDisplay').innerHTML = podiumHTML;
+            confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
+            switchView('winnerView');
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

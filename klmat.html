@@ -284,44 +284,139 @@
             }
         });
 
-        // قاعدة بيانات الكلمات المنوعة
+        // قاعدة بيانات الكلمات الموسعة (أكثر من 120 سؤال)
         const wordsDB = [
-            // برمجة وتقنية
+            // برمجة وتقنية (Tech)
             { word: "جافاسكربت", category: "tech", hint: "لغة برمجة أساسية للويب" },
             { word: "بايثون", category: "tech", hint: "لغة برمجة شعارها ثعبان" },
             { word: "خوارزمية", category: "tech", hint: "خطوات منطقية لحل مشكلة" },
             { word: "سيرفر", category: "tech", hint: "خادم يستضيف المواقع" },
             { word: "داتا", category: "tech", hint: "بيانات ومعلومات" },
-            // سيارات ومحركات
+            { word: "برمجة", category: "tech", hint: "كتابة أوامر لتوجيه الحاسوب" },
+            { word: "متصفح", category: "tech", hint: "تطبيق لفتح وزيارة المواقع" },
+            { word: "تطبيق", category: "tech", hint: "برنامج يعمل على هاتفك" },
+            { word: "شاشة", category: "tech", hint: "تعرض لك النتائج والصور" },
+            { word: "لوحة مفاتيح", category: "tech", hint: "أزرار لكتابة النصوص" },
+            { word: "ماوس", category: "tech", hint: "فأرة لتحريك المؤشر" },
+            { word: "معالج", category: "tech", hint: "عقل الحاسوب المدبر" },
+            { word: "ذاكرة", category: "tech", hint: "تحفظ المؤقت أو الدائم" },
+            { word: "رابط", category: "tech", hint: "ينقلك لصفحة أخرى" },
+            { word: "هكر", category: "tech", hint: "شخص يخترق الأنظمة" },
+            { word: "تحديث", category: "tech", hint: "نسخة أحدث وأفضل" },
+            { word: "ذكاء اصطناعي", category: "tech", hint: "تقنية تحاكي تفكير البشر" },
+            { word: "شبكة", category: "tech", hint: "تربط الأجهزة ببعضها" },
+            { word: "واي فاي", category: "tech", hint: "إنترنت لاسلكي" },
+            { word: "بطارية", category: "tech", hint: "تخزن الطاقة للجهاز" },
+
+            // سيارات ومحركات (Cars)
             { word: "نيسان", category: "cars", hint: "شركة سيارات يابانية" },
             { word: "مكسيما", category: "cars", hint: "سيارة سيدان يابانية سريعة" },
             { word: "فرامل", category: "cars", hint: "جزء أساسي لإيقاف السيارة" },
             { word: "راديتر", category: "cars", hint: "مسؤول عن تبريد المحرك" },
             { word: "بواجي", category: "cars", hint: "تطلق الشرارة للاحتراق" },
-            // ألعاب فيديو
+            { word: "تويوتا", category: "cars", hint: "شركة سيارات يابانية شهيرة" },
+            { word: "محرك", category: "cars", hint: "قلب السيارة النابض" },
+            { word: "إطار", category: "cars", hint: "كفر مطاطي يسير على الأرض" },
+            { word: "مقود", category: "cars", hint: "دركسيون لتوجيه السيارة" },
+            { word: "قير", category: "cars", hint: "ناقل الحركة في السيارة" },
+            { word: "شكمان", category: "cars", hint: "أنبوب خروج العادم" },
+            { word: "بطارية سيارة", category: "cars", hint: "مصدر الكهرباء للبدء" },
+            { word: "زيت المحرك", category: "cars", hint: "يمنع احتكاك القطع الداخلية" },
+            { word: "ونيت", category: "cars", hint: "سيارة نقل ذات صندوق خلفي" },
+            { word: "جيب", category: "cars", hint: "سيارة دفع رباعي مرتفعة" },
+            { word: "كورفيت", category: "cars", hint: "سيارة رياضية أمريكية شهيرة" },
+            { word: "بنزين", category: "cars", hint: "وقود تشغيل المحرك" },
+            { word: "طبلون", category: "cars", hint: "لوحة عدادات السرعة" },
+            { word: "صدام", category: "cars", hint: "يحمي واجهة أو مؤخرة السيارة" },
+            { word: "مكيف", category: "cars", hint: "يبرد حرارة صيف السيارة" },
+
+            // ألعاب فيديو (Games)
             { word: "روبلوكس", category: "games", hint: "منصة لتصميم ولعب الألعاب" },
             { word: "محاكي", category: "games", hint: "لعبة تحاكي الواقع" },
             { word: "سيرفر", category: "games", hint: "مكان يجتمع فيه اللاعبين" },
             { word: "بليستيشن", category: "games", hint: "جهاز كونسول شهير" },
             { word: "ماينكرافت", category: "games", hint: "لعبة مكعبات وبناء" },
-            // أكل ومشروبات
+            { word: "قيمر", category: "games", hint: "محترف ألعاب الفيديو" },
+            { word: "كونتر بلوكس", category: "games", hint: "لعبة إطلاق نار روبلوكسية شهيرة" },
+            { word: "فورت نايت", category: "games", hint: "لعبة باتل رويال وبناء شهيرة" },
+            { word: "قراند", category: "games", hint: "لعبة عالم مفتوح وعصابات" },
+            { word: "لعبة جماعية", category: "games", hint: "تلعبها مع أصحابك أونلاين" },
+            { word: "تحدي", category: "games", hint: "منافسة قوية بين لاعبين" },
+            { word: "فوز", category: "games", hint: "تحقيق الانتصار في الجولة" },
+            { word: "خسارة", category: "games", hint: "عدم الفوز في المباراة" },
+            { word: "مستوى", category: "games", hint: "مرحلة متقدمة في اللعبة" },
+            { word: "بوس", category: "games", hint: "الزعيم الأخير في المرحلة" },
+            { word: "سلاح", category: "games", hint: "أداة قتال داخل اللعبة" },
+            { word: "درع", category: "games", hint: "يحميك من الضرر" },
+            { word: "سكور", category: "games", hint: "النقاط التي جمعتها" },
+            { word: "كونترولر", category: "games", hint: "يد تحكم الألعاب" },
+            { word: "ببجي", category: "games", hint: "لعبة بقاء وقتال شهيرة" },
+
+            // أكل ومشروبات (Food)
             { word: "شاورما", category: "food", hint: "أكلة سريعة ملفوفة بخبز" },
             { word: "بيتزا", category: "food", hint: "معجنات إيطالية شهيرة" },
             { word: "كبسة", category: "food", hint: "طبق خليجي أساسي" },
             { word: "اسبريسو", category: "food", hint: "قهوة مركزة جداً" },
             { word: "برجر", category: "food", hint: "لحم أو دجاج بين شريحتين خبز" },
-            // حيوانات
+            { word: "شاي", category: "food", hint: "مشروب ساخن شعبي مفضل" },
+            { word: "قهوة عربية", category: "food", hint: "مشروب الضيافة الأصيل بالهيل" },
+            { word: "مندي", category: "food", hint: "أرز ولحم مطبوخ بالتحت" },
+            { word: "فلافل", category: "food", hint: "قرص مقلي مصنوع من الحمص" },
+            { word: "بطاطس مقلية", category: "food", hint: "أصابع بطاطس مقرمشة" },
+            { word: "عصير ليمون", category: "food", hint: "مشروب منعش وحامض" },
+            { word: "جريش", category: "food", hint: "طبق شعبي قمح ولبن" },
+            { word: "سلطة", category: "food", hint: "خضروات طازجة منوعة" },
+            { word: "سمبوسة", category: "food", hint: "معجنات مقرمشة مثلثة الشكل" },
+            { word: "حلى", category: "food", hint: "طعام حلو المذاق بعد الوجبة" },
+            { word: "فطيرة", category: "food", hint: "عجين مخبوز بحشوات مختلفة" },
+            { word: "مرقوق", category: "food", hint: "أكلة شعبية عجين ومرق خضار" },
+            { word: "عصير مانجو", category: "food", hint: "عصير استوائي حلو وبارد" },
+            { word: "ايس كريم", category: "food", hint: "حلوى باردة مثلجة" },
+            { word: "خبز صاج", category: "food", hint: "خبز رقيق مخبوز على الصاج" },
+
+            // حيوانات (Animals)
             { word: "أسد", category: "animals", hint: "ملك الغابة" },
             { word: "زرافة", category: "animals", hint: "رقبتها طويلة جداً" },
             { word: "أخطبوط", category: "animals", hint: "كائن بحري بثمانية أذرع" },
             { word: "صقر", category: "animals", hint: "طائر جارح مشهور بالخليج" },
             { word: "سلحفاة", category: "animals", hint: "كائن بطيء ومُعمر" },
-            // عامة
+            { word: "فهد", category: "animals", hint: "حيوان مفترس سريع جداً" },
+            { word: "فيل", category: "animals", hint: "أضخم حيوان بري بخرطوم" },
+            { word: "ذيب", category: "animals", hint: "حيوان ذكي ومكار يعيش بالبر" },
+            { word: "جمل", category: "animals", hint: "سفينة الصحراء" },
+            { word: "حصان", category: "animals", hint: "حيوان أصيل سريع للركوب" },
+            { word: "دولفين", category: "animals", hint: "كائن بحري ذكي وودود" },
+            { word: "بطريق", category: "animals", hint: "طائر لا يطير يعيش بالثلج" },
+            { word: "قرد", category: "animals", hint: "يحب تسلق الأشجار وأكل الموز" },
+            { word: "نمر", category: "animals", hint: "قط كبير ذو خطوط سوداء" },
+            { word: "ثعلب", category: "animals", hint: "رمز المكر والدهاء" },
+            { word: "نسر", category: "animals", hint: "طائر قوي يطلق بحدة رؤية" },
+            { word: "تمساح", category: "animals", hint: "زاحف مفترس بأسنان حادة" },
+            { word: "قنديل البحر", category: "animals", hint: "كائن بحري هلامي شفاف" },
+            { word: "غزال", category: "animals", hint: "حيوان رشيق سريع الخفة" },
+            { word: "بومة", category: "animals", hint: "طائر ليلي ذو عيون واسعة" },
+
+            // عامة (General)
             { word: "مستشفى", category: "general", hint: "مكان لعلاج المرضى" },
             { word: "طيارة", category: "general", hint: "وسيلة نقل جوية" },
             { word: "مدرسة", category: "general", hint: "مكان لتلقي العلم" },
             { word: "كاميرا", category: "general", hint: "جهاز لالتقاط الصور" },
-            { word: "نظارة", category: "general", hint: "تلبس لتحسين الرؤية أو الحماية" }
+            { word: "نظارة", category: "general", hint: "تلبس لتحسين الرؤية أو الحماية" },
+            { word: "ساعة", category: "general", hint: "تلبس لمعرفة الوقت" },
+            { word: "قلم", category: "general", hint: "أداة للكتابة والرسم" },
+            { word: "كتاب", category: "general", hint: "مصدر للقراءة والمعرفة" },
+            { word: "طاولة", category: "general", hint: "قطعة أثاث لوضع الأشياء عليها" },
+            { word: "مفتاح", category: "general", hint: "يستخدم لفتح الأبواب" },
+            { word: "سيارة إسعاف", category: "general", hint: "تنقل المرضى للطوارئ" },
+            { word: "مطار", category: "general", hint: "مكان إقلاع وهبوط الطائرات" },
+            { word: "محطة", category: "general", hint: "لتعبئة الوقود أو انتظار القطار" },
+            { word: "سماعة", category: "general", hint: "توضع على الأذن لاستماع الأصوات" },
+            { word: "مصباح", category: "general", hint: "يضيء الغرفة المظلمة" },
+            { word: "شمس", category: "general", hint: "نجم النهار الذي يدفئ الأرض" },
+            { word: "قمر", category: "general", hint: "جرم سماوي يضيء الليل" },
+            { word: "بحر", category: "general", hint: "واسع مالح مليء بالأسرار" },
+            { word: "جبل", category: "general", hint: "تضاريس عالية وصخرية" },
+            { word: "مظلة", category: "general", hint: "تحميك من المطر أو الشمس" }
         ];
 
         let isHost = false;
@@ -369,7 +464,6 @@
                     const j = Math.floor(Math.random() * (i + 1));
                     [arr[i], arr[j]] = [arr[j], arr[i]];
                 }
-                // التأكد أن الكلمة الملخبطة ليست الكلمة الأصلية
                 if (arr.join('') === word && word.length > 1) {
                     return scrambleWordAlg(word, diff); 
                 }
@@ -435,7 +529,6 @@
             let shuffled = [...filteredWords].sort(() => 0.5 - Math.random());
             gameQuestions = shuffled.slice(0, totalRounds);
             
-            // تجهيز الكلمات الملخبطة وحفظها عشان كل اللاعبين يشوفون نفس اللخبطة
             gameQuestions = gameQuestions.map(q => ({
                 ...q,
                 scrambled: scrambleWordAlg(q.word, difficulty)
@@ -582,7 +675,6 @@
                 let elapsed = Math.floor((Date.now() - startTime) / 1000);
                 let timeLeft = roundTime - elapsed;
                 
-                // التلميح يظهر فقط في السهل والوسط إذا بقى 10 ثواني
                 if (timeLeft <= 10 && timeLeft > 0 && diff !== 'hard') {
                     hintBox.style.display = 'block';
                 }

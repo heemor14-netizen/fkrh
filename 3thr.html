@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <link rel="manifest" href="manifest.json">
+    <meta name="application-name" content="فكرة">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="فكرة">
+    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="icon" type="image/png" href="logo.png">
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>فِكْرَة 💡 | وش العذر؟</title>
+    <!-- خط تجوال -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/canvas-confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary-orange: #FF5E36;
+            --orange-gradient: linear-gradient(135deg, #FF5E36 0%, #FFA036 100%);
+            --orange-glow: rgba(255, 94, 54, 0.35);
+            --text-main: #1D2029;
+            --text-muted: #6C757D;
+            --green-success: #2E7D32;
+            --red-danger: #D32F2F;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #F8F9FA;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(255, 94, 54, 0.15) 0px, transparent 40%),
+                radial-gradient(at 100% 0%, rgba(255, 160, 54, 0.2) 0px, transparent 45%),
+                radial-gradient(at 50% 50%, rgba(255, 255, 255, 0.8) 0px, transparent 100%),
+                radial-gradient(at 80% 100%, rgba(255, 94, 54, 0.12) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(255, 183, 3, 0.15) 0px, transparent 40%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .ambient-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            z-index: -1;
+            animation: float 10s infinite alternate ease-in-out;
+            pointer-events: none;
+        }
+        .orb-1 { width: 350px; height: 350px; background: rgba(255, 94, 54, 0.25); top: -50px; right: -50px; }
+        .orb-2 { width: 400px; height: 400px; background: rgba(255, 160, 54, 0.2); bottom: -100px; left: -100px; animation-delay: -5s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 50px) scale(1.1); }
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+        }
+
+        .logo {
+            font-size: 1.7rem;
+            font-weight: 900;
+            background: var(--orange-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .logo span {
+            filter: drop-shadow(0 4px 10px rgba(255, 94, 54, 0.4));
+            -webkit-text-fill-color: initial;
+        }
+
+        .back-btn-container {
+            max-width: 600px;
+            margin: 0.8rem auto 0;
+            padding: 0 0.8rem;
+        }
+        .btn-back {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--text-main);
+            border: 1px solid #E2E8F0;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .btn-back:hover { background: #FFF; border-color: var(--primary-orange); color: var(--primary-orange); }
+
+        .btn {
+            padding: 0.55rem 1.2rem; border-radius: 50px; font-weight: 700; cursor: pointer;
+            border: none; transition: all 0.3s; text-decoration: none; font-size: 0.9rem;
+            display: inline-flex; justify-content: center; align-items: center; gap: 0.4rem;
+        }
+        .btn-primary { background: var(--orange-gradient); color: white; box-shadow: 0 8px 20px var(--orange-glow); }
+        .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 25px rgba(255, 94, 54, 0.45); }
+        .btn:disabled { background: #CBD5E1 !important; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9); border-radius: 20px; padding: 1.4rem 1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #E2E8F0; margin-bottom: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .title { text-align: center; font-weight: 900; font-size: 1.7rem; color: var(--primary-orange); margin-bottom: 0.3rem; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 1.2rem; font-size: 0.88rem; font-weight: 700;}
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main); font-size: 0.9rem; }
+        input[type="text"], select {
+            width: 100%; padding: 0.8rem 1rem; border-radius: 12px; border: 2px solid #E2E8F0;
+            font-size: 0.95rem; outline: none; transition: all 0.3s ease; background: #FAFAFA; font-weight: 700;
+        }
+        input[type="text"]:focus, select:focus { border-color: var(--primary-orange); background: #FFF; box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.15); }
+
+        .header-status { display: flex; justify-content: space-between; align-items: center; background: #F8FAFC; padding: 0.8rem; border-radius: 14px; margin-bottom: 1.2rem; border: 1px solid #E2E8F0; }
+        .timer-display { font-size: 1.5rem; font-weight: 900; color: var(--text-main); }
+        .player-chip { display: flex; justify-content: space-between; align-items: center; background: #F1F5F9; padding: 0.5rem 0.8rem; border-radius: 10px; margin-bottom: 0.4rem; font-weight: 800; font-size: 0.88rem; }
+        
+        .situation-box {
+            background: #FFF3EF;
+            border: 2px dashed var(--primary-orange);
+            border-radius: 16px;
+            padding: 1.8rem 1rem;
+            text-align: center;
+            font-size: 1.3rem;
+            margin-bottom: 1.2rem;
+            font-weight: 900;
+            color: var(--text-main);
+            box-shadow: inset 0 0 20px rgba(255, 94, 54, 0.1);
+            line-height: 1.6;
+        }
+
+        .vote-card {
+            background: #F8FAFC;
+            border: 2px solid #E2E8F0;
+            border-radius: 14px;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            text-align: right;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .vote-card:hover { border-color: var(--primary-orange); background: #FFF3EF; }
+
+        .podium-container { display: flex; justify-content: center; align-items: flex-end; gap: 0.6rem; height: 170px; margin: 1.5rem 0; }
+        .podium-step { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 0.6rem; border-radius: 12px 12px 0 0; color: white; font-weight: 900; width: 31%; position: relative; }
+        .podium-1 { height: 100%; background: linear-gradient(180deg, #FFD700, #E6B800); }
+        .podium-2 { height: 75%; background: linear-gradient(180deg, #C0C0C0, #A8A8A8); }
+        .podium-3 { height: 55%; background: linear-gradient(180deg, #CD7F32, #B36B25); }
+        
+        .toast { 
+            position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); 
+            background: #FFFFFF; color: var(--text-main); border: 2px solid var(--primary-orange);
+            padding: 12px 24px; border-radius: 50px; font-weight: 800; z-index: 9999; 
+            box-shadow: 0 10px 25px var(--orange-glow); transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none; text-align: center; max-width: 90%;
+        }
+        .toast.show { bottom: 30px; }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="toast" id="toastMessage">تنبيه!</div>
+
+    <header>
+        <div class="logo" onclick="goBackStep()">
+            <span>💡</span> فِكْرَة
+        </div>
+    </header>
+
+    <div class="back-btn-container">
+        <button class="btn-back" onclick="goBackStep()">⬅️ رجوع للخلف</button>
+    </div>
+
+    <div id="gameContainerView" style="max-width: 600px; margin: 1rem auto; padding: 0 0.8rem;">
+        
+        <!-- واجهة اختيار الغرفة -->
+        <div id="roomSelectionView" class="glass-card">
+            <h1 class="title">🎭 وش العذر؟</h1>
+            <p class="subtitle">انكببت بموقف محرج؟ أتحفنا بأقوى وأغبى عذر وخل الربع يصوتون لك! 😂</p>
+
+            <div class="form-group">
+                <label>اسمك في اللعبة</label>
+                <input type="text" id="playerNameInput" placeholder="أدخل اسمك هنا..." maxlength="15">
+            </div>
+
+            <div class="form-group">
+                <label>تصنيف المواقف 🏷️</label>
+                <select id="categorySelect">
+                    <option value="all">🔥 منوع (كل التصنيفات الممتعة)</option>
+                    <option value="driving">🚗 سيارات وساهر والخطوط</option>
+                    <option value="work">💼 الدوام والمدير والمدرسة</option>
+                    <option value="home">🏠 البيت والأهل والمطبخ</option>
+                    <option value="awkward">💥 مواقف تفشل ومحرجة جداً</option>
+                </select>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1rem;">
+                <div>
+                    <label>عدد الجولات</label>
+                    <select id="roundsSelect">
+                        <option value="3">3 مواقف</option>
+                        <option value="5" selected>5 مواقف</option>
+                        <option value="7">7 مواقف</option>
+                    </select>
+                </div>
+                <div>
+                    <label>وقت كتابة العذر</label>
+                    <select id="timeSelect">
+                        <option value="20">20 ثانية (سريع!)</option>
+                        <option value="30" selected>30 ثانية</option>
+                        <option value="45">45 ثانية</option>
+                    </select>
+                </div>
+            </div>
+
+            <button onclick="hostCreateRoom()" class="btn btn-primary" style="width: 100%;">إنشاء غرفة تحدي 🚀</button>
+            
+            <div style="margin: 1rem 0; text-align: center; font-weight: 700; color: #888; font-size: 0.85rem;">أو</div>
+
+            <div class="form-group">
+                <input type="text" id="roomCodeInput" placeholder="أدخل رمز الغرفة" maxlength="6" style="text-align: center; letter-spacing: 2px; font-weight: 900;">
+            </div>
+            <button onclick="guestJoinRoom()" class="btn btn-primary" style="width: 100%;">انضمام لغرفة 🔗</button>
+        </div>
+
+        <!-- لوبي الانتظار -->
+        <div id="lobbyView" class="glass-card" style="display: none; text-align: center;">
+            <h2 style="margin-bottom: 0.3rem; font-size: 1.3rem;">غرفة الانتظار ☕</h2>
+            <p style="color: #666; font-size: 0.85rem;">شارك الرمز مع خويك عشان تتفلسفون سوى:</p>
+            <div id="displayRoomCode" style="font-size: 2rem; font-weight: 900; color: var(--primary-orange); background: #FFF3EF; padding: 0.6rem; border-radius: 12px; border: 2px dashed var(--primary-orange); margin: 0.8rem 0; letter-spacing: 3px;">
+                0000 📋
+            </div>
+
+            <div style="margin-bottom: 0.8rem; text-align: right;">
+                <label>اللاعبون المتصلون:</label>
+                <div id="connectedPlayersContainer" style="margin-top: 0.4rem;"></div>
+            </div>
+
+            <button id="startGameBtn" onclick="hostStartGame()" class="btn btn-primary" style="display: none; margin-top: 1.2rem; width: 100%;">ابدأ التحدي 🔥</button>
+            <p id="waitingHostText" style="color: #888; font-weight: 700; display: none; margin-top: 0.8rem; font-size: 0.85rem;">في انتظار الهوست يبدأ العرض...</p>
+        </div>
+
+        <!-- واجهة كتابة العذر -->
+        <div id="gamePlayView" class="glass-card" style="display: none;">
+            <div class="header-status">
+                <span id="roundDisplay" style="font-size: 0.85rem; font-weight: 800; color: #666;">الموقف 1 من 5</span>
+                <div class="timer-display" id="timer">30s</div>
+            </div>
+
+            <div class="situation-box" id="situationTextDisplay">جاري جلب الموقف المحرج...</div>
+
+            <div class="form-group">
+                <input type="text" id="excuseInput" placeholder="صرفها بأغبى عذر وخلصنا.. اكتب هنا ✍️" onkeydown="if(event.key === 'Enter') submitExcuse()">
+            </div>
+            
+            <button id="submitExcuseBtn" onclick="submitExcuse()" class="btn btn-primary" style="width: 100%;">إرسال العذر 🚀</button>
+            <div id="excuseFeedback" style="text-align: center; font-weight: 800; margin-top: 1rem; display: none; color: var(--green-success);">تم إرسال عذرك، انتظر البقية...</div>
+        </div>
+
+        <!-- واجهة التصويت -->
+        <div id="votingView" class="glass-card" style="display: none; text-align: center;">
+            <h2 style="margin-bottom: 0.5rem; font-size: 1.3rem;">🗳️ وقت التصويت!</h2>
+            <p style="color: #666; font-size: 0.85rem; margin-bottom: 1rem;">اختر العذر الأقوى والأضحك (لا يجوز التصويت لعذرك):</p>
+            
+            <div id="excusesListContainer" style="text-align: right; margin-bottom: 1rem;"></div>
+        </div>
+
+        <!-- واجهة نتيجة الجولة -->
+        <div id="resultsView" class="glass-card" style="display: none; text-align: center;">
+            <h2 style="margin-bottom: 0.5rem; font-size: 1.5rem;">🏆 ملك التصريفات للجولة</h2>
+            <div id="roundWinnerDisplay" style="font-size: 1.3rem; font-weight: 900; color: var(--green-success); margin-bottom: 1rem;"></div>
+
+            <div id="roundScoresContainer" style="text-align: right; margin-bottom: 1.5rem;"></div>
+
+            <div id="nextRoundTimerContainer" style="display: none; font-size: 1.1rem; font-weight: 900; color: #475569;">
+                الموقف التالي بعد<br>
+                <span id="nextRoundTimerDisplay" style="font-size: 3rem; color: var(--primary-orange); display: inline-block; margin-top: 10px;">3</span>
+            </div>
+        </div>
+
+        <!-- واجهة التتويج النهائي -->
+        <div id="winnerView" class="glass-card" style="display: none; text-align: center;">
+            <h1 class="title" style="font-size: 1.5rem;">👑 أساطير التصريف والكذب الفاخر 👑</h1>
+            <div id="podiumDisplay" class="podium-container"></div>
+            <button onclick="window.location.reload()" class="btn btn-primary" style="margin-top: 1.2rem; width: 100%;">لعب مرة ثانية 🔄</button>
+        </div>
+
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCg29LG4HI-vas93dBFIMqKEfzeYUAx-o0",
+            authDomain: "fikrh-cf0ff.firebaseapp.com",
+            databaseURL: "https://fikrh-cf0ff-default-rtdb.firebaseio.com",
+            projectId: "fikrh-cf0ff",
+            storageBucket: "fikrh-cf0ff.firebasestorage.app",
+            messagingSenderId: "523229194032",
+            appId: "1:523229194032:web:29e3a5ef0ce27d8b3d0af5"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('currentUser') || 
+                              localStorage.getItem('fikrh_username') || 
+                              localStorage.getItem('username') || 
+                              localStorage.getItem('playerName');
+            if(savedUser) {
+                document.getElementById('playerNameInput').value = savedUser;
+            }
+        });
+
+        let backAttemptTime = 0;
+        function goBackStep() {
+            const lobbyView = document.getElementById('lobbyView');
+            const gamePlayView = document.getElementById('gamePlayView');
+            const votingView = document.getElementById('votingView');
+            const resultsView = document.getElementById('resultsView');
+            const winnerView = document.getElementById('winnerView');
+
+            if ((lobbyView && lobbyView.style.display === 'block') || 
+                (gamePlayView && gamePlayView.style.display === 'block') || 
+                (votingView && votingView.style.display === 'block') || 
+                (resultsView && resultsView.style.display === 'block') || 
+                (winnerView && winnerView.style.display === 'block')) {
+                
+                let now = Date.now();
+                if (now - backAttemptTime > 10000) {
+                    backAttemptTime = now;
+                    showToast('⚠️ اضغط مرة أخرى خلال 10 ثوانٍ لتأكيد الخروج من الغرفة!');
+                    return;
+                }
+
+                if(roomRef && currentRoomCode) {
+                    let pName = document.getElementById('playerNameInput').value.trim();
+                    if(pName) {
+                        roomRef.child('players/' + pName).remove().then(() => {
+                            roomRef.child('players').get().then((snap) => {
+                                if(!snap.exists() || Object.keys(snap.val()).length === 0) {
+                                    roomRef.remove();
+                                }
+                            });
+                        });
+                    }
+                }
+                switchView('roomSelectionView');
+            } else {
+                if (window.history.length > 1) {
+                    window.history.back();
+                } else {
+                    window.location.href = 'index.html';
+                }
+            }
+        }
+
+        const categorizedSituations = {
+            driving: [
+                "صيدك ساهر وأنت ماشي 160.. ما هو العذر؟",
+                "صدمت رصيف الحارة وقشيت المرايا.. ما هو عذرك لأبوك؟",
+                "وقفت في مواقف المعاقين ونزل العسكري.. ما هو عذرك السريع؟",
+                "سيارتك محجوزة في الحوش منذ ثلاثة أيام، أين كنت؟",
+                "نسيت مفتاح السيارة بداخلها وهي شغال المكيف.. ما هي التصريفة؟"
+            ],
+            work: [
+                "متأخر عن الدوام ساعتين والمدير في وجهك.. ما هو عذرك؟",
+                "لماذا لم تحل الواجب يا أستاذ؟",
+                "نمت في اجتماع العمل وقام المدير وناداك.. ما هو عذرك؟",
+                "أرسلت نكته على مجموعة الدوام الرسمية بالخطأ.. ماذا تقول؟",
+                "لماذا لم تحضر محاضرة اليوم المهمة؟"
+            ],
+            home: [
+                "أكلت كيكة الضيوف وحدك في الليل.. ما هو عذرك؟",
+                "كسرت عطر الوالدة الغالي وأنكرت.. ماذا تقول؟",
+                "لماذا لم ترد على اتصال الوالدة من المرة الأولى؟",
+                "نائم في الصالة ومبقي التلفزيون يعمل للصبح.. ما هو عذرك؟",
+                "حرقت الغداء وأنت تسولف بالجوال.. كيف تصرفها؟"
+            ],
+            awkward: [
+                "ترحب بشخص تحسبه خويك وطلع شخصاً غريباً.. ما هو عذرك؟",
+                "جالس تطقطق على شخص وطلع هو الواقف جنبك.. ماذا تقول؟",
+                "كرشت شخصاً بوجهه وطلع يمزح معك.. ما هي التصريفة؟",
+                "صارخت بأعلى صوتك بصوت غريب وطلع المكان هادئاً جداً.. ما هو عذرك؟",
+                "نسيت اسم خويك الذي تعرفه منذ سنة.. ما هو عذرك؟"
+            ]
+        };
+
+        let isHost = false;
+        let currentRoomCode = "";
+        let roomRef = null;
+        let playerName = "";
+        let totalRounds = 5;
+        let roundTime = 30;
+        let currentRound = 0;
+        let timerInterval;
+        let nextRoundTimerInterval;
+        let gameSituations = [];
+
+        let toastTimeout;
+        function showToast(msg) {
+            const t = document.getElementById('toastMessage');
+            t.innerText = msg;
+            t.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                t.classList.remove('show');
+            }, 3000);
+        }
+
+        function switchView(viewId) {
+            document.querySelectorAll('#gameContainerView .glass-card').forEach(c => c.style.display = 'none');
+            document.getElementById(viewId).style.display = 'block';
+        }
+
+        function hostCreateRoom() {
+            playerName = document.getElementById('playerNameInput').value.trim() || "الهوست";
+            totalRounds = parseInt(document.getElementById('roundsSelect').value);
+            roundTime = parseInt(document.getElementById('timeSelect').value);
+            let selectedCategory = document.getElementById('categorySelect').value;
+            isHost = true;
+
+            let pool = [];
+            if(selectedCategory === 'all') {
+                for(let cat in categorizedSituations) {
+                    pool.push(...categorizedSituations[cat]);
+                }
+            } else {
+                pool = categorizedSituations[selectedCategory] || categorizedSituations['driving'];
+            }
+
+            let shuffled = [...pool].sort(() => 0.5 - Math.random());
+            gameSituations = shuffled.slice(0, totalRounds);
+            
+            if(gameSituations.length < totalRounds) {
+                while(gameSituations.length < totalRounds) {
+                    gameSituations.push(shuffled[Math.floor(Math.random() * shuffled.length)]);
+                }
+            }
+
+            currentRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
+            document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
+
+            roomRef = db.ref('excuse_rooms/' + currentRoomCode);
+            roomRef.set({
+                host: playerName,
+                state: 'lobby',
+                settings: { totalRounds, roundTime, situations: gameSituations },
+                players: { [playerName]: { score: 0 } }
+            }).then(() => {
+                listenToFirebase();
+                switchView('lobbyView');
+                document.getElementById('startGameBtn').style.display = 'block';
+                document.getElementById('waitingHostText').style.display = 'none';
+            });
+        }
+
+        function guestJoinRoom() {
+            playerName = document.getElementById('playerNameInput').value.trim() || "الضيف";
+            const code = document.getElementById('roomCodeInput').value.trim();
+            if(!code) return showToast('أدخل رمز الغرفة يا كابتن!');
+
+            isHost = false;
+            currentRoomCode = code;
+            roomRef = db.ref('excuse_rooms/' + currentRoomCode);
+
+            roomRef.get().then((snap) => {
+                if(snap.exists()) {
+                    roomRef.child('players/' + playerName).set({ score: 0 });
+                    document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
+                    listenToFirebase();
+                    switchView('lobbyView');
+                    document.getElementById('startGameBtn').style.display = 'none';
+                    document.getElementById('waitingHostText').style.display = 'block';
+                } else {
+                    showToast('الغرفة غير موجودة، تأكد من الرمز!');
+                }
+            });
+        }
+
+        function listenToFirebase() {
+            roomRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                
+                if(!data || !data.players || Object.keys(data.players).length === 0) {
+                    if(document.getElementById('roomSelectionView').style.display !== 'block') {
+                        showToast('انتهت الغرفة لخروج كل اللاعبين! 🚪');
+                        clearInterval(timerInterval);
+                        clearInterval(nextRoundTimerInterval);
+                        switchView('roomSelectionView');
+                    }
+                    return;
+                }
+
+                if(data.players) {
+                    updatePlayersUI(data.players);
+                }
+                
+                if(data.settings) {
+                    totalRounds = data.settings.totalRounds;
+                    roundTime = data.settings.roundTime;
+                    gameSituations = data.settings.situations;
+                }
+
+                if(data.state === 'playing' && data.currentRound !== currentRound) {
+                    currentRound = data.currentRound;
+                    startRoundPlay(data.currentRound, data.roundStartTime);
+                } else if(data.state === 'voting') {
+                    showVotingPhase(data);
+                } else if (data.state === 'results') {
+                    showRoundResults(data);
+                } else if (data.state === 'finished') {
+                    showFinalWinner(data.players);
+                }
+            });
+        }
+
+        function updatePlayersUI(playersObj) {
+            const container = document.getElementById('connectedPlayersContainer');
+            container.innerHTML = '';
+            for(let p in playersObj) {
+                container.innerHTML += `<div class="player-chip">👤 ${p} <span style="color:var(--primary-orange);">${playersObj[p].score} نقطة</span></div>`;
+            }
+        }
+
+        function hostStartGame() {
+            if(!isHost) return;
+            currentRound = 0;
+            hostNextRound();
+        }
+
+        function hostNextRound() {
+            let nextRound = currentRound + 1;
+            if(nextRound > totalRounds) {
+                roomRef.update({ state: 'finished' });
+            } else {
+                roomRef.child('excuses').remove();
+                roomRef.child('votes').remove();
+                roomRef.update({
+                    state: 'playing',
+                    currentRound: nextRound,
+                    roundStartTime: Date.now()
+                });
+            }
+        }
+
+        function startRoundPlay(roundNum, startTime) {
+            clearInterval(timerInterval);
+            clearInterval(nextRoundTimerInterval);
+
+            let currentSit = gameSituations[roundNum - 1];
+            document.getElementById('roundDisplay').innerText = `الموقف ${roundNum} من ${totalRounds}`;
+            document.getElementById('situationTextDisplay').innerText = currentSit;
+
+            let inputEl = document.getElementById('excuseInput');
+            inputEl.value = '';
+            inputEl.disabled = false;
+            inputEl.focus();
+            
+            let btnEl = document.getElementById('submitExcuseBtn');
+            btnEl.disabled = false;
+            document.getElementById('excuseFeedback').style.display = 'none';
+
+            switchView('gamePlayView');
+
+            timerInterval = setInterval(() => {
+                let elapsed = Math.floor((Date.now() - startTime) / 1000);
+                let timeLeft = roundTime - elapsed;
+                
+                if(timeLeft <= 0) {
+                    timeLeft = 0;
+                    clearInterval(timerInterval);
+                    if(isHost) {
+                        roomRef.update({ state: 'voting' });
+                    }
+                }
+                document.getElementById('timer').innerText = timeLeft + "s";
+            }, 1000);
+        }
+
+        function submitExcuse() {
+            let input = document.getElementById('excuseInput').value.trim();
+            if(!input) return showToast('اكتب عذرك أولاً يا وحش!');
+
+            roomRef.child('excuses/' + playerName).set(input).then(() => {
+                document.getElementById('excuseInput').disabled = true;
+                document.getElementById('submitExcuseBtn').disabled = true;
+                document.getElementById('excuseFeedback').style.display = 'block';
+
+                roomRef.get().then((snap) => {
+                    let data = snap.val();
+                    let playersCount = Object.keys(data.players || {}).length;
+                    let excusesCount = Object.keys(data.excuses || {}).length;
+                    if(isHost && excusesCount >= playersCount) {
+                        roomRef.update({ state: 'voting' });
+                    }
+                });
+            });
+        }
+
+        function showVotingPhase(data) {
+            clearInterval(timerInterval);
+            let excuses = data.excuses || {};
+            let container = document.getElementById('excusesListContainer');
+            container.innerHTML = '';
+
+            let hasExcuses = false;
+            for(let p in excuses) {
+                hasExcuses = true;
+                if(p !== playerName) {
+                    container.innerHTML += `
+                        <div class="vote-card" onclick="voteForExcuse('${p}')">
+                            <div style="font-weight: 700; color: var(--primary-orange); margin-bottom: 0.2rem;">عذر اللاعب: ${p}</div>
+                            <div style="font-size: 1.1rem; color: var(--text-main);">"${excuses[p]}"</div>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML += `
+                        <div class="vote-card" style="opacity: 0.6; cursor: not-allowed;">
+                            <div style="font-weight: 700; color: #888; margin-bottom: 0.2rem;">عذرك (لا يمكنك التصويت لنفسك):</div>
+                            <div style="font-size: 1.1rem; color: var(--text-main);">"${excuses[p]}"</div>
+                        </div>
+                    `;
+                }
+            }
+
+            if(!hasExcuses) {
+                container.innerHTML = `<p style="text-align: center; color: #888; font-weight: 700;">لم يكتب أحد عذراً للأسف! 😅</p>`;
+                setTimeout(() => { if(isHost) hostNextRound(); }, 3000);
+            }
+
+            switchView('votingView');
+        }
+
+        function voteForExcuse(votedPlayer) {
+            roomRef.child('votes/' + playerName).set(votedPlayer).then(() => {
+                showToast('✅ تم تسجيل صوتك بنجاح!');
+                document.querySelectorAll('.vote-card').forEach(c => c.style.pointerEvents = 'none');
+
+                roomRef.get().then((snap) => {
+                    let data = snap.val();
+                    let playersCount = Object.keys(data.players || {}).length;
+                    let votesCount = Object.keys(data.votes || {}).length;
+                    if(isHost && votesCount >= playersCount - 1) {
+                        calculateRoundWinner(data);
+                    }
+                });
+            });
+        }
+
+        function calculateRoundWinner(data) {
+            let votes = data.votes || {};
+            let counts = {};
+            for(let v in votes) {
+                let target = votes[v];
+                counts[target] = (counts[target] || 0) + 1;
+            }
+
+            let maxVotes = 0;
+            let roundWinner = "";
+            for(let p in counts) {
+                if(counts[p] > maxVotes) {
+                    maxVotes = counts[p];
+                    roundWinner = p;
+                }
+            }
+
+            if(roundWinner) {
+                roomRef.child('players/' + roundWinner + '/score').transaction((score) => {
+                    return (score || 0) + 150;
+                });
+            }
+
+            roomRef.update({ state: 'results', roundWinner: roundWinner || "لا أحد (بدون أصوات)" });
+        }
+
+        function showRoundResults(data) {
+            clearInterval(nextRoundTimerInterval);
+            document.getElementById('roundWinnerDisplay').innerText = `👑 ${data.roundWinner || "التعادل سيد الموقف"}`;
+
+            let container = document.getElementById('roundScoresContainer');
+            container.innerHTML = '';
+            for(let p in data.players) {
+                container.innerHTML += `
+                    <div class="player-chip">
+                        <span>👤 ${p}</span>
+                        <span style="color:var(--primary-orange); font-weight:900;">${data.players[p].score} نقطة</span>
+                    </div>
+                `;
+            }
+
+            switchView('resultsView');
+
+            let countdown = 4;
+            let displayElement = document.getElementById('nextRoundTimerDisplay');
+            document.getElementById('nextRoundTimerContainer').style.display = 'block';
+            displayElement.innerText = countdown;
+
+            nextRoundTimerInterval = setInterval(() => {
+                countdown--;
+                displayElement.innerText = countdown;
+                if(countdown <= 0) {
+                    clearInterval(nextRoundTimerInterval);
+                    if(isHost) {
+                        hostNextRound();
+                    }
+                }
+            }, 1000);
+        }
+
+        function showFinalWinner(playersObj) {
+            clearInterval(timerInterval);
+            clearInterval(nextRoundTimerInterval);
+
+            showToast('🏁 انتهت اللعبة، مبروك لملك التصريفات! 🎉');
+
+            let sorted = Object.entries(playersObj).sort((a, b) => b[1].score - a[1].score);
+            let podiumHTML = '';
+            
+            if(sorted.length > 0) {
+                podiumHTML += `<div class="podium-step podium-2" style="order: 1;"><div style="font-size:1.5rem">🥈</div><div>${sorted[1] ? sorted[1][0] : '-'}</div><div>${sorted[1] ? sorted[1][1].score : ''}</div></div>`;
+                podiumHTML += `<div class="podium-step podium-1" style="order: 2; z-index:2; box-shadow: 0 -10px 20px rgba(255,215,0,0.5);"><div style="font-size:2rem; position:absolute; top:-35px;">👑</div><div>${sorted[0][0]}</div><div>${sorted[0][1].score}</div></div>`;
+                podiumHTML += `<div class="podium-step podium-3" style="order: 3;"><div style="font-size:1.5rem">🥉</div><div>${sorted[2] ? sorted[2][0] : '-'}</div><div>${sorted[2] ? sorted[2][1].score : ''}</div></div>`;
+            }
+            
+            document.getElementById('podiumDisplay').innerHTML = podiumHTML;
+            confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
+            switchView('winnerView');
+        }
+    </script>
+</body>
+</html>

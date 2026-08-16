@@ -11,8 +11,7 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>فِكْرَة 💡 | تحدي الأسرع كتابةً</title>
-    <!-- خط تجوال -->
+    <title>فِكْرَة 💡 |  تحدي السرعة</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/canvas-confetti.browser.min.js"></script>
     <style>
@@ -26,13 +25,7 @@
             --red-danger: #D32F2F;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Tajawal', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; -webkit-tap-highlight-color: transparent; }
 
         body {
             background-color: #F8F9FA;
@@ -42,160 +35,57 @@
                 radial-gradient(at 50% 50%, rgba(255, 255, 255, 0.8) 0px, transparent 100%),
                 radial-gradient(at 80% 100%, rgba(255, 94, 54, 0.12) 0px, transparent 50%),
                 radial-gradient(at 0% 100%, rgba(255, 183, 3, 0.15) 0px, transparent 40%);
-            background-attachment: fixed;
-            color: var(--text-main);
-            line-height: 1.6;
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
+            background-attachment: fixed; color: var(--text-main); line-height: 1.6; min-height: 100vh; overflow-x: hidden; position: relative;
         }
 
-        .ambient-orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(90px);
-            z-index: -1;
-            animation: float 10s infinite alternate ease-in-out;
-            pointer-events: none;
-        }
+        .ambient-orb { position: fixed; border-radius: 50%; filter: blur(90px); z-index: -1; animation: float 10s infinite alternate ease-in-out; pointer-events: none; }
         .orb-1 { width: 350px; height: 350px; background: rgba(255, 94, 54, 0.25); top: -50px; right: -50px; }
         .orb-2 { width: 400px; height: 400px; background: rgba(255, 160, 54, 0.2); bottom: -100px; left: -100px; animation-delay: -5s; }
 
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(30px, 50px) scale(1.1); }
-        }
+        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(30px, 50px) scale(1.1); } }
 
         header {
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.8);
-            padding: 1rem 5%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+            background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+            padding: 1rem 5%; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
         }
 
-        .logo {
-            font-size: 1.7rem;
-            font-weight: 900;
-            background: var(--orange-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-        }
-        .logo span {
-            filter: drop-shadow(0 4px 10px rgba(255, 94, 54, 0.4));
-            -webkit-text-fill-color: initial;
-        }
+        .logo { font-size: 1.7rem; font-weight: 900; background: var(--orange-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+        .logo span { filter: drop-shadow(0 4px 10px rgba(255, 94, 54, 0.4)); -webkit-text-fill-color: initial; }
 
-        .back-btn-container {
-            max-width: 600px;
-            margin: 0.8rem auto 0;
-            padding: 0 0.8rem;
-        }
-        .btn-back {
-            background: rgba(255, 255, 255, 0.9);
-            color: var(--text-main);
-            border: 1px solid #E2E8F0;
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-            cursor: pointer;
-            transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
+        .back-btn-container { max-width: 600px; margin: 0.8rem auto 0; padding: 0 0.8rem; }
+        .btn-back { background: rgba(255, 255, 255, 0.9); color: var(--text-main); border: 1px solid #E2E8F0; padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 700; box-shadow: 0 4px 10px rgba(0,0,0,0.03); cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 0.4rem; }
         .btn-back:hover { background: #FFF; border-color: var(--primary-orange); color: var(--primary-orange); }
 
-        .btn {
-            padding: 0.7rem 1.2rem; border-radius: 50px; font-weight: 700; cursor: pointer;
-            border: none; transition: all 0.3s; text-decoration: none; font-size: 0.95rem;
-            display: inline-flex; justify-content: center; align-items: center; gap: 0.4rem;
-        }
+        .btn { padding: 0.55rem 1.2rem; border-radius: 50px; font-weight: 700; cursor: pointer; border: none; transition: all 0.3s; text-decoration: none; font-size: 0.9rem; display: inline-flex; justify-content: center; align-items: center; gap: 0.4rem; }
         .btn-primary { background: var(--orange-gradient); color: white; box-shadow: 0 8px 20px var(--orange-glow); }
         .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 25px rgba(255, 94, 54, 0.45); }
         .btn:disabled { background: #CBD5E1 !important; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.9); border-radius: 20px; padding: 1.4rem 1rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #E2E8F0; margin-bottom: 1rem;
-            backdrop-filter: blur(10px);
-        }
+        .glass-card { background: rgba(255, 255, 255, 0.9); border-radius: 20px; padding: 1.4rem 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #E2E8F0; margin-bottom: 1rem; backdrop-filter: blur(10px); }
 
         .title { text-align: center; font-weight: 900; font-size: 1.7rem; color: var(--primary-orange); margin-bottom: 0.3rem; }
-        .subtitle { text-align: center; color: #666; margin-bottom: 1.2rem; font-size: 0.88rem; font-weight: 700;}
+        .subtitle { text-align: center; color: #666; margin-bottom: 1.2rem; font-size: 0.88rem; font-weight: 700; }
+        
         .form-group { margin-bottom: 1rem; }
         label { display: block; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main); font-size: 0.9rem; }
-        input[type="text"], select {
-            width: 100%; padding: 0.8rem 1rem; border-radius: 12px; border: 2px solid #E2E8F0;
-            font-size: 0.95rem; outline: none; transition: all 0.3s ease; background: #FAFAFA; font-weight: 700;
-        }
+        input[type="text"], select { width: 100%; padding: 0.8rem 1rem; border-radius: 12px; border: 2px solid #E2E8F0; font-size: 0.95rem; outline: none; transition: all 0.3s ease; background: #FAFAFA; font-weight: 700; text-align: center; }
         input[type="text"]:focus, select:focus { border-color: var(--primary-orange); background: #FFF; box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.15); }
         
-        .categories-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.5rem;
-            margin-top: 0.3rem;
-        }
-        .category-checkbox-label {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: #F8FAFC;
-            border: 2px solid #E2E8F0;
-            padding: 0.6rem 0.8rem;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 0.85rem;
-            transition: all 0.2s ease;
-        }
-        .category-checkbox-label input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--primary-orange);
-            cursor: pointer;
-        }
-        .category-checkbox-label:hover {
-            border-color: var(--primary-orange);
-            background: #FFF3EF;
-        }
+        .categories-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.3rem; }
+        .category-checkbox-label { display: flex; align-items: center; gap: 0.5rem; background: #F8FAFC; border: 2px solid #E2E8F0; padding: 0.6rem 0.8rem; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.88rem; transition: all 0.2s ease; }
+        .category-checkbox-label input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary-orange); cursor: pointer; }
+        .category-checkbox-label:hover { border-color: var(--primary-orange); background: #FFF3EF; }
 
         .header-status { display: flex; justify-content: space-between; align-items: center; background: #F8FAFC; padding: 0.8rem; border-radius: 14px; margin-bottom: 1.2rem; border: 1px solid #E2E8F0; }
-        .timer-display { font-size: 1.8rem; font-weight: 900; color: var(--primary-orange); }
+        .timer-display { font-size: 1.5rem; font-weight: 900; color: var(--text-main); }
         .player-chip { display: flex; justify-content: space-between; align-items: center; background: #F1F5F9; padding: 0.5rem 0.8rem; border-radius: 10px; margin-bottom: 0.4rem; font-weight: 800; font-size: 0.88rem; }
         
-        .challenge-box {
-            background: #FFF3EF;
-            border: 3px dashed var(--primary-orange);
-            border-radius: 18px;
-            padding: 1.5rem 1rem;
-            text-align: center;
-            margin-bottom: 1.2rem;
-        }
-        .target-question {
-            font-size: 1.3rem;
-            font-weight: 900;
-            color: var(--text-main);
-            margin-bottom: 0.5rem;
-        }
-        .target-subtext {
-            font-size: 0.9rem;
-            color: var(--primary-orange);
-            font-weight: 800;
+        .question-display-box {
+            background: #FFF3EF; border: 2px dashed var(--primary-orange); border-radius: 16px; padding: 1.8rem 1rem;
+            text-align: center; font-size: 1.5rem; font-weight: 900; margin-bottom: 1.5rem;
+            box-shadow: inset 0 0 20px rgba(255, 94, 54, 0.1); color: var(--primary-orange);
+            word-wrap: break-word; line-height: 1.4;
         }
 
         .podium-container { display: flex; justify-content: center; align-items: flex-end; gap: 0.6rem; height: 170px; margin: 1.5rem 0; }
@@ -204,31 +94,10 @@
         .podium-2 { height: 75%; background: linear-gradient(180deg, #C0C0C0, #A8A8A8); }
         .podium-3 { height: 55%; background: linear-gradient(180deg, #CD7F32, #B36B25); }
         
-        .toast { 
-            position: fixed; 
-            bottom: -100px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            background: #FFFFFF; 
-            color: var(--text-main); 
-            border: 2px solid var(--primary-orange);
-            padding: 12px 24px; 
-            border-radius: 50px; 
-            font-weight: 800; 
-            z-index: 9999; 
-            box-shadow: 0 10px 25px var(--orange-glow);
-            transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            pointer-events: none;
-            text-align: center;
-            max-width: 90%;
-        }
+        .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: #FFFFFF; color: var(--text-main); border: 2px solid var(--primary-orange); padding: 12px 24px; border-radius: 50px; font-weight: 800; z-index: 9999; box-shadow: 0 10px 25px var(--orange-glow); transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; text-align: center; max-width: 90%; }
         .toast.show { bottom: 30px; }
 
-        @keyframes pulse-timer {
-            0% { transform: scale(0.8); opacity: 0.5; }
-            50% { transform: scale(1.4); opacity: 1; color: var(--primary-orange); }
-            100% { transform: scale(1); opacity: 1; }
-        }
+        @keyframes pulse-timer { 0% { transform: scale(0.8); opacity: 0.5; } 50% { transform: scale(1.4); opacity: 1; color: var(--primary-orange); } 100% { transform: scale(1); opacity: 1; } }
         .timer-pop { animation: pulse-timer 0.4s ease-in-out; }
     </style>
 </head>
@@ -250,9 +119,10 @@
 
     <div id="gameContainerView" style="max-width: 600px; margin: 1rem auto; padding: 0 0.8rem;">
         
+        <!-- واجهة اختيار الغرفة -->
         <div id="roomSelectionView" class="glass-card">
-            <h1 class="title">⌨️ تحدي الأسرع كتابةً</h1>
-            <p class="subtitle">اكتب الإجابة المطلوبة في الصندوق بأسرع وقت لتفوز بالجولة! 🚀</p>
+            <h1 class="title">🎯 أوجد الكلمة المناسبة</h1>
+            <p class="subtitle">تحدي السرعة والمعلومات </p>
 
             <div class="form-group">
                 <label>اسمك في اللعبة</label>
@@ -260,43 +130,36 @@
             </div>
 
             <div class="form-group">
-                <label>تصنيفات التحدي:</label>
+                <label>التصنيفات:</label>
                 <div class="categories-grid">
-                    <label class="category-checkbox-label">
-                        <input type="checkbox" id="catGeneral" value="general" checked> 🔥 عامة ومنوعة
-                    </label>
-                    <label class="category-checkbox-label">
-                        <input type="checkbox" id="catFoods" value="foods" checked> 🍔 أطعمة ومأكولات
-                    </label>
-                    <label class="category-checkbox-label">
-                        <input type="checkbox" id="catAnimals" value="animals" checked> 🦁 حيوانات وطبيعة
-                    </label>
-                    <label class="category-checkbox-label">
-                        <input type="checkbox" id="catPlaces" value="places" checked> 🏙️ دول وأماكن
-                    </label>
+                    <label class="category-checkbox-label"><input type="checkbox" id="catGeneral" value="general" checked> 🌍 عامة ومنوعات</label>
+                    <label class="category-checkbox-label"><input type="checkbox" id="catFoods" value="foods" checked> 🍔 أكل ومشروبات</label>
+                    <label class="category-checkbox-label"><input type="checkbox" id="catAnimals" value="animals" checked> 🦁 حيوانات وطبيعة</label>
+                    <label class="category-checkbox-label"><input type="checkbox" id="catPlaces" value="places" checked> 📍 دول ومدن</label>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label>وقت الجولة (بالثواني - الحد الأدنى 10 ثواني)</label>
-                <select id="roundTimeSelect">
-                    <option value="10" selected>10 ثواني (سريع جداً 🔥)</option>
-                    <option value="15">15 ثانية</option>
-                    <option value="20">20 ثانية</option>
-                    <option value="30">30 ثانية</option>
-                </select>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1rem;">
+                <div>
+                    <label>عدد الجولات</label>
+                    <select id="roundsSelect">
+                        <option value="5">5 جولات</option>
+                        <option value="10" selected>10 جولات</option>
+                        <option value="15">15 جولة</option>
+                        <option value="20">20 جولة (تحدي طويل)</option>
+                    </select>
+                </div>
+                <div>
+                    <label>وقت الإجابة</label>
+                    <select id="timeSelect">
+                        <option value="15">15 ثانية (سريع 🔥)</option>
+                        <option value="20" selected>20 ثانية</option>
+                        <option value="30">30 ثانية</option>
+                    </select>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label>عدد الجولات الكلي</label>
-                <select id="roundsSelect">
-                    <option value="3">3 جولات</option>
-                    <option value="5" selected>5 جولات</option>
-                    <option value="10">10 جولات</option>
-                </select>
-            </div>
-
-            <button onclick="hostCreateRoom()" class="btn btn-primary" style="width: 100%;">إنشاء غرفة تحدي 🚀</button>
+            <button onclick="hostCreateRoom()" class="btn btn-primary" style="width: 100%;">إنشاء غرفة لعب 🚀</button>
             
             <div style="margin: 1rem 0; text-align: center; font-weight: 700; color: #888; font-size: 0.85rem;">أو</div>
 
@@ -306,10 +169,11 @@
             <button onclick="guestJoinRoom()" class="btn btn-primary" style="width: 100%;">انضمام لغرفة 🔗</button>
         </div>
 
+        <!-- لوبي الانتظار -->
         <div id="lobbyView" class="glass-card" style="display: none; text-align: center;">
-            <h2 style="margin-bottom: 0.3rem; font-size: 1.3rem;">غرفة انتظار التحدي ⏱️</h2>
-            <p style="color: #666; font-size: 0.85rem;">اضغط على مفتاح الغرفة لنسخه ومشاركته مع أصدقائك:</p>
-            <div id="displayRoomCode" onclick="copyRoomCode()" style="font-size: 2rem; font-weight: 900; color: var(--primary-orange); background: #FFF3EF; padding: 0.6rem; border-radius: 12px; border: 2px dashed var(--primary-orange); margin: 0.8rem 0; letter-spacing: 3px; cursor: pointer; transition: 0.2s;" title="اضغط للنسخ">
+            <h2 style="margin-bottom: 0.3rem; font-size: 1.3rem;">غرفة الانتظار ✈️</h2>
+            <p style="color: #666; font-size: 0.85rem;">شارك هذا الرمز مع أخوياك:</p>
+            <div id="displayRoomCode" style="font-size: 2rem; font-weight: 900; color: var(--primary-orange); background: #FFF3EF; padding: 0.6rem; border-radius: 12px; border: 2px dashed var(--primary-orange); margin: 0.8rem 0; letter-spacing: 3px;">
                 0000 📋
             </div>
 
@@ -317,50 +181,52 @@
                 <label>إعدادات الغرفة الحالية:</label>
                 <div id="roomSettingsSummary" style="background: #F8FAFC; padding: 0.6rem; border-radius: 10px; font-size: 0.85rem; font-weight: 700; color: #475569; margin-bottom: 0.8rem; border: 1px solid #E2E8F0;"></div>
 
-                <label>اللاعبون المتصلون:</label>
+                <label>اللاعبون الجاهزون:</label>
                 <div id="connectedPlayersContainer" style="margin-top: 0.4rem;"></div>
             </div>
 
-            <button id="startGameBtn" onclick="hostStartGame()" class="btn btn-primary" style="display: none; margin-top: 1.2rem; width: 100%;">بدء اللعبة 🛫</button>
-            <p id="waitingHostText" style="color: #888; font-weight: 700; display: none; margin-top: 0.8rem; font-size: 0.85rem;">في انتظار الهوست ليحرك اللعبة...</p>
+            <button id="startGameBtn" onclick="hostStartGame()" class="btn btn-primary" style="display: none; margin-top: 1.2rem; width: 100%;">ابدأ التحدي 🔥</button>
+            <p id="waitingHostText" style="color: #888; font-weight: 700; display: none; margin-top: 0.8rem; font-size: 0.85rem;">في انتظار كابتن الغرفة (الهوست) ليبدأ...</p>
         </div>
 
+        <!-- واجهة اللعب -->
         <div id="gamePlayView" class="glass-card" style="display: none;">
             <div class="header-status">
                 <div>
-                    <span id="roundDisplay" style="font-size: 0.85rem; font-weight: 800; color: #666;">الجولة</span>
-                    <div id="activePlayerIndicator" style="font-weight: 900; font-size: 1.1rem; margin-top: 0.1rem; color: var(--primary-orange);">الكل يتنافس الآن! ⚡</div>
+                    <span id="roundDisplay" style="font-size: 0.85rem; font-weight: 800; color: #666;">الجولة 1 من 10</span>
+                    <div style="font-weight: 800; font-size: 1rem; margin-top: 0.1rem; color: var(--primary-orange);">أسرع إجابة تكسب!</div>
                 </div>
-                <div class="timer-display" id="timer">10s</div>
+                <div class="timer-display" id="timer">20s</div>
             </div>
 
-            <div class="challenge-box">
-                <div class="target-subtext">اكتب الإجابة المطلوبة بأسرع ما يمكنك:</div>
-                <div class="target-question" id="targetQuestionText">...</div>
-                <div id="sampleHint" style="font-size: 0.78rem; color: #777; margin-top: 6px; font-weight: 700;"></div>
-            </div>
+            <div class="question-display-box" id="questionTextDisplay">...</div>
 
             <div class="form-group">
-                <input type="text" id="playerAnswerInput" placeholder="اكتب إجابتك هنا بسرعة..." onkeydown="checkPlayerSubmit(event)">
+                <input type="text" id="answerInput" placeholder="اكتب إجابتك هنا بسرعة! ✍️" onkeydown="if(event.key === 'Enter') submitAnswer()">
             </div>
+            
             <button id="submitAnswerBtn" onclick="submitAnswer()" class="btn btn-primary" style="width: 100%;">إرسال الإجابة 🚀</button>
+            <div id="answerFeedback" style="text-align: center; font-weight: 800; margin-top: 1rem; display: none;"></div>
         </div>
 
+        <!-- واجهة نتيجة الجولة -->
         <div id="resultsView" class="glass-card" style="display: none; text-align: center;">
             <h2 id="resultTitle" style="margin-bottom: 0.5rem; font-size: 1.5rem;">انتهت الجولة! ⏱️</h2>
-            <div id="roundWinnerAnnouncement" style="font-size: 1.1rem; font-weight: 900; color: var(--green-success); margin-bottom: 1rem; background: #E8F5E9; padding: 10px; border-radius: 12px; border: 1px dashed var(--green-success);"></div>
+            
+            <div id="winnerAnnouncement" style="font-size: 1.2rem; font-weight: 900; color: var(--green-success); margin-bottom: 1rem; display: none; background: #E8F5E9; padding: 10px; border-radius: 12px; border: 1px dashed var(--green-success);"></div>
 
             <div id="roundScoresContainer" style="text-align: right; margin-bottom: 1.5rem;"></div>
 
             <div id="nextRoundTimerContainer" style="display: none; font-size: 1.1rem; font-weight: 900; color: #475569;">
-                الجولة التالية تبدأ بعد<br>
+                السؤال الجاي بيطلع بعد<br>
                 <span id="nextRoundTimerDisplay" style="font-size: 3.5rem; color: var(--primary-orange); display: inline-block; margin-top: 10px;">3</span>
             </div>
         </div>
 
+        <!-- واجهة التتويج -->
         <div id="winnerView" class="glass-card" style="display: none; text-align: center;">
-            <h1 class="title" style="font-size: 1.5rem;">🎉 أساطير السرعة والكتابة 🎉</h1>
-            <p class="subtitle">مين أسرع واحد طقطق على الكيبورد؟ 😂</p>
+            <h1 class="title" style="font-size: 1.5rem;">🎉 أساطير المعلومات 🎉</h1>
+            <p class="subtitle">شوفوا مين اللي أكل الجو وجمع أكبر نقاط! 😂</p>
 
             <div id="podiumDisplay" class="podium-container"></div>
 
@@ -369,6 +235,7 @@
 
     </div>
 
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
@@ -385,52 +252,165 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // مفتاح الذكاء الاصطناعي (Groq AI API Key)
-        const GROQ_API_KEY = "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";
-
-        let audioCtx = null;
-        function playTickSound(isFinal = false) {
-            try {
-                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                if (audioCtx.state === 'suspended') audioCtx.resume();
-                let osc = audioCtx.createOscillator();
-                let gain = audioCtx.createGain();
-                osc.type = isFinal ? 'sawtooth' : 'sine';
-                osc.frequency.setValueAtTime(isFinal ? 150 : 600, audioCtx.currentTime);
-                if(isFinal) osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.3);
-                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + (isFinal ? 0.3 : 0.1));
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + (isFinal ? 0.3 : 0.1));
-            } catch(e) {}
-        }
-
         window.addEventListener('DOMContentLoaded', () => {
             const savedUser = localStorage.getItem('currentUser') || 
                               localStorage.getItem('fikrh_username') || 
                               localStorage.getItem('username') || 
                               localStorage.getItem('playerName');
-            if(savedUser) document.getElementById('playerNameInput').value = savedUser;
+            if(savedUser) {
+                document.getElementById('playerNameInput').value = savedUser;
+            }
         });
+
+        // قاعدة بيانات ضخمة بأكثر من 100 سؤال منوع ومقسم
+        const questionsDB = [
+            // --- قسم عام ومنوعات (General) ---
+            { q: "اذكر اسم سيارة مشهورة", category: "general" },
+            { q: "اذكر لوناً يبدأ بحرف الميم", category: "general" },
+            { q: "اذكر اسم تطبيق جوال تستخدمه يومياً", category: "general" },
+            { q: "اذكر نادياً رياضياً سعودياً", category: "general" },
+            { q: "اذكر ماركة جوالات عالمية", category: "general" },
+            { q: "اذكر شيئاً تشتريه من البقالة", category: "general" },
+            { q: "اذكر لوناً داكناً", category: "general" },
+            { q: "اذكر ماركة ملابس رياضية شهيرة", category: "general" },
+            { q: "اذكر وسيلة نقل بحرية", category: "general" },
+            { q: "اذكر قطعة ملابس شتوية", category: "general" },
+            { q: "اذكر أداة حفر أو بناء", category: "general" },
+            { q: "اذكر شيئاً تجده في غرفة المعيشة", category: "general" },
+            { q: "اذكر منصة ألعاب فيديو أو بث", category: "general" },
+            { q: "اذكر ماركة ساعات فاخرة", category: "general" },
+            { q: "اذكر شيئاً تضعه في جيبك", category: "general" },
+            { q: "اذكر نوع معدن ثمين", category: "general" },
+            { q: "اذكر أداة كتابة", category: "general" },
+            { q: "اذكر شيئاً تستخدمه لقص الورق", category: "general" },
+            { q: "اذكر لوناً فاتحاً", category: "general" },
+            { q: "اذكر مهنة تعتمد على الرسم أو التصميم", category: "general" },
+            { q: "اذكر شيئاً تراه في المطار", category: "general" },
+            { q: "اذكر لعبة بورد أو ورق تقليدية", category: "general" },
+            { q: "اذكر ماركة سيارات فاخرة ألمانية", category: "general" },
+            { q: "اذكر شيئاً تستخدمه لتنظيف الأسنان", category: "general" },
+            { q: "اذكر لوناً مشتقاً من الأزرق", category: "general" },
+
+            // --- قسم أكل ومشروبات (Foods) ---
+            { q: "اذكر نوع فاكهة أحمر", category: "foods" },
+            { q: "اذكر أكلة شعبية خليجية", category: "foods" },
+            { q: "اذكر مشروباً بارداً تفضله", category: "foods" },
+            { q: "اذكر نوع حلا مشهور", category: "foods" },
+            { q: "اذكر خضاراً يدخل في السلطة", category: "foods" },
+            { q: "اذكر نوع لحوم مشوي", category: "foods" },
+            { q: "اذكر فاكهة صيفية منعشة", category: "foods" },
+            { q: "اذكر نوع شوربة دافئة", category: "foods" },
+            { q: "اذكر مكوناً أساسياً في البيتزا", category: "foods" },
+            { q: "اذكر نوع معجنات تفضلها", category: "foods" },
+            { q: "اذكر مشروباً ساخناً بالقهوة", category: "foods" },
+            { q: "اذكر نوع بهار أو توابل شائعة", category: "foods" },
+            { q: "اذكر فاكهة استوائية صفراء", category: "foods" },
+            { q: "اذكر نوع مكسرات تفضله", category: "foods" },
+            { q: "اذكر طعاماً سريعاً (فاست فود)", category: "foods" },
+            { q: "اذكر صنف إفطار صباحي", category: "foods" },
+            { q: "اذكر نوع سلطة مشهورة", category: "foods" },
+            { q: "اذكر نكهة آيس كريم مفضلة", category: "foods" },
+            { q: "اذكر شيئاً يؤكل مع الشاي", category: "foods" },
+            { q: "اذكر فاكهة قشرتها خضراء من الخارج حمراء من الداخل", category: "foods" },
+            { q: "اذكر نوع خبز مشهور", category: "foods" },
+            { q: "اذكر مكوناً أساسياً في الكبسة", category: "foods" },
+            { q: "اذكر نوع جبن شهير", category: "foods" },
+            { q: "اذكر فاكهة مجففة", category: "foods" },
+            { q: "اذكر طبخة شعبية عربية غير الكبسة", category: "foods" },
+
+            // --- قسم حيوانات وطبيعة (Animals) ---
+            { q: "اذكر حيواناً مفترساً", category: "animals" },
+            { q: "اذكر طائراً يستطيع الطيران", category: "animals" },
+            { q: "اذكر حيواناً يعيش في الصحراء", category: "animals" },
+            { q: "اذكر حيواناً أليفاً يربي بالمنزل", category: "animals" },
+            { q: "اذكر حيواناً بحرياً ضخماً", category: "animals" },
+            { q: "اذكر حشرة مزعجة صيفاً", category: "animals" },
+            { q: "اذكر حيواناً يبدأ بحرف القاف", category: "animals" },
+            { q: "اذكر طائراً لا يستطيع الطيران", category: "animals" },
+            { q: "اذكر حيواناً يعيش في القطب المتجمد", category: "animals" },
+            { q: "اذكر زاحفاً ساماً", category: "animals" },
+            { q: "اذكر حيواناً رمزه السرعة والرشاقة", category: "animals" },
+            { q: "اذكر نوع كلب أو قطة مشهور", category: "animals" },
+            { q: "اذكر حيواناً أضخم من الفيل", category: "animals" },
+            { q: "اذكر حيواناً يتغذى على العشب فقط", category: "animals" },
+            { q: "اذكر حيواناً ليلي النشاط", category: "animals" },
+            { q: "اذكر عنصراً من الطبيعة الساحلية", category: "animals" },
+            { q: "اذكر اسم شجرة مشهورة", category: "animals" },
+            { q: "اذكر زهرة جميلة الرائحة", category: "animals" },
+            { q: "اذكر ظاهرة جوية طبيعية", category: "animals" },
+            { q: "اذكر حيواناً بارعاً في القفز والتسلق", category: "animals" },
+            { q: "اذكر حيواناً بحرياً له أذرع متعددة", category: "animals" },
+            { q: "اذكر طائراً جارحاً", category: "animals" },
+            { q: "اذكر حيواناً قارضاً", category: "animals" },
+            { q: "اذكر حيواناً له سنام أو سنامين", category: "animals" },
+            { q: "اذكر كحشرة تنتج العسل", category: "animals" },
+
+            // --- قسم دول ومدن (Places) ---
+            { q: "اذكر دولة عربية تبدأ بحرف الميم", category: "places" },
+            { q: "اذكر مدينة سعودية كبرى", category: "places" },
+            { q: "اذكر عاصمة أوروبية", category: "places" },
+            { q: "اذكر قارة في العالم", category: "places" },
+            { q: "اذكر دولة أجنبية مشهورة بالسياحة", category: "places" },
+            { q: "اذكر دولة خليجية", category: "places" },
+            { q: "اذكر عاصمة عربية آسيوية", category: "places" },
+            { q: "اذكر مدينة تاريخية عالمية", category: "places" },
+            { q: "اذكر جزيرة سياحية شهيرة", category: "places" },
+            { q: "اذكر دولة إفريقية كبرى", category: "places" },
+            { q: "اذكر عاصمة عربية إفريقية", category: "places" },
+            { q: "اذكر دولة في أمريكا الجنوبية", category: "places" },
+            { q: "اذكر معلماً سياحياً عالمياً بارزاً", category: "places" },
+            { q: "اذكر مدينة سعودية ساحلية على البحر الأحمر", category: "places" },
+            { q: "اذكر دولة يمر بها خط الاستواء", category: "places" },
+            { q: "اذكر عاصمة آسيوية كبرى", category: "places" },
+            { q: "اذكر دولة أوروبية باردة جداً شتاءً", category: "places" },
+            { q: "اذكر مدينة مقدسة إسلامية", category: "places" },
+            { q: "اذكر دولة مشهورة بصناعة السيارات", category: "places" },
+            { q: "اذكر اسم بحر أو محيط عالمي", category: "places" },
+            { q: "اذكر دولة جزيرية بالكامل", category: "places" },
+            { q: "اذكر مدينة عالمية تُلقب بالتفاحة الكبيرة", category: "places" },
+            { q: "اذكر دولة تبدأ بحرف الالف", category: "places" },
+            { q: "اذكر منطقة جبلية شهيرة بالسعودية", category: "places" },
+            { q: "اذكر دولة ذات مساحة واسعة جداً (عالمياً)", category: "places" }
+        ];
+
+        let isHost = false;
+        let currentRoomCode = "";
+        let roomRef = null;
+        let playerName = "";
+        let totalRounds = 10;
+        let roundTime = 20;
+        let currentRound = 0;
+        let timerInterval;
+        let nextRoundTimerInterval;
+        let playersList = [];
+        let gameQuestions = [];
+
+        let toastTimeout;
+        function showToast(msg) {
+            const t = document.getElementById('toastMessage');
+            t.innerText = msg;
+            t.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                t.classList.remove('show');
+            }, 3000);
+        }
+
+        function switchView(viewId) {
+            document.querySelectorAll('#gameContainerView .glass-card').forEach(c => c.style.display = 'none');
+            document.getElementById(viewId).style.display = 'block';
+        }
 
         let backAttemptTime = 0;
         function goBackStep() {
-            const lobbyView = document.getElementById('lobbyView');
-            const gamePlayView = document.getElementById('gamePlayView');
-            const resultsView = document.getElementById('resultsView');
-            const winnerView = document.getElementById('winnerView');
+            const views = ['lobbyView', 'gamePlayView', 'resultsView', 'winnerView'];
+            let inGame = views.some(v => document.getElementById(v) && document.getElementById(v).style.display === 'block');
 
-            if ((lobbyView && lobbyView.style.display === 'block') || 
-                (gamePlayView && gamePlayView.style.display === 'block') || 
-                (resultsView && resultsView.style.display === 'block') || 
-                (winnerView && winnerView.style.display === 'block')) {
-                
+            if (inGame) {
                 let now = Date.now();
                 if (now - backAttemptTime > 10000) {
                     backAttemptTime = now;
-                    showToast('⚠️ اضغط مرة أخرى خلال 10 ثواني لتأكيد الخروج من الغرفة!');
+                    showToast('⚠️ اضغط مرة أخرى خلال 10 ثواني لتأكيد الخروج!');
                     return;
                 }
 
@@ -439,7 +419,9 @@
                     if(pName) {
                         roomRef.child('players/' + pName).remove().then(() => {
                             roomRef.child('players').get().then((snap) => {
-                                if(!snap.exists() || Object.keys(snap.val()).length === 0) roomRef.remove();
+                                if(!snap.exists() || Object.keys(snap.val()).length === 0) {
+                                    roomRef.remove();
+                                }
                             });
                         });
                     }
@@ -451,71 +433,10 @@
             }
         }
 
-        // بنك الأسئلة (معدل ليطلب كلمة/إجابة واحدة بدلاً من ثلاث)
-        const questionsDB = [
-            { q: "اذكر اسم سيارة مشهورة", category: "general" },
-            { q: "اذكر لوناً يبدأ بحرف الميم", category: "general" },
-            { q: "اذكر اسم تطبيق جوال تستخدمه يومياً", category: "general" },
-            { q: "اذكر نادياً رياضياً سعودياً", category: "general" },
-            { q: "اذكر ماركة جوالات عالمية", category: "general" },
-            { q: "اذكر شيئاً تشتريه من البقالة", category: "general" },
-
-            { q: "اذكر نوع فاكهة أحمر", category: "foods" },
-            { q: "اذكر أكلة شعبية خليجية", category: "foods" },
-            { q: "اذكر مشروباً بارداً تفضله", category: "foods" },
-            { q: "اذكر نوع حلا مشهور", category: "foods" },
-            { q: "اذكر خضاراً يدخل في السلطة", category: "foods" },
-
-            { q: "اذكر حيواناً مفترساً", category: "animals" },
-            { q: "اذكر طائراً يستطيع الطيران", category: "animals" },
-            { q: "اذكر حيواناً يعيش في الصحراء", category: "animals" },
-            { q: "اذكر حيواناً أليفاً يربي بالمنزل", category: "animals" },
-
-            { q: "اذكر دولة عربية تبدأ بحرف الميم", category: "places" },
-            { q: "اذكر مدينة سعودية كبرى", category: "places" },
-            { q: "اذكر عاصمة أوروبية", category: "places" },
-            { q: "اذكر قارة في العالم", category: "places" }
-        ];
-
-        let isHost = false;
-        let currentRoomCode = "";
-        let roomRef = null;
-        let playerName = "";
-        let roundsPerPlayer = 5;
-        let roundTimeLimit = 10;
-        let timerInterval = null;
-        let nextRoundTimerInterval = null;
-        let playersList = [];
-        let gameQuestions = [];
-        let currentRoundIndex = 0;
-
-        let toastTimeout;
-        function showToast(msg) {
-            const t = document.getElementById('toastMessage');
-            t.innerText = msg;
-            t.classList.add('show');
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => { t.classList.remove('show'); }, 3000);
-        }
-
-        function copyRoomCode() {
-            if (!currentRoomCode) return;
-            navigator.clipboard.writeText(currentRoomCode).then(() => {
-                showToast('📋 تم نسخ رمز الغرفة بنجاح: ' + currentRoomCode);
-            }).catch(err => {
-                showToast('❌ تعذر النسخ تلقائياً');
-            });
-        }
-
-        function switchView(viewId) {
-            document.querySelectorAll('#gameContainerView .glass-card').forEach(c => c.style.display = 'none');
-            document.getElementById(viewId).style.display = 'block';
-        }
-
         function hostCreateRoom() {
             playerName = document.getElementById('playerNameInput').value.trim() || "الهوست";
-            roundsPerPlayer = parseInt(document.getElementById('roundsSelect').value);
-            roundTimeLimit = parseInt(document.getElementById('roundTimeSelect').value);
+            totalRounds = parseInt(document.getElementById('roundsSelect').value);
+            roundTime = parseInt(document.getElementById('timeSelect').value);
             isHost = true;
 
             let selectedCategories = [];
@@ -524,27 +445,25 @@
             if(document.getElementById('catAnimals').checked) selectedCategories.push('animals');
             if(document.getElementById('catPlaces').checked) selectedCategories.push('places');
 
-            if(selectedCategories.length === 0) return showToast('اختر تصنيف واحد على الأقل يا بطل! ⚠️');
+            if(selectedCategories.length === 0) return showToast('اختر تصنيف واحد على الأقل يا أسطورة! ⚠️');
 
-            let filtered = questionsDB.filter(q => selectedCategories.includes(q.category));
-            if(filtered.length === 0) filtered = questionsDB;
+            let filteredQuestions = questionsDB.filter(q => selectedCategories.includes(q.category));
 
-            // خلط الأسئلة واختيار عدد غير متكرر للجولات الكلية بدون أخطاء أو حذف
-            let shuffled = [...filtered].sort(() => 0.5 - Math.random());
-            let generatedQuestions = [];
-            for(let i = 0; i < roundsPerPlayer; i++) {
-                generatedQuestions.push(shuffled[i % shuffled.length]);
+            if(filteredQuestions.length < totalRounds) {
+                return showToast(`الأسئلة المتاحة (${filteredQuestions.length}) أقل من الجولات المطلوبة! حدد تصنيفات أكثر.`);
             }
-            gameQuestions = generatedQuestions;
+
+            let shuffled = [...filteredQuestions].sort(() => 0.5 - Math.random());
+            gameQuestions = shuffled.slice(0, totalRounds);
 
             currentRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
             document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
 
-            roomRef = db.ref('fast_write_rooms/' + currentRoomCode);
+            roomRef = db.ref('word_rooms/' + currentRoomCode);
             roomRef.set({
                 host: playerName,
                 state: 'lobby',
-                settings: { roundsPerPlayer, roundTimeLimit, questions: gameQuestions },
+                settings: { totalRounds, roundTime, questions: gameQuestions },
                 players: { [playerName]: { score: 0 } }
             }).then(() => {
                 listenToFirebase();
@@ -561,7 +480,7 @@
 
             isHost = false;
             currentRoomCode = code;
-            roomRef = db.ref('fast_write_rooms/' + currentRoomCode);
+            roomRef = db.ref('word_rooms/' + currentRoomCode);
 
             roomRef.get().then((snap) => {
                 if(snap.exists()) {
@@ -597,19 +516,18 @@
                 }
                 
                 if(data.settings) {
-                    roundsPerPlayer = data.settings.roundsPerPlayer;
-                    roundTimeLimit = data.settings.roundTimeLimit || 10;
+                    totalRounds = data.settings.totalRounds;
+                    roundTime = data.settings.roundTime;
                     gameQuestions = data.settings.questions;
+
                     document.getElementById('roomSettingsSummary').innerHTML = `
-                        ⏱️ وقت الجولة: ${roundTimeLimit} ثواني | 🏁 إجمالي الجولات: ${roundsPerPlayer}
+                        ⏱️ وقت السؤال: ${roundTime} ث | 🏁 إجمالي الجولات: ${totalRounds} | 📚 إجمالي الأسئلة المتاحة: ${gameQuestions.length}
                     `;
                 }
 
-                if(data.state === 'playing') {
-                    if(data.roundIndex !== currentRoundIndex || document.getElementById('gamePlayView').style.display !== 'block') {
-                        currentRoundIndex = data.roundIndex;
-                        startRoundPlay(data.roundIndex, data.roundStartTime, data.questionIndex);
-                    }
+                if(data.state === 'playing' && data.currentRound !== currentRound) {
+                    currentRound = data.currentRound;
+                    startRoundPlay(data.currentRound, data.roundStartTime);
                 } else if (data.state === 'results') {
                     showRoundResults(data);
                 } else if (data.state === 'finished') {
@@ -628,186 +546,117 @@
 
         function hostStartGame() {
             if(!isHost) return;
-            currentRoundIndex = 0;
+            currentRound = 0;
             hostNextRound();
         }
 
         function hostNextRound() {
-            let nextIndex = (currentRoundIndex || 0) + 1;
-            if(nextIndex > roundsPerPlayer) {
+            let nextRound = currentRound + 1;
+            if(nextRound > totalRounds) {
                 roomRef.update({ state: 'finished' });
             } else {
-                // اختيار مؤشر السؤال التسلسلي بناءً على رقم الجولة لضمان عدم تكرار الأسئلة نهائياً في الجلسة
-                let questionIndex = nextIndex - 1;
-                if(questionIndex >= gameQuestions.length) questionIndex = questionIndex % gameQuestions.length;
-
-                roomRef.update({
-                    state: 'playing',
-                    roundIndex: nextIndex,
-                    questionIndex: questionIndex,
-                    roundStartTime: Date.now(),
-                    roundWinner: null
-                });
+                roomRef.child('round_answers').remove();
+                roomRef.child('roundWinner').remove();
+                roomRef.update({ state: 'playing', currentRound: nextRound, roundStartTime: Date.now() });
             }
         }
 
-        function startRoundPlay(roundIdx, startTime, qIndex) {
-            if(timerInterval) clearInterval(timerInterval);
-            if(nextRoundTimerInterval) clearInterval(nextRoundTimerInterval);
+        function startRoundPlay(roundNum, startTime) {
+            clearInterval(timerInterval);
+            clearInterval(nextRoundTimerInterval);
 
-            let qObj = gameQuestions[qIndex] || { q: "اذكر شيئاً مشهوراً" };
-            document.getElementById('roundDisplay').innerText = `الجولة ${roundIdx} من ${roundsPerPlayer}`;
-            document.getElementById('targetQuestionText').innerText = qObj.q;
+            let currentQ = gameQuestions[roundNum - 1];
+
+            document.getElementById('roundDisplay').innerText = `الجولة ${roundNum} من ${totalRounds}`;
+            document.getElementById('questionTextDisplay').innerText = currentQ.q;
+
+            let inputEl = document.getElementById('answerInput');
+            inputEl.value = '';
+            inputEl.disabled = false;
+            inputEl.focus();
             
-            let inputField = document.getElementById('playerAnswerInput');
-            inputField.value = '';
-            inputField.disabled = false;
-            inputField.focus();
+            let btnEl = document.getElementById('submitAnswerBtn');
+            btnEl.disabled = false;
+            btnEl.innerText = 'إرسال الإجابة 🚀';
 
-            document.getElementById('submitAnswerBtn').disabled = false;
+            let feedbackEl = document.getElementById('answerFeedback');
+            feedbackEl.style.display = 'none';
+
             switchView('gamePlayView');
 
-            let lastPlayedSec = roundTimeLimit;
             timerInterval = setInterval(() => {
                 let elapsed = Math.floor((Date.now() - startTime) / 1000);
-                let timeLeft = roundTimeLimit - elapsed;
-                
-                if(timeLeft < 0) timeLeft = 0;
+                let timeLeft = roundTime - elapsed;
 
-                if (timeLeft !== lastPlayedSec) {
-                    lastPlayedSec = timeLeft;
-                    if (timeLeft > 0) playTickSound(false);
-                    else playTickSound(true);
-                }
-
-                let timerEl = document.getElementById('timer');
-                timerEl.classList.remove('timer-pop');
-                void timerEl.offsetWidth;
-                timerEl.classList.add('timer-pop');
-                timerEl.innerText = timeLeft + "s";
-
-                if(timeLeft === 0) {
+                if(timeLeft <= 0) {
+                    timeLeft = 0;
                     clearInterval(timerInterval);
                     if(isHost) {
                         roomRef.get().then((snap) => {
                             let data = snap.val();
-                            if(data && data.state === 'playing' && !data.roundWinner) {
-                                roomRef.update({
-                                    state: 'results',
-                                    roundWinner: null,
-                                    roundMessage: "انتهى الوقت وما أحد جابها صح! ⌛"
-                                });
-                            }
+                            if(data && data.state === 'playing') roomRef.update({ state: 'results' });
                         });
                     }
                 }
-            }, 500);
+                document.getElementById('timer').innerText = timeLeft + "s";
+            }, 1000);
         }
 
-        function checkPlayerSubmit(e) {
-            if (e.key === 'Enter') {
-                submitAnswer();
-            }
-        }
+        function submitAnswer() {
+            let input = document.getElementById('answerInput').value.trim();
+            if(!input) return;
 
-        // دالة التحقق الذكي المرن عبر Groq AI API
-        async function submitAnswer() {
-            let answerText = document.getElementById('playerAnswerInput').value.trim();
-            if(!answerText) return showToast('اكتب إجابتك أولاً يا بطل! ⚠️');
+            let feedbackEl = document.getElementById('answerFeedback');
+            feedbackEl.style.display = 'block';
+            feedbackEl.innerText = "تم تسجيل إجابتك! في انتظار باقي اللاعبين... ⏳";
+            feedbackEl.style.color = "var(--primary-orange)";
 
+            document.getElementById('answerInput').disabled = true;
             document.getElementById('submitAnswerBtn').disabled = true;
-            showToast('🤖 الحكم الآلي يتحقق من إجابتك...');
 
-            roomRef.get().then(async (snap) => {
-                let data = snap.val();
-                if(!data || data.state !== 'playing' || data.roundWinner) {
-                    document.getElementById('submitAnswerBtn').disabled = false;
-                    return;
-                }
+            // منح نقاط إضافية وسريعة للاعب
+            roomRef.child('players/' + playerName + '/score').transaction((currentScore) => (currentScore || 0) + 100);
+            roomRef.child('round_answers/' + playerName).set({ answer: input, time: Date.now() });
 
-                let qIndex = data.questionIndex;
-                let qObj = gameQuestions[qIndex];
-                let questionText = qObj.q;
-
-                let systemPrompt = "أنت حكم مرن وسريع للعبة سرعة كتابة باللغة العربية. إذا كانت إجابة اللاعب صحيحة وتطابق السؤال المطلوب (إجابة مفردة صحيحة)، فاعتبرها صحيحة.";
-                let userPrompt = `السؤال هو: "${questionText}"\nإجابة اللاعب هي: "${answerText}"\n\nهل إجابة اللاعب صحيحة وتتناسب مع السؤال؟ أجب بكلمة واحدة فقط: "نعم" أو "لا".`;
-
-                let isCorrect = false;
-                try {
-                    let response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                        method: "POST",
-                        headers: {
-                            "Authorization": `Bearer ${GROQ_API_KEY}`,
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            model: "llama-3.3-70b-versatile",
-                            messages: [
-                                { role: "system", content: systemPrompt },
-                                { role: "user", content: userPrompt }
-                            ],
-                            temperature: 0.1,
-                            max_tokens: 5
-                        })
-                    });
-
-                    let resJson = await response.json();
-                    let aiReply = resJson.choices && resJson.choices[0] && resJson.choices[0].message ? resJson.choices[0].message.content.trim() : "";
-                    
-                    if (aiReply.includes("نعم")) {
-                        isCorrect = true;
-                    }
-                } catch(err) {
-                    if(answerText.length > 0) isCorrect = true;
-                }
-
-                if(isCorrect) {
-                    let currentScore = (data.players && data.players[playerName] && data.players[playerName].score) || 0;
-                    let updates = {
-                        state: 'results',
-                        roundWinner: playerName,
-                        roundMessage: `الكابتن ${playerName} جابها صح وكان الأسرع! 🏆`,
-                        ['players/' + playerName + '/score']: currentScore + 100
-                    };
-                    roomRef.update(updates);
-                    document.getElementById('playerAnswerInput').disabled = true;
-                } else {
-                    document.getElementById('submitAnswerBtn').disabled = false;
-                    showToast('❌ الحكم الآلي يقول: حاول مرة ثانية بإجابة أدق!');
+            // إذا كان هذا أول من أجاب، نسجل اسمه كفائز سريع بالجولة
+            roomRef.child('roundWinner').get().then((snap) => {
+                if(!snap.exists()) {
+                    roomRef.child('roundWinner').set(playerName);
                 }
             });
+
+            confetti({ particleCount: 30, spread: 50, origin: { y: 0.8 } });
         }
 
         function showRoundResults(data) {
-            if(timerInterval) clearInterval(timerInterval);
-            if(nextRoundTimerInterval) clearInterval(nextRoundTimerInterval);
+            clearInterval(timerInterval);
+            clearInterval(nextRoundTimerInterval);
 
-            let winnerBox = document.getElementById('roundWinnerAnnouncement');
             let resultTitle = document.getElementById('resultTitle');
+            let winnerBox = document.getElementById('winnerAnnouncement');
             
             if(data.roundWinner) {
-                resultTitle.innerText = "انتهت الجولة بفوز أسرع كاتب! 🚀";
-                winnerBox.innerHTML = `👑 البطل: ${data.roundWinner} (+100 نقطة)`;
+                resultTitle.innerText = "انتهت الجولة! ⏱️";
+                winnerBox.innerHTML = `أسرع واحد جابها: 👑 ${data.roundWinner}`;
                 winnerBox.style.display = 'block';
-                try { confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } }); } catch(e){}
             } else {
-                resultTitle.innerText = "انتهى الوقت بدون فائز! ⌛";
-                winnerBox.innerHTML = "ما حالفكم الحظ في هذه الجولة.";
-                winnerBox.style.display = 'block';
+                resultTitle.innerText = "خلص الوقت وما أحد رد! ❌";
+                winnerBox.style.display = 'none';
             }
 
+            let answers = data.round_answers || {};
             let container = document.getElementById('roundScoresContainer');
-            container.innerHTML = '<label style="margin-bottom:0.4rem;">مجموع النقاط الحالي:</label>';
+            container.innerHTML = '<h3 style="font-size:0.95rem; margin-bottom:0.5rem; color:#475569;">إجابات اللاعبين هذه الجولة:</h3>';
 
-            if(data.players) {
-                for(let p in data.players) {
-                    container.innerHTML += `
-                        <div class="player-chip">
-                            <span>👤 ${p}</span>
-                            <span style="color: var(--primary-orange); font-weight: 900;">${data.players[p].score} نقطة</span>
-                        </div>
-                    `;
-                }
+            for(let p in data.players) {
+                let userAns = answers[p] ? answers[p].answer : "ما جاوب ⏳";
+                let color = answers[p] ? "var(--green-success)" : "#888";
+                container.innerHTML += `
+                    <div class="player-chip">
+                        <span>👤 ${p} (المجموع: ${data.players[p].score})</span>
+                        <span style="color: ${color}; font-weight: 900;">${userAns}</span>
+                    </div>
+                `;
             }
 
             switchView('resultsView');
@@ -816,6 +665,9 @@
             let displayElement = document.getElementById('nextRoundTimerDisplay');
             document.getElementById('nextRoundTimerContainer').style.display = 'block';
             displayElement.innerText = countdown;
+            displayElement.classList.remove('timer-pop');
+            void displayElement.offsetWidth; 
+            displayElement.classList.add('timer-pop');
 
             nextRoundTimerInterval = setInterval(() => {
                 countdown--;
@@ -832,12 +684,12 @@
         }
 
         function showFinalWinner(playersObj) {
-            if(timerInterval) clearInterval(timerInterval);
-            if(nextRoundTimerInterval) clearInterval(nextRoundTimerInterval);
+            clearInterval(timerInterval);
+            clearInterval(nextRoundTimerInterval);
 
-            showToast('🏁 انتهت اللعبة بفوز الأبطال! 🎉');
+            showToast('🏁 انتهت اللعبة، مبروك للأساطير! 🎉');
 
-            let sorted = Object.entries(playersObj || {}).sort((a, b) => b[1].score - a[1].score);
+            let sorted = Object.entries(playersObj).sort((a, b) => b[1].score - a[1].score);
             let podiumHTML = '';
             
             if(sorted.length > 0) {
@@ -847,7 +699,7 @@
             }
             
             document.getElementById('podiumDisplay').innerHTML = podiumHTML;
-            try { confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } }); } catch(e){}
+            confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
             switchView('winnerView');
         }
     </script>
