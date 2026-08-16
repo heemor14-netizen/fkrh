@@ -613,6 +613,33 @@
     height: 100%;
     object-fit: cover; /* عشان تغطي المساحة بدون ما ينعكس أو يتشوه شكلها */
 }
+.game-card {
+    position: relative;
+    overflow: hidden;
+    background-color: #ffffff; /* خلفية الكرت */
+}
+
+/* الأشكال والرموز بخلفية برتقالية شفافة */
+.game-card::after {
+    content: ""; /* تقدر تغيرها لأي رموز تبيها */
+    position: absolute;
+    bottom: -15px;
+    left: -15px;
+    font-size: 85px;
+    color: var(--primary-orange); /* اللون البرتقالي الجميل حقك */
+    opacity: 0.06; /* شفافية منخفضة وناعمة */
+    transform: rotate(-15deg); /* ميلان فني */
+    z-index: 0;
+    pointer-events: none;
+    line-height: 1;
+    letter-spacing: 10px;
+}
+
+/* عشان نضمن أن النصوص فوق الأشكال وتكون واضحة */
+.game-card > * {
+    position: relative;
+    z-index: 1;
+}
     </style>
 </head>
 <body>
@@ -685,7 +712,7 @@
             <!-- لعبة إنسان جماد نبات (شغالة) -->
             <div class="game-card" data-category="word party" data-name="اسم انسان جماد نبات بلاد">
                 <div class="game-icon-img">
-    <img src="path/to/your-image.png" alt="أيقونة اللعبة">
+    <img src="images/asm.jpeg" alt="أيقونة اللعبة">
 </div>
                 <div class="game-title">اسم انسان جماد نبات</div>
                 <div class="game-desc">اللعبة الكلاسيكية الشهيرة! اختبر سرعة بديهتك وجيب كلمات بالحرف المطلوب.</div>
@@ -696,7 +723,9 @@
             </div>
 
   <div class="game-card" data-category="word party" data-name="خمن الدولة">
-    <div class="game-icon">🤔</div>
+                    <div class="game-icon-img">
+    <img src="images/dwlh.jpeg" alt="أيقونة اللعبة">
+</div>
     <div class="game-title">خمن الدولة</div>
     <div class="game-desc">تحدي جغرافي شيق يعتمد على سرعة استنتاج أسماء الدول من خلال تلميحات ومعالم سريعة.</div>
     <div class="game-meta">
@@ -706,7 +735,9 @@
 </div>
 
             <div class="game-card" data-category="word party" data-name="اسم انسان جماد نبات بلاد">
-                <div class="game-icon">🔀</div>
+                                <div class="game-icon-img">
+    <img src="images/klmat.jpeg" alt="أيقونة اللعبة">
+</div>
                 <div class="game-title">الكلمات المبعثرة</div>
                 <div class="game-desc">تختبر قوة تركيزك وبصرك عبر فك وتركيب الحروف المقلوبة للوصول إلى الكلمة الصحيحة.</div>
                 <div class="game-meta">
@@ -716,7 +747,9 @@
             </div>
 
             <div class="game-card" data-category="word party" data-name="اسم انسان جماد نبات بلاد">
-                <div class="game-icon">⚽</div>
+                                <div class="game-icon-img">
+    <img src="images/krt.jpeg" alt="أيقونة اللعبة">
+</div>
                 <div class="game-title">معلومات كروية</div>
                 <div class="game-desc">اختبر معلوماتك الكروية، وتوقع النتائج ونافس مع أصدقائك لتفوز بكأس الدوري.</div>
                 <div class="game-meta">
@@ -726,7 +759,9 @@
             </div>
 
                         <div class="game-card" data-category="word party" data-name="اسم انسان جماد نبات بلاد">
-                <div class="game-icon">🎤</div>
+                                <div class="game-icon-img">
+    <img src="images/shtr.jpeg" alt="أيقونة اللعبة">
+</div>
                 <div class="game-title">اكمل الشطر</div>
                 <div class="game-desc">تختبر سرعة بديهتك في تذكر وتكملة الأشعار والأمثال الشعبية والكلمات الناقصة.</div>
                 <div class="game-meta">
@@ -736,7 +771,9 @@
             </div>
 
              <div class="game-card" data-category="word party" data-name="اسم انسان جماد نبات بلاد">
-                <div class="game-icon">🎭</div>
+                                <div class="game-icon-img">
+    <img src="images/3thr.jpeg" alt="أيقونة اللعبة">
+</div>
                 <div class="game-title">وش العذر</div>
                 <div class="game-desc">تختبر قدرتك على اختلاق أغبى وأقوى الأعذار لتصريف مواقف محرجة يضعك فيها أصحابك.</div>
                 <div class="game-meta">
@@ -747,7 +784,9 @@
 
             <!-- لعبة مين الجاسوس (شغالة ومفعلة الآن!) -->
             <div class="game-card" data-category="party" data-name="مين الجاسوس">
-                <div class="game-icon">🕵️‍♂️</div>
+                                <div class="game-icon-img">
+    <img src="images/jasos.jpeg" alt="أيقونة اللعبة">
+</div>
                 <div class="game-title">مين الجاسوس؟</div>
                 <div class="game-desc">اكتشف الجاسوس المتخفي بينكم قبل ما يعرف المكان السري! لعبة الذكاء والتشكيك.</div>
                 <div class="game-meta">
@@ -757,7 +796,9 @@
             </div>
 
             <div class="game-card" data-category="speed" data-name="تحدي ال 5 ثواني">
-                <div class="game-icon">⏱️</div>
+                                <div class="game-icon-img">
+    <img src="images/asr3.jpeg" alt="أيقونة اللعبة">
+</div>
                 <div class="game-title">تحدي السرعة</div>
                 <div class="game-desc">تختبر سرعة بديهتك في كتابة أو ذكر إجابة صحيحة قبل نفاد الوقت القصير.</div>
                 <div class="game-meta">
@@ -768,7 +809,9 @@
 
             <!-- لعبة ارسم وتخمّن (جاهزة وشغالة 100%) -->
             <div class="game-card" data-category="party" data-name="ارسم وتخمن">
-                <div class="game-icon">🎨</div>
+                                <div class="game-icon-img">
+    <img src="images/rsm.jpeg" alt="أيقونة اللعبة">
+</div>
                 <div class="game-title">ارسم وتخمّن</div>
                 <div class="game-desc">ارسم الكلمة المكتوبة وخلي بقية اللاعبين يحزرون الرسمة بأسرع وقت.</div>
                 <div class="game-meta">
