@@ -1,20 +1,18 @@
 {
-  "name": "فكرة",
-  "short_name": "فكرة",
-  "description": "كل لعبة تبدأ بفكرة.. تحدي أصحابك واثبت إنك الأذكى",
+  "name": "فِكْرَة",
+  "short_name": "فِكْرَة",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FFFFFF",
-  "theme_color": "#FF5E36",
+  "background_color": "#0f172a",
+  "theme_color": "#3b82f6",
   "icons": [
     {
-      "src": "/images/icon-192.png",
+      "src": "images/app-icon.jpeg",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable" 
+      "type": "image/png"
     },
     {
-      "src": "/images/icon-512.png",
+      "src": "images/app-icon.jpeg",
       "sizes": "512x512",
       "type": "image/png"
     }
