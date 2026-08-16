@@ -11,10 +11,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="فكرة">
-    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="apple-touch-icon" href="images/app-icon.jpeg">
 
     <!-- أيقونة الموقع المفضلة (Favicon) فوق بالمتصفح للكمبيوتر -->
-    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="icon" type="image/png" href="images/app-icon.jpeg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>فِكْرَة 💡 | عالم الألعاب الجماعية</title>
@@ -599,6 +599,22 @@
         font-size: 0.75rem !important;
     }
 }
+.game-icon-img {
+    width: 45px; /* أو حسب المقاس اللي يناسب بطاقة اللعبة عندك */
+    height: 45px;
+    border-radius: 12px; /* لو تبغى الحواف دائرية أو خليها 50% لو تبغاها دائرية بالكامل */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05); /* خلفية خفيفة متناسقة مع الثيم */
+}
+
+.game-icon-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* عشان تغطي المساحة بدون ما ينعكس أو يتشوه شكلها */
+}
     </style>
 </head>
 <body>
@@ -638,7 +654,7 @@
     <div id="homeMainView">
         <section class="hero">
             <h1>كل لعبة تبدأ بـ <span>فِكْرَة</span>..<br>تحدى أصحابك واثبت إنك الأذكى! 🔥</h1>
-            <p>جمّع أصحابك ولعبوا ألعاب السرعة والذكاء بدون تحميل، ادخل والعب على طول!</p>
+            <p>جمّع أصحابك والعبوا ألعاب السرعة والذكاء !</p>
         </section>
 
         <section class="controls-section">
@@ -656,6 +672,7 @@
     <button class="btn-compact" id="compactViewToggleBtn" onclick="toggleCompactView()">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
         <span id="compactBtnText">تصغير العرض</span>
+        <span>للهاتف</span
     </button>
 </div>
             <div class="categories">
@@ -669,7 +686,9 @@
         <main class="games-grid" id="gamesGridContainer">
             <!-- لعبة إنسان جماد نبات (شغالة) -->
             <div class="game-card" data-category="word party" data-name="اسم انسان جماد نبات بلاد">
-                <div class="game-icon">🌱</div>
+                <div class="game-icon-img">
+    <img src="path/to/your-image.png" alt="أيقونة اللعبة">
+</div>
                 <div class="game-title">اسم انسان جماد نبات</div>
                 <div class="game-desc">اللعبة الكلاسيكية الشهيرة! اختبر سرعة بديهتك وجيب كلمات بالحرف المطلوب.</div>
                 <div class="game-meta">
