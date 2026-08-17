@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <link rel="manifest" href="manifest.json">
+<link rel="manifest" href="manifest.json">
     <meta name="application-name" content="فكرة">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="فكرة">
-    <link rel="apple-touch-icon" href="logo.png">
-    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="./images/app-icon.jpeg">
+    <link rel="icon" type="image/png" href="./images/app-icon.jpeg">
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -143,36 +143,6 @@
             font-size: 0.95rem; outline: none; transition: all 0.3s ease; background: #FAFAFA; font-weight: 700;
         }
         input[type="text"]:focus, select:focus { border-color: var(--primary-orange); background: #FFF; box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.15); }
-        
-        .categories-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.5rem;
-            margin-top: 0.3rem;
-        }
-        .category-checkbox-label {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: #F8FAFC;
-            border: 2px solid #E2E8F0;
-            padding: 0.6rem 0.8rem;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 0.85rem;
-            transition: all 0.2s ease;
-        }
-        .category-checkbox-label input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--primary-orange);
-            cursor: pointer;
-        }
-        .category-checkbox-label:hover {
-            border-color: var(--primary-orange);
-            background: #FFF3EF;
-        }
 
         .header-status { display: flex; justify-content: space-between; align-items: center; background: #F8FAFC; padding: 0.8rem; border-radius: 14px; margin-bottom: 1.2rem; border: 1px solid #E2E8F0; }
         .timer-display { font-size: 1.8rem; font-weight: 900; color: var(--primary-orange); }
@@ -187,10 +157,11 @@
             margin-bottom: 1.2rem;
         }
         .target-question {
-            font-size: 1.3rem;
+            font-size: 1.6rem;
             font-weight: 900;
             color: var(--text-main);
             margin-bottom: 0.5rem;
+            direction: rtl;
         }
         .target-subtext {
             font-size: 0.9rem;
@@ -252,7 +223,7 @@
         
         <div id="roomSelectionView" class="glass-card">
             <h1 class="title">⌨️ تحدي الأسرع كتابةً</h1>
-            <p class="subtitle">اكتب الإجابة المطلوبة في الصندوق بأسرع وقت لتفوز بالجولة! 🚀</p>
+            <p class="subtitle">اكتب الكلمات بدقة مع الهمزات المطلوبة بأسرع وقت لتفوز! 🚀</p>
 
             <div class="form-group">
                 <label>اسمك في اللعبة</label>
@@ -260,27 +231,19 @@
             </div>
 
             <div class="form-group">
-                <label>تصنيفات التحدي:</label>
-                <div class="categories-grid">
-                    <label class="category-checkbox-label">
-                        <input type="checkbox" id="catGeneral" value="general" checked> 🔥 عامة ومنوعة
-                    </label>
-                    <label class="category-checkbox-label">
-                        <input type="checkbox" id="catFoods" value="foods" checked> 🍔 أطعمة ومأكولات
-                    </label>
-                    <label class="category-checkbox-label">
-                        <input type="checkbox" id="catAnimals" value="animals" checked> 🦁 حيوانات وطبيعة
-                    </label>
-                    <label class="category-checkbox-label">
-                        <input type="checkbox" id="catPlaces" value="places" checked> 🏙️ دول وأماكن
-                    </label>
-                </div>
+                <label>مستوى الصعوبة (كلما زاد المستوى، طالت الكلمات ودقت الهمزات):</label>
+                <select id="difficultySelect">
+                    <option value="easy">🟢 سهل (كلمات قصيرة ومعروفة)</option>
+                    <option value="medium" selected>🟡 متوسط (كلمات أطول وهمزات متفرقة)</option>
+                    <option value="hard">🟠 صعب (كلمات طويلة وهمزات معقدة وقوية)</option>
+                    <option value="extreme">🔥 احترافي / أساطير (كلمات بالغة الطول ومليئة بالهمزات الصعبة)</option>
+                </select>
             </div>
 
             <div class="form-group">
-                <label>وقت الجولة (بالثواني - الحد الأدنى 10 ثواني)</label>
+                <label>وقت الجولة (بالثواني)</label>
                 <select id="roundTimeSelect">
-                    <option value="10" selected>10 ثواني (سريع جداً 🔥)</option>
+                    <option value="12" selected>12 ثانية</option>
                     <option value="15">15 ثانية</option>
                     <option value="20">20 ثانية</option>
                     <option value="30">30 ثانية</option>
@@ -329,19 +292,19 @@
             <div class="header-status">
                 <div>
                     <span id="roundDisplay" style="font-size: 0.85rem; font-weight: 800; color: #666;">الجولة</span>
-                    <div id="activePlayerIndicator" style="font-weight: 900; font-size: 1.1rem; margin-top: 0.1rem; color: var(--primary-orange);">الكل يتنافس الآن! ⚡</div>
+                    <div id="activePlayerIndicator" style="font-weight: 900; font-size: 1.1rem; margin-top: 0.1rem; color: var(--primary-orange);">اكتب مع الهمزات بدقة! ⚡</div>
                 </div>
-                <div class="timer-display" id="timer">10s</div>
+                <div class="timer-display" id="timer">12s</div>
             </div>
 
             <div class="challenge-box">
-                <div class="target-subtext">اكتب الإجابة المطلوبة بأسرع ما يمكنك:</div>
-                <div class="target-question" id="targetQuestionText">...</div>
-                <div id="sampleHint" style="font-size: 0.78rem; color: #777; margin-top: 6px; font-weight: 700;"></div>
+                <div class="target-subtext">اكتب الكلمة التالية بالهمزات كاملة وبأسرع ما يمكنك:</div>
+                <div class="target-question" id="targetQuestionText" style="color: var(--primary-orange); letter-spacing: 1px;">...</div>
+                <div id="sampleHint" style="font-size: 0.78rem; color: #777; margin-top: 6px; font-weight: 700;">التطابق الإملائي والهمزات شرط أساسي للفوز</div>
             </div>
 
             <div class="form-group">
-                <input type="text" id="playerAnswerInput" placeholder="اكتب إجابتك هنا بسرعة..." onkeydown="checkPlayerSubmit(event)">
+                <input type="text" id="playerAnswerInput" placeholder="اكتب الكلمة بالهمزات هنا..." onkeydown="checkPlayerSubmit(event)" autocomplete="off" autocapitalize="off">
             </div>
             <button id="submitAnswerBtn" onclick="submitAnswer()" class="btn btn-primary" style="width: 100%;">إرسال الإجابة 🚀</button>
         </div>
@@ -359,8 +322,8 @@
         </div>
 
         <div id="winnerView" class="glass-card" style="display: none; text-align: center;">
-            <h1 class="title" style="font-size: 1.5rem;">🎉 أساطير السرعة والكتابة 🎉</h1>
-            <p class="subtitle">مين أسرع واحد طقطق على الكيبورد؟ 😂</p>
+            <h1 class="title" style="font-size: 1.5rem;">🎉 أساطير الإملاء والسرعة 🎉</h1>
+            <p class="subtitle">من ملك الكيبورد وأستاذ الهمزات؟ 😂</p>
 
             <div id="podiumDisplay" class="podium-container"></div>
 
@@ -384,9 +347,6 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-
-        // مفتاح الذكاء الاصطناعي (Groq AI API Key)
-        const GROQ_API_KEY = "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";
 
         let audioCtx = null;
         function playTickSound(isFinal = false) {
@@ -451,118 +411,79 @@
             }
         }
 
-const questionsDB = [
-    { q: "اذكر اسم سيارة مشهورة", category: "general" },
-    { q: "اذكر لوناً يبدأ بحرف الميم", category: "general" },
-    { q: "اذكر اسم تطبيق جوال تستخدمه يومياً", category: "general" },
-    { q: "اذكر نادياً رياضياً سعودياً", category: "general" },
-    { q: "اذكر ماركة جوالات عالمية", category: "general" },
-    { q: "اذكر شيئاً تشتريه من البقالة", category: "general" },
-    { q: "اذكر نوع طراز سيارة دفع رباعي", category: "general" },
-    { q: "اذكر موقع تسوق إلكتروني مشهور", category: "general" },
-    { q: "اذكر لعبة فيديو تحبها", category: "general" },
-    { q: "اذكر منصة بث مرئي مشهورة", category: "general" },
-    { q: "اذكر علامة تجارية للأجهزة الكهربائية", category: "general" },
-    { q: "اذكر وسيلة مواصلات عامة", category: "general" },
-    { q: "اذكر أداة تستخدمها في الكتابة", category: "general" },
-    { q: "اذكر قطعة ملابس شتوية", category: "general" },
-    { q: "اذكر نوع ساعة يد مشهورة", category: "general" },
-    { q: "اذكر ماركة عطور عالمية", category: "general" },
-    { q: "اذكر منصة تواصل اجتماعي", category: "general" },
-    { q: "اذكر لوناً غامقاً", category: "general" },
-    { q: "اذكر قطعة أثاث منزلية أساسية", category: "general" },
-    { q: "اذكر أداة نجار مشهورة", category: "general" },
-    { q: "اذكر نوع قماش للملابس", category: "general" },
-    { q: "اذكر جهاز إلكتروني لوحي", category: "general" },
-    { q: "اذكر لوناً فاتحاً", category: "general" },
-    { q: "اذكر نوع رياضة فردية", category: "general" },
-    { q: "اذكر علامة تجارية للمستلزمات الرياضية", category: "general" },
-
-    { q: "اذكر نوع فاكهة أحمر", category: "foods" },
-    { q: "اذكر أكلة شعبية خليجية", category: "foods" },
-    { q: "اذكر مشروباً بارداً تفضله", category: "foods" },
-    { q: "اذكر نوع حلا مشهور", category: "foods" },
-    { q: "اذكر خضاراً يدخل في السلطة", category: "foods" },
-    { q: "اذكر طبق وجبة سريعة مفضل", category: "foods" },
-    { q: "اذكر نوع توابل أو بهار رئيسي بالطبخ", category: "foods" },
-    { q: "اذكر نوع شوربة رمضانية", category: "foods" },
-    { q: "اذكر فاكهة حمضية", category: "foods" },
-    { q: "اذكر نوع مكسرات شهير", category: "foods" },
-    { q: "اذكر مشروباً ساخناً", category: "foods" },
-    { q: "اذكر نوع معجنات تفضلها", category: "foods" },
-    { q: "اذكر نوع لحم أبيض", category: "foods" },
-    { q: "اذكر خضاراً ورقياً أخضر", category: "foods" },
-    { q: "اذكر نوع صوص أو صلصة طعام", category: "foods" },
-    { q: "اذكر مكوناً أساسياً في الكيك", category: "foods" },
-    { q: "اذكر نوع أجبان مشهور", category: "foods" },
-    { q: "اذكر نوع فاكهة استوائية", category: "foods" },
-    { q: "اذكر وجبة إفطار صباحية", category: "foods" },
-    { q: "اذكر نوع سمك بحري مشهور", category: "foods" },
-    { q: "اذكر نوع إضافات بيتزا مفضلة", category: "foods" },
-    { q: "اذكر نوع عصائر طبيعية منعشة", category: "foods" },
-    { q: "اذكر نوع حلويات شرقية", category: "foods" },
-    { q: "اذكر وجبة عشاء خفيفة", category: "foods" },
-    { q: "اذكر نوع حبوب غذائية مفيدة", category: "foods" },
-
-    { q: "اذكر حيواناً مفترساً", category: "animals" },
-    { q: "اذكر طائراً يستطيع الطيران", category: "animals" },
-    { q: "اذكر حيواناً يعيش في الصحراء", category: "animals" },
-    { q: "اذكر حيواناً أليفاً يربي بالمنزل", category: "animals" },
-    { q: "اذكر حشرة تعيش في جماعات منظمة", category: "animals" },
-    { q: "اذكر حيواناً بحرياً ضخماً", category: "animals" },
-    { q: "اذكر طائراً لا يستطيع الطيران", category: "animals" },
-    { q: "اذكر حيواناً زاحفاً", category: "animals" },
-    { q: "اذكر حيواناً ينام مقلوباً", category: "animals" },
-    { q: "اذكر حيواناً بطيئ الحركة", category: "animals" },
-    { q: "اذكر حيواناً يعيش في القطب الشمالي", category: "animals" },
-    { q: "اذكر نوع حشرة مزعجة", category: "animals" },
-    { q: "اذكر حيواناً يمتلك قروناً", category: "animals" },
-    { q: "اذكر حيواناً من البرمائيات", category: "animals" },
-    { q: "اذكر حيواناً قارضاً", category: "animals" },
-    { q: "اذكر نوع كلب شهير", category: "animals" },
-    { q: "اذكر سمكة زينة منزلية", category: "animals" },
-    { q: "اذكر حيواناً ينشط ليلاً", category: "animals" },
-    { q: "اذكر طائراً جارحاً", category: "animals" },
-    { q: "اذكر حيواناً ثديياً مائياً", category: "animals" },
-    { q: "اذكر حيواناً يتغذى على الأوراق فقط", category: "animals" },
-    { q: "اذكر نوع قطط أليف", category: "animals" },
-    { q: "اذكر حيواناً ضخماً منقرضاً", category: "animals" },
-    { q: "اذكر حيواناً يغير لون جلده", category: "animals" },
-    { q: "اذكر حشرة منتجة لادة نافعة", category: "animals" },
-
-    { q: "اذكر دولة عربية تبدأ بحرف الميم", category: "places" },
-    { q: "اذكر مدينة سعودية كبرى", category: "places" },
-    { q: "اذكر عاصمة أوروبية", category: "places" },
-    { q: "اذكر قارة في العالم", category: "places" },
-    { q: "اذكر معلماً سياحياً عالمياً مشهوراً", category: "places" },
-    { q: "اذكر اسماً لحي في مدينة سعودية", category: "places" },
-    { q: "اذكر دولة آسيوية غير عربية", category: "places" },
-    { q: "اذكر دولة في قارة أفريقيا", category: "places" },
-    { q: "اذكر عاصمة عربية شهيرة", category: "places" },
-    { q: "اذكر اسماً لجزيرة سياحية", category: "places" },
-    { q: "اذكر دولة أوروبية مشهورة بالسياحة", category: "places" },
-    { q: "اذكر اسماً لبرج عالمي ضخم", category: "places" },
-    { q: "اذكر اسماً لمحيط في العالم", category: "places" },
-    { q: "اذكر دولة لاتينية أمريكية", category: "places" },
-    { q: "اذكر اسماً لنهر عظيم", category: "places" },
-    { q: "اذكر اسماً لسلسلة جبال شهيرة", category: "places" },
-    { q: "اذكر اسماً لملعب كرة قدم عالمي", category: "places" },
-    { q: "اذكر دولة خليجية عربية", category: "places" },
-    { q: "اذكر اسماً لصحراء كبرى", category: "places" },
-    { q: "اذكر اسماً لمطار دولي معروف", category: "places" },
-    { q: "اذكر اسماً لقناة مائية عالمية", category: "places" },
-    { q: "اذكر اسماً لمنتزه ترفيهي مشهور", category: "places" },
-    { q: "اذكر دولة في أمريكا الشمالية", category: "places" },
-    { q: "اذكر عاصمة أسترالية أو أوقيانوسية", category: "places" },
-    { q: "اذكر اسماً لمتحف عالمي شهير", category: "places" }
-];
+        // قاعدة بيانات مصنفة حسب مستويات الصعوبة مع التركيز على طول الكلمات وكثرة الهمزات الصحيحة
+        const questionsDB = {
+            easy: [
+                { q: "أحمد", difficulty: "easy" },
+                { q: "إبراهيم", difficulty: "easy" },
+                { q: "إيمان", difficulty: "easy" },
+                { q: "أسد", difficulty: "easy" },
+                { q: "أرنب", difficulty: "easy" },
+                { q: "إبريق", difficulty: "easy" },
+                { q: "أخضر", difficulty: "easy" },
+                { q: "أزرق", difficulty: "easy" },
+                { q: "أب", difficulty: "easy" },
+                { q: "أم", difficulty: "easy" },
+                { q: "إصبع", difficulty: "easy" },
+                { q: "أذن", difficulty: "easy" },
+                { q: "أنف", difficulty: "easy" },
+                { q: "أمل", difficulty: "easy" },
+                { q: "أسرع", difficulty: "easy" }
+            ],
+            medium: [
+                { q: "مسؤول", difficulty: "medium" },
+                { q: "فؤاد", difficulty: "medium" },
+                { q: "سؤال", difficulty: "medium" },
+                { q: "رئاسة", difficulty: "medium" },
+                { q: "طائره", difficulty: "medium" },
+                { q: "هيئة", difficulty: "medium" },
+                { q: "مؤمن", difficulty: "medium" },
+                { q: "مئذنة", difficulty: "medium" },
+                { q: "تفاؤل", difficulty: "medium" },
+                { q: "قراءة", difficulty: "medium" },
+                { q: "براءة", difficulty: "medium" },
+                { q: "ضوءه", difficulty: "medium" },
+                { q: "جزؤه", difficulty: "medium" },
+                { q: "خطؤه", difficulty: "medium" },
+                { q: "مبتدئ", difficulty: "medium" }
+            ],
+            hard: [
+                { q: "استئجار", difficulty: "hard" },
+                { q: "اطمئنان", difficulty: "hard" },
+                { q: "استِئصال", difficulty: "hard" },
+                { q: "استئذان", difficulty: "hard" },
+                { q: "مسؤولية", difficulty: "hard" },
+                { q: "تساؤلات", difficulty: "hard" },
+                { q: "كالاستئذان", difficulty: "hard" },
+                { q: "الاطمئنان", difficulty: "hard" },
+                { q: "المسؤولون", difficulty: "hard" },
+                { q: "المرتئون", difficulty: "hard" },
+                { q: "مستؤى", difficulty: "hard" },
+                { q: "فأرستنا", difficulty: "hard" },
+                { q: "مستهزئون", difficulty: "hard" },
+                { q: "تأشيرات", difficulty: "hard" },
+                { q: "مأكولات", difficulty: "hard" }
+            ],
+            extreme: [
+                { q: "فَاسْتَبْشِرُوا بِبَيْعِكُمُ", difficulty: "extreme" },
+                { q: "أَفَإِن مَّاتَ أَوْ قُتِلَ", difficulty: "extreme" },
+                { q: "وَيَسْتَنْبِئُونَكَ أَحَقٌّ هُوَ", difficulty: "extreme" },
+                { q: "أولئك هم المهتدون", difficulty: "extreme" },
+                { q: "الْمُسْتَأْذِنِينَ مِنْهُمْ", difficulty: "extreme" },
+                { q: "أَلا إِنَّ أَوْلِيَاءَ اللَّهِ", difficulty: "extreme" },
+                { q: "وَسَأُصْرِفُ عَنْ آيَاتِيَ", difficulty: "extreme" },
+                { q: "فَاسْتَفْتِهِمْ أَهُمْ أَشَدُّ", difficulty: "extreme" },
+                { q: "أَفَرَأَيْتُمُ الْمَاءَ الَّذِي تَشْرَبُونَ", difficulty: "extreme" },
+                { q: "لِيَسْتَأْذِنَكُمُ الَّذِينَ مَلَكَتْ", difficulty: "extreme" }
+            ]
+        };
 
         let isHost = false;
         let currentRoomCode = "";
         let roomRef = null;
         let playerName = "";
         let roundsPerPlayer = 5;
-        let roundTimeLimit = 10;
+        let roundTimeLimit = 12;
         let timerInterval = null;
         let nextRoundTimerInterval = null;
         let playersList = [];
@@ -596,20 +517,10 @@ const questionsDB = [
             playerName = document.getElementById('playerNameInput').value.trim() || "الهوست";
             roundsPerPlayer = parseInt(document.getElementById('roundsSelect').value);
             roundTimeLimit = parseInt(document.getElementById('roundTimeSelect').value);
+            const difficulty = document.getElementById('difficultySelect').value;
             isHost = true;
 
-            let selectedCategories = [];
-            if(document.getElementById('catGeneral').checked) selectedCategories.push('general');
-            if(document.getElementById('catFoods').checked) selectedCategories.push('foods');
-            if(document.getElementById('catAnimals').checked) selectedCategories.push('animals');
-            if(document.getElementById('catPlaces').checked) selectedCategories.push('places');
-
-            if(selectedCategories.length === 0) return showToast('اختر تصنيف واحد على الأقل يا بطل! ⚠️');
-
-            let filtered = questionsDB.filter(q => selectedCategories.includes(q.category));
-            if(filtered.length === 0) filtered = questionsDB;
-
-            // خلط الأسئلة واختيار عدد غير متكرر للجولات الكلية بدون أخطاء أو حذف
+            let filtered = questionsDB[difficulty] || questionsDB['medium'];
             let shuffled = [...filtered].sort(() => 0.5 - Math.random());
             let generatedQuestions = [];
             for(let i = 0; i < roundsPerPlayer; i++) {
@@ -624,7 +535,7 @@ const questionsDB = [
             roomRef.set({
                 host: playerName,
                 state: 'lobby',
-                settings: { roundsPerPlayer, roundTimeLimit, questions: gameQuestions },
+                settings: { roundsPerPlayer, roundTimeLimit, difficulty, questions: gameQuestions },
                 players: { [playerName]: { score: 0 } }
             }).then(() => {
                 listenToFirebase();
@@ -678,10 +589,11 @@ const questionsDB = [
                 
                 if(data.settings) {
                     roundsPerPlayer = data.settings.roundsPerPlayer;
-                    roundTimeLimit = data.settings.roundTimeLimit || 10;
+                    roundTimeLimit = data.settings.roundTimeLimit || 12;
                     gameQuestions = data.settings.questions;
+                    let diffNames = { easy: 'سهل 🟢', medium: 'متوسط 🟡', hard: 'صعب 🟠', extreme: 'احترافي 🔥' };
                     document.getElementById('roomSettingsSummary').innerHTML = `
-                        ⏱️ وقت الجولة: ${roundTimeLimit} ثواني | 🏁 إجمالي الجولات: ${roundsPerPlayer}
+                        🎚️ المستوى: ${diffNames[data.settings.difficulty] || 'متوسط'} | ⏱️ الوقت: ${roundTimeLimit}ث | 🏁 الجولات: ${roundsPerPlayer}
                     `;
                 }
 
@@ -717,7 +629,6 @@ const questionsDB = [
             if(nextIndex > roundsPerPlayer) {
                 roomRef.update({ state: 'finished' });
             } else {
-                // اختيار مؤشر السؤال التسلسلي بناءً على رقم الجولة لضمان عدم تكرار الأسئلة نهائياً في الجلسة
                 let questionIndex = nextIndex - 1;
                 if(questionIndex >= gameQuestions.length) questionIndex = questionIndex % gameQuestions.length;
 
@@ -735,7 +646,7 @@ const questionsDB = [
             if(timerInterval) clearInterval(timerInterval);
             if(nextRoundTimerInterval) clearInterval(nextRoundTimerInterval);
 
-            let qObj = gameQuestions[qIndex] || { q: "اذكر شيئاً مشهوراً" };
+            let qObj = gameQuestions[qIndex] || { q: "سرعة" };
             document.getElementById('roundDisplay').innerText = `الجولة ${roundIdx} من ${roundsPerPlayer}`;
             document.getElementById('targetQuestionText').innerText = qObj.q;
             
@@ -775,7 +686,7 @@ const questionsDB = [
                                 roomRef.update({
                                     state: 'results',
                                     roundWinner: null,
-                                    roundMessage: "انتهى الوقت وما أحد جابها صح! ⌛"
+                                    roundMessage: "انتهى الوقت وما أحد كتبها بالهمزات بدقة! ⌛"
                                 });
                             }
                         });
@@ -790,15 +701,14 @@ const questionsDB = [
             }
         }
 
-        // دالة التحقق الذكي المرن عبر Groq AI API
-        async function submitAnswer() {
+        // تحقق دقيق يتأكد من تطابق النص كاملاً بما في ذلك الهمزات
+        function submitAnswer() {
             let answerText = document.getElementById('playerAnswerInput').value.trim();
-            if(!answerText) return showToast('اكتب إجابتك أولاً يا بطل! ⚠️');
+            if(!answerText) return showToast('اكتب الكلمة أولاً يا بطل! ⚠️');
 
             document.getElementById('submitAnswerBtn').disabled = true;
-            showToast('🤖 الحكم الآلي يتحقق من إجابتك...');
 
-            roomRef.get().then(async (snap) => {
+            roomRef.get().then((snap) => {
                 let data = snap.val();
                 if(!data || data.state !== 'playing' || data.roundWinner) {
                     document.getElementById('submitAnswerBtn').disabled = false;
@@ -807,53 +717,22 @@ const questionsDB = [
 
                 let qIndex = data.questionIndex;
                 let qObj = gameQuestions[qIndex];
-                let questionText = qObj.q;
+                let targetWord = qObj.q.trim();
 
-                let systemPrompt = "أنت حكم مرن وسريع للعبة سرعة كتابة باللغة العربية. إذا كانت إجابة اللاعب صحيحة وتطابق السؤال المطلوب (إجابة مفردة صحيحة)، فاعتبرها صحيحة.";
-                let userPrompt = `السؤال هو: "${questionText}"\nإجابة اللاعب هي: "${answerText}"\n\nهل إجابة اللاعب صحيحة وتتناسب مع السؤال؟ أجب بكلمة واحدة فقط: "نعم" أو "لا".`;
-
-                let isCorrect = false;
-                try {
-                    let response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                        method: "POST",
-                        headers: {
-                            "Authorization": `Bearer ${GROQ_API_KEY}`,
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            model: "llama-3.3-70b-versatile",
-                            messages: [
-                                { role: "system", content: systemPrompt },
-                                { role: "user", content: userPrompt }
-                            ],
-                            temperature: 0.1,
-                            max_tokens: 5
-                        })
-                    });
-
-                    let resJson = await response.json();
-                    let aiReply = resJson.choices && resJson.choices[0] && resJson.choices[0].message ? resJson.choices[0].message.content.trim() : "";
-                    
-                    if (aiReply.includes("نعم")) {
-                        isCorrect = true;
-                    }
-                } catch(err) {
-                    if(answerText.length > 0) isCorrect = true;
-                }
-
-                if(isCorrect) {
+                // مقارنة دقيقة تشترط صحة الحروف والهمزات تماماً
+                if(answerText === targetWord) {
                     let currentScore = (data.players && data.players[playerName] && data.players[playerName].score) || 0;
                     let updates = {
                         state: 'results',
                         roundWinner: playerName,
-                        roundMessage: `الكابتن ${playerName} جابها صح وكان الأسرع! 🏆`,
+                        roundMessage: `الكابتن ${playerName} كان الأسرع وكتبها بالهمزات صحيحة! 🏆`,
                         ['players/' + playerName + '/score']: currentScore + 100
                     };
                     roomRef.update(updates);
                     document.getElementById('playerAnswerInput').disabled = true;
                 } else {
                     document.getElementById('submitAnswerBtn').disabled = false;
-                    showToast('❌ الحكم الآلي يقول: حاول مرة ثانية بإجابة أدق!');
+                    showToast('❌ خطأ في الهمزات أو الإملاء، ركز واكتبها مضبوطة!');
                 }
             });
         }
@@ -872,7 +751,7 @@ const questionsDB = [
                 try { confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } }); } catch(e){}
             } else {
                 resultTitle.innerText = "انتهى الوقت بدون فائز! ⌛";
-                winnerBox.innerHTML = "ما حالفكم الحظ في هذه الجولة.";
+                winnerBox.innerHTML = "ما حالفكم الحظ بكتابتها بالهمزات الصحيحة في الوقت المحدد.";
                 winnerBox.style.display = 'block';
             }
 
@@ -915,7 +794,7 @@ const questionsDB = [
             if(timerInterval) clearInterval(timerInterval);
             if(nextRoundTimerInterval) clearInterval(nextRoundTimerInterval);
 
-            showToast('🏁 انتهت اللعبة بفوز الأبطال! 🎉');
+            showToast('🏁 انتهت اللعبة بفوز أبطال الهمزات والكيبورد! 🎉');
 
             let sorted = Object.entries(playersObj || {}).sort((a, b) => b[1].score - a[1].score);
             let podiumHTML = '';

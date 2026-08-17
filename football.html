@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <link rel="manifest" href="manifest.json">
+ <link rel="manifest" href="manifest.json">
     <meta name="application-name" content="فكرة">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="فكرة">
-    <link rel="apple-touch-icon" href="logo.png">
-    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="./images/app-icon.jpeg">
+    <link rel="icon" type="image/png" href="./images/app-icon.jpeg">
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -416,8 +416,6 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        const GROQ_API_KEY = "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";
-
         let audioCtx = null;
         function playTickSound(isFinal = false) {
             try {
@@ -481,38 +479,38 @@
             }
         }
 
-        // قاعدة بيانات الأسئلة المصنفة حسب المستويات (سهل، وسط، صعب)
+        // قاعدة بيانات الأسئلة المصنفة حسب المستويات (سهل، وسط، صعب) مع إجابة واحدة دقيقة
         const footballQuestionsDB = [
             // أسئلة سهلة
-            { q: "اذكر نادي إسباني يحظى بشعبية جارفة ويلقب بالملكي", answer: "ريال مدريد", category: "leagues", diff: "easy" },
-            { q: "اذكر لاعباً أرجنتينيًا أسطورياً فاز بكأس العالم 2022", answer: "ليونيل ميسي", category: "players", diff: "easy" },
-            { q: "اذكر دولة استضافت مونديال كأس العالم 2022", answer: "قطر", category: "history", diff: "easy" },
-            { q: "اذكر نادي إنجليزي يلقب بالشياطين الحمر", answer: "مانشستر يونايتد", category: "leagues", diff: "easy" },
-            { q: "اذكر لاعباً برتغالياً شهيراً يرتدي رقم 7 ويلقب بالدون", answer: "كريستيانو رونالدو", category: "players", diff: "easy" },
-            { q: "اذكر دولة فازت بأكبر عدد من بطولات كأس العالم تاريخياً", answer: "البرازيل", category: "history", diff: "easy" },
-            { q: "اذكر نادي سعودي عريق يلقب بالزعيم", answer: "الهلال", category: "leagues", diff: "easy" },
-            { q: "اذكر ملعب نادي برشلونة الشهير", answer: "كامب نو", category: "leagues", diff: "easy" },
+            { q: "اذكر نادي إسباني يحظى بشعبية جارفة ويلقب بالملكي[cite: 11]", answer: "ريال مدريد", category: "leagues", diff: "easy" },
+            { q: "اذكر لاعباً أرجنتينيًا أسطورياً فاز بكأس العالم 2022[cite: 11]", answer: "ليونيل ميسي", category: "players", diff: "easy" },
+            { q: "اذكر دولة استضافت مونديال كأس العالم 2022[cite: 11]", answer: "قطر", category: "history", diff: "easy" },
+            { q: "اذكر نادي إنجليزي يلقب بالشياطين الحمر[cite: 11]", answer: "مانشستر يونايتد", category: "leagues", diff: "easy" },
+            { q: "اذكر لاعباً برتغالياً شهيراً يرتدي رقم 7 ويلقب بالدون[cite: 11]", answer: "كريستيانو رونالدو", category: "players", diff: "easy" },
+            { q: "اذكر دولة فازت بأكبر عدد من بطولات كأس العالم تاريخياً[cite: 11]", answer: "البرازيل", category: "history", diff: "easy" },
+            { q: "اذكر نادي سعودي عريق يلقب بالزعيم[cite: 11]", answer: "الهلال", category: "leagues", diff: "easy" },
+            { q: "اذكر ملعب نادي برشلونة الشهير[cite: 11]", answer: "كامب نو", category: "leagues", diff: "easy" },
 
             // أسئلة متوسطة
-            { q: "اذكر خطة لعب شهيرة تتكون من ثلاثة أرقام (دفاع وسط هجوم)", answer: "4-3-3", category: "tactics", diff: "medium" },
-            { q: "اذكر نادياً إيطالياً يلقب بالسيدة العجوز", answer: "يوفنتوس", category: "leagues", diff: "medium" },
-            { q: "اذكر حارس مرمى ألماني أسطوري اشتهر بمهارته الكبيرة بالقدمين وخروج المرمى", answer: "مانويل نوير", category: "players", diff: "medium" },
-            { q: "اذكر البلد الذي أقيمت فيه أول بطولة كأس عالم عام 1930", answer: "أوروغواي", category: "history", diff: "medium" },
-            { q: "اذكر نادي فرنسي يعتبر الأقوى محلياً في العهد الحديث", answer: "باريس سان جيرمان", category: "leagues", diff: "medium" },
-            { q: "اذكر لاعباً برازيلياً أسطورياً لقب بالجوهرة السوداء وفاز بثلاثة كؤوس عالم", answer: "بيليه", category: "players", diff: "medium" },
-            { q: "اذكر نادياً ألمانيًا يسيطر على الدوري المحلي بوضوح تام", answer: "بايرن ميونخ", category: "leagues", diff: "medium" },
-            { q: "اذكر المنتخب الذي فاز بكأس العالم 2014 في البرازيل", answer: "ألمانيا", category: "history", diff: "medium" },
-            { q: "اذكر طريقة حسم مباريات كرة القدم في الأدوار الإقصائية عند تعادل الفريقين", answer: "ركلات الترجيح", category: "tactics", diff: "medium" },
+            { q: "اذكر خطة لعب شهيرة تتكون من ثلاثة أرقام (دفاع وسط هجوم)[cite: 11]", answer: "4-3-3", category: "tactics", diff: "medium" },
+            { q: "اذكر نادياً إيطالياً يلقب بالسيدة العجوز[cite: 11]", answer: "يوفنتوس", category: "leagues", diff: "medium" },
+            { q: "اذكر حارس مرمى ألماني أسطوري اشتهر بمهارته الكبيرة بالقدمين وخروج المرمى[cite: 11]", answer: "مانويل نوير", category: "players", diff: "medium" },
+            { q: "اذكر البلد الذي أقيمت فيه أول بطولة كأس عالم عام 1930[cite: 11]", answer: "أوروغواي", category: "history", diff: "medium" },
+            { q: "اذكر نادي فرنسي يعتبر الأقوى محلياً في العهد الحديث[cite: 11]", answer: "باريس سان جيرمان", category: "leagues", diff: "medium" },
+            { q: "اذكر لاعباً برازيلياً أسطورياً لقب بالجوهرة السوداء وفاز بثلاثة كؤوس عالم[cite: 11]", answer: "بيليه", category: "players", diff: "medium" },
+            { q: "اذكر نادياً ألمانيًا يسيطر على الدوري المحلي بوضوح تام[cite: 11]", answer: "بايرن ميونخ", category: "leagues", diff: "medium" },
+            { q: "اذكر المنتخب الذي فاز بكأس العالم 2014 في البرازيل[cite: 11]", answer: "ألمانيا", category: "history", diff: "medium" },
+            { q: "اذكر طريقة حسم مباريات كرة القدم في الأدوار الإقصائية عند تعادل الفريقين[cite: 11]", answer: "ركلات الترجيح", category: "tactics", diff: "medium" },
 
             // أسئلة صعبة
-            { q: "اذكر الفريق الوحيد الذي فاز بـ 3 ألقاب متتالية في دوري أبطال أوروبا بنظامها الحديث", answer: "ريال مدريد", category: "leagues", diff: "hard" },
-            { q: "اذكر المنتخب الذي فاز بأول نسختين متتاليتين لكأس العالم عامي 1934 و 1938", answer: "إيطاليا", category: "history", diff: "hard" },
-            { q: "اذكر المدرب الذي ابتكر خطة (التيكي تاكا) وأحدث ثورة مع برشلونة وإسبانيا", answer: "بيب جوارديولا", category: "tactics", diff: "hard" },
-            { q: "اذكر اللاعب الذي سجل أسرع هدف في تاريخ نهائيات كأس العالم (سجله بعد 11 ثانية عام 2002)", answer: "هاكان شوكور", category: "history", diff: "hard" },
-            { q: "اذكر النادي الإنجليزي الوحيد الذي حقق الدوري بدون أي هزيمة طوال الموسم (لازم اللاحقة الذهبية)", answer: "آرسنال", category: "leagues", diff: "hard" },
-            { q: "اذكر اللاعب الهاتريك الوحيد الذي سجل في نهائي كأس العالم للرجال (عام 1966)", answer: "جيف هيرست", category: "history", diff: "hard" },
-            { q: "اذكر النادي اللاتيني الذي فاز ببطولة كوبا ليبرتادوريس أطول سلسلة تاريخية مرعبة", answer: "إنديبندينتي", category: "history", diff: "hard" },
-            { q: "اذكر خطة الدفاع المرتد التكتيكية المعقدة التي عُرفت بـ (الكيناتشيو) الإيطالية", answer: "كتيناتشيو", category: "tactics", diff: "hard" }
+            { q: "اذكر الفريق الوحيد الذي فاز بـ 3 ألقاب متتالية في دوري أبطال أوروبا بنظامها الحديث[cite: 11]", answer: "ريال مدريد", category: "leagues", diff: "hard" },
+            { q: "اذكر المنتخب الذي فاز بأول نسختين متتاليتين لكأس العالم عامي 1934 و 1938[cite: 11]", answer: "إيطاليا", category: "history", diff: "hard" },
+            { q: "اذكر المدرب الذي ابتكر خطة (التيكي تاكا) وأحدث ثورة مع برشلونة وإسبانيا[cite: 11]", answer: "بيب جوارديولا", category: "tactics", diff: "hard" },
+            { q: "اذكر اللاعب الذي سجل أسرع هدف في تاريخ نهائيات كأس العالم (سجله بعد 11 ثانية عام 2002)[cite: 11]", answer: "هاكان شوكور", category: "history", diff: "hard" },
+            { q: "اذكر النادي الإنجليزي الوحيد الذي حقق الدوري بدون أي هزيمة طوال الموسم (لازم اللاحقة الذهبية)[cite: 11]", answer: "آرسنال", category: "leagues", diff: "hard" },
+            { q: "اذكر اللاعب الهاتريك الوحيد الذي سجل في نهائي كأس العالم للرجال (عام 1966)[cite: 11]", answer: "جيف هيرست", category: "history", diff: "hard" },
+            { q: "اذكر النادي اللاتيني الذي فاز ببطولة كوبا ليبرتادوريس أطول سلسلة تاريخية مرعبة[cite: 11]", answer: "إنديبندينتي", category: "history", diff: "hard" },
+            { q: "اذكر خطة الدفاع المرتد التكتيكية المعقدة التي عُرفت بـ (الكيناتشيو) الإيطالية[cite: 11]", answer: "كتيناتشيو", category: "tactics", diff: "hard" }
         ];
 
         let isHost = false;
@@ -565,14 +563,12 @@
 
             if(selectedCategories.length === 0) return showToast('اختر تصنيفاً كروياً واحداً على الأقل! ⚠️');
 
-            // تصفية الأسئلة بناءً على التصنيفات ومستوى الصعوبة المختار
             let filtered = footballQuestionsDB.filter(q => {
                 let matchCat = selectedCategories.includes(q.category);
                 let matchDiff = (selectedDiff === 'mixed') ? true : (q.diff === selectedDiff);
                 return matchCat && matchDiff;
             });
 
-            // لو ما حصلنا أسئلة كافية بالمستوى الدقيق، نرجع للتصنيف العام كاحتياط
             if(filtered.length === 0) {
                 filtered = footballQuestionsDB.filter(q => selectedCategories.includes(q.category));
             }
@@ -703,11 +699,10 @@
             if(timerInterval) clearInterval(timerInterval);
             if(nextRoundTimerInterval) clearInterval(nextRoundTimerInterval);
 
-            let qObj = gameQuestions[qIndex] || { q: "اذكر نادياً مشهوراً", answer: "غير متوفر", diff: "medium" };
+            let qObj = gameQuestions[qIndex] || { q: "اذكر نادياً مشهوراً[cite: 11]", answer: "غير متوفر", diff: "medium" };
             document.getElementById('roundDisplay').innerText = `الجولة ${roundIdx} من ${roundsPerPlayer}`;
             document.getElementById('targetQuestionText').innerText = qObj.q;
             
-            // تحديث شارة الصعوبة للداخل
             let diffTagMap = { easy: '🟢 سهل', medium: '🟡 وسط', hard: '🔴 صعب' };
             document.getElementById('difficultyBadge').innerText = diffTagMap[qObj.diff] || '🟡 وسط';
             
@@ -762,14 +757,27 @@
             }
         }
 
-        async function submitAnswer() {
+        // دالة موحدة ومتطورة لتنظيف النصوص (تجاهل الهمزات، التشكيل، ال التعريف، والتاء المربوطة والهاء)[cite: 11]
+        function normalizeArabic(text) {
+            if (!text) return "";
+            return text
+                .replace(/أ|إ|آ/g, 'ا')
+                .replace(/ة/g, 'ه')
+                .replace(/ى/g, 'ي')
+                .replace(/ً|ٌ|ٍ|َ|ُ|ِ|ّ|ْ/g, '') // إزالة التشكيل
+                .replace(/^ال/, '') // إزالة ال التعريف لو بدأت بها الكلمة لتحقيق مرونة أكبر
+                .trim()
+                .toLowerCase();
+        }
+
+        function submitAnswer() {
             let answerText = document.getElementById('playerAnswerInput').value.trim();
             if(!answerText) return showToast('اكتب إجابتك الكروية أولاً يا كابتن! ⚠️');
 
             document.getElementById('submitAnswerBtn').disabled = true;
-            showToast('⚽ الحكم يتحقق من صحة الهدف...');
+            showToast('صح عليك⚽');
 
-            roomRef.get().then(async (snap) => {
+            roomRef.get().then((snap) => {
                 let data = snap.val();
                 if(!data || data.state !== 'playing' || data.roundWinner) {
                     document.getElementById('submitAnswerBtn').disabled = false;
@@ -778,38 +786,26 @@
 
                 let qIndex = data.questionIndex;
                 let qObj = gameQuestions[qIndex];
-                let questionText = qObj.q;
+                let expectedAnswer = qObj.answer;
 
-                let systemPrompt = "أنت حكم كروي ذكي ومرن باللغة العربية. إذا كانت إجابة اللاعب صحيحة وتتطابق مع السؤال الكروي المطلوب، فاعتبرها صحيحة وسجل هدفاً.";
-                let userPrompt = `السؤال الكروي هو: "${questionText}"\nإجابة اللاعب هي: "${answerText}"\n\nهل إجابة اللاعب صحيحة وتتناسب مع السؤال؟ أجب بكلمة واحدة فقط: "نعم" أو "لا".`;
+                let cleanPlayer = normalizeArabic(answerText);
+                let cleanExpected = normalizeArabic(expectedAnswer);
 
                 let isCorrect = false;
-                try {
-                    let response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                        method: "POST",
-                        headers: {
-                            "Authorization": `Bearer ${GROQ_API_KEY}`,
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            model: "llama-3.3-70b-versatile",
-                            messages: [
-                                { role: "system", content: systemPrompt },
-                                { role: "user", content: userPrompt }
-                            ],
-                            temperature: 0.1,
-                            max_tokens: 5
-                        })
-                    });
 
-                    let resJson = await response.json();
-                    let aiReply = resJson.choices && resJson.choices[0] && resJson.choices[0].message ? resJson.choices[0].message.content.trim() : "";
-                    
-                    if (aiReply.includes("نعم")) {
-                        isCorrect = true;
+                // التحقق التام أو الجزئي (مثل كتابة الاسم الأخير وحده مثل "نوير" بدلاً من "مانويل نوير")[cite: 11]
+                if (cleanExpected === cleanPlayer || cleanExpected.includes(cleanPlayer) || cleanPlayer.includes(cleanExpected)) {
+                    isCorrect = true;
+                } else {
+                    // التحقق بالكلمات المفردة (لو كتب اسم واحد من الإجابة المركبة يكفي)[cite: 11]
+                    let expectedWords = cleanExpected.split(/\s+/);
+                    let playerWords = cleanPlayer.split(/\s+/);
+                    for (let pw of playerWords) {
+                        if (pw.length > 2 && expectedWords.includes(pw)) {
+                            isCorrect = true;
+                            break;
+                        }
                     }
-                } catch(err) {
-                    if(answerText.length > 0) isCorrect = true;
                 }
 
                 if(isCorrect) {
@@ -824,7 +820,7 @@
                     document.getElementById('playerAnswerInput').disabled = true;
                 } else {
                     document.getElementById('submitAnswerBtn').disabled = false;
-                    showToast('❌ الحكم يقول: تسلل أو إجابة خاطئة، جرب مجدداً!');
+                    showToast('❌ تسلل أو إجابة خاطئة، جرب مجدداً!');
                 }
             });
         }

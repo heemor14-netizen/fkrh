@@ -135,7 +135,16 @@
             background: var(--orange-gradient);
             color: white;
             box-shadow: 0 8px 20px var(--orange-glow);
+            position: relative;
+            overflow: hidden;
         }
+        .btn-primary::after {
+            content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.55), transparent);
+            transform: skewX(-20deg);
+        }
+        .btn-primary:hover::after { animation: btnShine 0.9s ease forwards; }
+        @keyframes btnShine { to { left: 130%; } }
         .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 25px rgba(255, 94, 54, 0.45); }
 
         .btn-secondary { background: #475569; color: white; }
@@ -275,14 +284,26 @@
             border-radius: 24px; padding: 1.4rem; border: 1px solid rgba(255, 255, 255, 0.9);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.03); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: flex; flex-direction: column; justify-content: space-between;
+            position: relative; overflow: hidden;
         }
-        .game-card:hover { transform: translateY(-6px); background: rgba(255, 255, 255, 0.9); border-color: var(--primary-orange); box-shadow: 0 20px 40px rgba(255, 94, 54, 0.2); }
+        .game-card::before {
+            content: ""; position: absolute; inset: 0; border-radius: 24px; padding: 1px;
+            background: linear-gradient(135deg, transparent 40%, rgba(255, 94, 54, 0.5), transparent 60%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude;
+            opacity: 0; transition: opacity 0.4s ease; pointer-events: none;
+        }
+        .game-card:hover::before { opacity: 1; }
+        .game-card:hover { transform: translateY(-8px); background: rgba(255, 255, 255, 0.92); border-color: rgba(255, 94, 54, 0.25); box-shadow: 0 25px 45px rgba(255, 94, 54, 0.22); }
+        .game-card:active { transform: translateY(-4px) scale(0.99); }
 
         .game-icon {
             width: 55px; height: 55px; border-radius: 18px; background: var(--orange-gradient);
             display: flex; align-items: center; justify-content: center; font-size: 1.8rem;
             margin-bottom: 1rem; box-shadow: 0 8px 18px var(--orange-glow); color: white;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        .game-card:hover .game-icon { transform: scale(1.08) rotate(-4deg); }
         .game-title { font-size: 1.25rem; font-weight: 800; margin-bottom: 0.4rem; color: var(--text-main); }
         .game-desc { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.2rem; font-weight: 500; }
         .game-meta { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 1rem; border-top: 1px solid rgba(0, 0, 0, 0.05); }
@@ -291,20 +312,58 @@
         /* نوافذ منبثقة (Modal) لتسجيل الدخول والبروفايل */
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(29, 32, 41, 0.4); backdrop-filter: blur(8px);
+            background: rgba(20, 15, 25, 0.55); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
             display: none; justify-content: center; align-items: center; z-index: 1000;
             padding: 1rem;
         }
+        @keyframes authCardPop {
+            0% { opacity: 0; transform: translateY(18px) scale(0.96); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
         .auth-card {
-            background: rgba(255, 255, 255, 0.98); padding: 2rem 1.5rem; border-radius: 28px;
-            width: 100%; max-width: 380px; text-align: center; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15); border: 1px solid #FFFFFF;
+            position: relative;
+            background: linear-gradient(180deg, #FFFFFF 0%, #FFFCFA 100%);
+            padding: 2.4rem 1.7rem 1.8rem; border-radius: 28px;
+            width: 100%; max-width: 380px; text-align: center;
+            box-shadow: 0 30px 70px rgba(20, 10, 5, 0.35), 0 0 0 1px rgba(255, 94, 54, 0.08);
+            border: 1px solid #FFFFFF; overflow: hidden;
+            animation: authCardPop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .auth-card h2 { margin-bottom: 1.2rem; font-weight: 900; font-size: 1.5rem; }
-        .auth-card input[type="text"], .auth-card input[type="password"] { 
-            width: 100%; padding: 0.8rem 1rem; margin-bottom: 0.9rem; border: 2px solid #EAEAEA; border-radius: 14px; outline: none; font-size: 0.9rem; font-weight: 700; 
+        .auth-card::before {
+            content: ""; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+            background: var(--orange-gradient);
         }
-        .auth-card input:focus { border-color: var(--primary-orange); }
+        .auth-icon-badge {
+            width: 64px; height: 64px; margin: 0 auto 0.8rem; border-radius: 20px;
+            background: var(--orange-gradient); display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; box-shadow: 0 12px 24px var(--orange-glow);
+        }
+        .auth-card h2 { margin-bottom: 0.3rem; font-weight: 900; font-size: 1.5rem; }
+        .auth-subtitle { color: var(--text-muted); font-size: 0.85rem; font-weight: 600; margin-bottom: 1.4rem; }
+        .auth-field { position: relative; margin-bottom: 0.9rem; text-align: right; }
+        .auth-card input[type="text"], .auth-card input[type="password"] {
+            width: 100%; padding: 1rem 1rem 0.5rem; border: 2px solid #EAEAEA; border-radius: 14px;
+            outline: none; font-size: 0.9rem; font-weight: 700; background: #FAFAFA; transition: 0.25s;
+        }
+        .auth-card input:focus { border-color: var(--primary-orange); background: #FFF; box-shadow: 0 0 0 4px rgba(255, 94, 54, 0.12); }
+        .auth-field label {
+            position: absolute; right: 1rem; top: 0.85rem; color: var(--text-muted); font-weight: 700;
+            font-size: 0.9rem; pointer-events: none; transition: 0.2s; background: transparent;
+        }
+        .auth-field input:focus + label, .auth-field input:not(:placeholder-shown) + label {
+            top: 0.3rem; font-size: 0.68rem; color: var(--primary-orange);
+        }
+        .auth-eye-toggle { position: absolute; left: 1rem; top: 0.9rem; cursor: pointer; font-size: 0.95rem; opacity: 0.6; }
+        .auth-error-box {
+            display: none; background: #FFEBEE; color: var(--red-danger); font-weight: 700; font-size: 0.8rem;
+            padding: 0.6rem 0.8rem; border-radius: 12px; margin-bottom: 0.7rem; text-align: center;
+        }
+        .auth-error-box.show { display: block; animation: authCardPop 0.25s ease; }
         .auth-card .btn { width: 100%; padding: 0.8rem; margin-top: 0.4rem; }
+        .auth-card .btn .spinner { display: inline-block; vertical-align: middle; margin-left: 6px; }
+        .auth-switch-line { margin-top: 1rem; font-size: 0.82rem; color: var(--text-muted); font-weight: 600; }
+        .auth-switch-line a { color: var(--primary-orange); font-weight: 800; cursor: pointer; margin-right: 4px; }
+        .auth-switch-line a:hover { text-decoration: underline; }
 
         /* بروفايل المستخدم المطور وتعديل الصورة */
         .profile-avatar-container {
@@ -1250,6 +1309,8 @@
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 <!-- قسم الحسابات في مربع واحد وعريض -->
 <div class="accounts-wide-container">
     <div class="accounts-wide-box">
@@ -1313,6 +1374,9 @@ function toggleCompactView() {
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+        const auth = firebase.auth();
+        const storage = firebase.storage();
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});
 
         const API_KEY = "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";
         const arabicLetters = ["أ", "ب", "ت", "ث", "ج", "ح", "خ", "د", "ر", "ز", "س", "ش", "ص", "ض", "ط", "ظ", "ع", "غ", "ف", "ق", "ك", "ل", "م", "ن", "هـ", "و", "ي"];
@@ -1334,7 +1398,7 @@ function toggleCompactView() {
         let playerName = "لاعب";
         let playersList = [];
 
-        let currentUserAccount = JSON.parse(localStorage.getItem('fikra_user')) || null;
+        let currentUserAccount = null; // تُملأ تلقائياً من Firebase Authentication + Realtime Database
 
         let allPlayersAnswers = {};
         let currentEvaluations = {};
@@ -1418,6 +1482,13 @@ function toggleCompactView() {
             } catch(e) {}
         }
 
+        // يحوّل اسم المستخدم إلى بريد وهمي ثابت يستخدمه Firebase Authentication داخلياً
+        // (تجربة المستخدم تبقى "اسم مستخدم + كلمة مرور" بينما الحساب فعلياً محمي عبر Firebase)
+        function usernameToAuthEmail(username) {
+            const clean = username.trim().toLowerCase().replace(/[^a-z0-9_\.\u0600-\u06FF]/g, '');
+            return clean + '@fikra-players.app';
+        }
+
         function openAuthModal(mode) {
             const modal = document.getElementById('authModal');
             const content = document.getElementById('authModalContent');
@@ -1425,73 +1496,160 @@ function toggleCompactView() {
 
             if (mode === 'profile') {
                 content.innerHTML = `
-                    <h2>الملف الشخصي 👤</h2>
+                    <div class="auth-icon-badge">👤</div>
+                    <h2>الملف الشخصي</h2>
+                    <p class="auth-subtitle">حسابك محفوظ بأمان عبر Firebase</p>
                     <div class="profile-avatar-container">
-                        <img id="modalAvatarPreview" src="${currentUserAccount.avatar || 'https://via.placeholder.com/90?text=USER'}" class="profile-avatar-img">
+                        <img id="modalAvatarPreview" src="${currentUserAccount.avatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}" class="profile-avatar-img">
                         <label for="avatarFileInput" class="avatar-upload-btn" title="تغيير الصورة">📷</label>
                         <input type="file" id="avatarFileInput" accept="image/*" style="display:none;" onchange="handleImageUpload(event)">
                     </div>
-                    <input type="text" id="profileNameInput" value="${currentUserAccount.name || ''}" placeholder="اسم المستخدم" maxlength="15">
-                    <button onclick="saveProfileChanges()" class="btn btn-primary">حفظ التعديلات ✨</button>
+                    <div class="auth-field">
+                        <input type="text" id="profileNameInput" value="${currentUserAccount.name || ''}" placeholder=" " maxlength="15">
+                        <label for="profileNameInput">اسم المستخدم</label>
+                    </div>
+                    <div id="authErrorBox" class="auth-error-box"></div>
+                    <button id="authSubmitBtn" onclick="saveProfileChanges()" class="btn btn-primary">حفظ التعديلات ✨</button>
                     <button onclick="logoutAccount()" class="btn btn-danger" style="margin-top: 0.5rem;">تسجيل الخروج 🚪</button>
                     <button class="btn" style="color: var(--text-muted); margin-top: 6px;" onclick="closeAuthModal()">إغلاق</button>
                 `;
             } else {
                 let isReg = mode === 'register';
                 content.innerHTML = `
-                    <h2>${isReg ? 'حساب جديد 🚀' : 'تسجيل الدخول 🚀'}</h2>
-                    <input type="text" id="authUserInput" placeholder="اسم المستخدم أو البريد" value="">
-                    <input type="password" id="authPassInput" placeholder="كلمة المرور" value="">
-                    <button onclick="submitAuthAction('${mode}')" class="btn btn-primary">${isReg ? 'إنشاء حساب' : 'دخول'}</button>
+                    <div class="auth-icon-badge">${isReg ? '🚀' : '🔐'}</div>
+                    <h2>${isReg ? 'حساب جديد' : 'تسجيل الدخول'}</h2>
+                    <p class="auth-subtitle">${isReg ? 'انضم لعالم فِكْرَة في ثوانٍ' : 'أهلاً بعودتك! سجّل دخولك للمتابعة'}</p>
+                    <div class="auth-field">
+                        <input type="text" id="authUserInput" placeholder=" " autocomplete="username">
+                        <label for="authUserInput">اسم المستخدم</label>
+                    </div>
+                    <div class="auth-field">
+                        <input type="password" id="authPassInput" placeholder=" " autocomplete="${isReg ? 'new-password' : 'current-password'}">
+                        <label for="authPassInput">كلمة المرور</label>
+                        <span class="auth-eye-toggle" onclick="toggleAuthPassVisibility()">👁️</span>
+                    </div>
+                    <div id="authErrorBox" class="auth-error-box"></div>
+                    <button id="authSubmitBtn" onclick="submitAuthAction('${mode}')" class="btn btn-primary">${isReg ? 'إنشاء حساب' : 'دخول'}</button>
                     <button class="btn" style="color: var(--text-muted); margin-top: 8px;" onclick="closeAuthModal()">إلغاء</button>
+                    <div class="auth-switch-line">
+                        ${isReg ? 'عندك حساب؟' : 'ما عندك حساب؟'}
+                        <a onclick="openAuthModal('${isReg ? 'login' : 'register'}')">${isReg ? 'سجّل دخولك' : 'أنشئ حساب جديد'}</a>
+                    </div>
                 `;
             }
+        }
+
+        function toggleAuthPassVisibility() {
+            const input = document.getElementById('authPassInput');
+            if (input) input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        function showAuthError(msg) {
+            const box = document.getElementById('authErrorBox');
+            if (box) { box.innerText = msg; box.classList.add('show'); }
+        }
+
+        function setAuthLoading(isLoading, label) {
+            const btn = document.getElementById('authSubmitBtn');
+            if (!btn) return;
+            btn.disabled = isLoading;
+            btn.innerHTML = isLoading ? `<span class="spinner" style="border-top-color:#fff; border-color: rgba(255,255,255,0.4); border-top-color:#fff;"></span> جارِ التحقق...` : label;
         }
 
         function closeAuthModal() {
             document.getElementById('authModal').style.display = 'none';
         }
 
-        function submitAuthAction(mode) {
+        async function submitAuthAction(mode) {
             const uInput = document.getElementById('authUserInput').value.trim();
-            if (!uInput) return alert('أدخل اسم المستخدم لو سمحت!');
-            
-            currentUserAccount = {
-                name: uInput,
-                avatar: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'
+            const pInput = document.getElementById('authPassInput').value;
+            const isReg = mode === 'register';
+            const originalLabel = isReg ? 'إنشاء حساب' : 'دخول';
+
+            if (!uInput) return showAuthError('أدخل اسم المستخدم لو سمحت!');
+            if (uInput.length < 3) return showAuthError('اسم المستخدم لازم يكون 3 أحرف على الأقل!');
+            if (!pInput || pInput.length < 6) return showAuthError('كلمة المرور لازم تكون 6 أحرف على الأقل!');
+
+            const email = usernameToAuthEmail(uInput);
+            setAuthLoading(true, originalLabel);
+
+            try {
+                if (isReg) {
+                    const cred = await auth.createUserWithEmailAndPassword(email, pInput);
+                    const avatar = 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
+                    await cred.user.updateProfile({ displayName: uInput, photoURL: avatar });
+                    await db.ref('users/' + cred.user.uid).set({ name: uInput, avatar: avatar, createdAt: Date.now() });
+                    currentUserAccount = { uid: cred.user.uid, name: uInput, avatar: avatar };
+                    triggerUniversalToast('أهلاً بك! 🔥', `تم إنشاء حسابك بنجاح يا ${uInput}!`, false);
+                } else {
+                    const cred = await auth.signInWithEmailAndPassword(email, pInput);
+                    const snap = await db.ref('users/' + cred.user.uid).once('value');
+                    const profile = snap.val() || { name: uInput, avatar: cred.user.photoURL || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png' };
+                    currentUserAccount = { uid: cred.user.uid, name: profile.name, avatar: profile.avatar };
+                    triggerUniversalToast('أهلاً بعودتك! 🔥', `تم تسجيل دخولك بنجاح يا ${profile.name}!`, false);
+                }
+                updateHeaderAuthUI();
+                closeAuthModal();
+            } catch (err) {
+                setAuthLoading(false, originalLabel);
+                showAuthError(firebaseAuthErrorToArabic(err));
+            }
+        }
+
+        function firebaseAuthErrorToArabic(err) {
+            const code = err && err.code;
+            const map = {
+                'auth/email-already-in-use': 'اسم المستخدم هذا محجوز، جرّب اسم ثاني!',
+                'auth/user-not-found': 'ما فيه حساب بهذا الاسم، تأكد أو سجّل حساب جديد!',
+                'auth/wrong-password': 'كلمة المرور غلط، حاول مرة ثانية!',
+                'auth/invalid-email': 'اسم المستخدم يحتوي على رموز غير مسموحة!',
+                'auth/weak-password': 'كلمة المرور ضعيفة، اختر كلمة مرور أقوى!',
+                'auth/network-request-failed': 'تأكد من اتصالك بالإنترنت وحاول مرة ثانية!',
+                'auth/too-many-requests': 'محاولات كثيرة، استنّ شوي وحاول مرة ثانية!'
             };
-            localStorage.setItem('fikra_user', JSON.stringify(currentUserAccount));
-            updateHeaderAuthUI();
-            closeAuthModal();
-            triggerUniversalToast('أهلاً بك! 🔥', `تم تسجيل دخولك بنجاح يا ${uInput}!`, false);
+            return map[code] || 'صار خطأ غير متوقع، حاول مرة ثانية!';
         }
 
         function handleImageUpload(event) {
             const file = event.target.files[0];
-            if (!file) return;
+            if (!file || !currentUserAccount) return;
+            const preview = document.getElementById('modalAvatarPreview');
             const reader = new FileReader();
-            reader.onload = function(e) {
-                currentUserAccount.avatar = e.target.result;
-                document.getElementById('modalAvatarPreview').src = e.target.result;
-            };
+            reader.onload = (e) => { if (preview) preview.src = e.target.result; };
             reader.readAsDataURL(file);
+
+            const fileRef = storage.ref('avatars/' + currentUserAccount.uid + '.jpg');
+            fileRef.put(file).then(() => fileRef.getDownloadURL()).then((url) => {
+                currentUserAccount.avatar = url;
+                if (preview) preview.src = url;
+            }).catch(() => {
+                triggerUniversalToast('تنبيه ⚠️', 'تعذّر رفع الصورة، حاول مرة ثانية.', false);
+            });
         }
 
-        function saveProfileChanges() {
+        async function saveProfileChanges() {
             const newName = document.getElementById('profileNameInput').value.trim();
             if (newName) currentUserAccount.name = newName;
-            localStorage.setItem('fikra_user', JSON.stringify(currentUserAccount));
-            updateHeaderAuthUI();
-            closeAuthModal();
-            triggerUniversalToast('تم الحفظ ✨', 'تم حفظ تعديلات بروفايلك بنجاح!', false);
+            setAuthLoading(true, 'حفظ التعديلات ✨');
+            try {
+                await db.ref('users/' + currentUserAccount.uid).update({ name: currentUserAccount.name, avatar: currentUserAccount.avatar });
+                if (auth.currentUser) await auth.currentUser.updateProfile({ displayName: currentUserAccount.name, photoURL: currentUserAccount.avatar });
+                updateHeaderAuthUI();
+                closeAuthModal();
+                triggerUniversalToast('تم الحفظ ✨', 'تم حفظ تعديلات بروفايلك بنجاح!', false);
+            } catch (e) {
+                setAuthLoading(false, 'حفظ التعديلات ✨');
+                showAuthError('تعذّر حفظ التعديلات، حاول مرة ثانية.');
+            }
         }
 
         function logoutAccount() {
-            currentUserAccount = null;
-            localStorage.removeItem('fikra_user');
-            updateHeaderAuthUI();
-            closeAuthModal();
-            triggerUniversalToast('تم الخروج 🚪', 'تم تسجيل الخروج بنجاح.', false);
+            auth.signOut().finally(() => {
+                currentUserAccount = null;
+                updateHeaderAuthUI();
+                closeAuthModal();
+                triggerUniversalToast('تم الخروج 🚪', 'تم تسجيل الخروج بنجاح.', false);
+            });
         }
 
         function updateHeaderAuthUI() {
@@ -1781,6 +1939,31 @@ function toggleCompactView() {
             });
             updateMaxCategoriesLimit();
             loadGlobalLeaderboard();
+            updateHeaderAuthUI();
+        });
+
+        // مراقبة حالة تسجيل الدخول مباشرة من Firebase Authentication
+        // تُشغَّل تلقائياً عند فتح الموقع وتحافظ على الجلسة حتى بعد إعادة التحميل
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                try {
+                    const snap = await db.ref('users/' + user.uid).once('value');
+                    const profile = snap.val() || {};
+                    currentUserAccount = {
+                        uid: user.uid,
+                        name: profile.name || user.displayName || 'لاعب',
+                        avatar: profile.avatar || user.photoURL || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'
+                    };
+                } catch (e) {
+                    currentUserAccount = {
+                        uid: user.uid,
+                        name: user.displayName || 'لاعب',
+                        avatar: user.photoURL || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'
+                    };
+                }
+            } else {
+                currentUserAccount = null;
+            }
             updateHeaderAuthUI();
         });
 
