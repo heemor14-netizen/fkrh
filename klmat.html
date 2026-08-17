@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <link rel="manifest" href="manifest.json">
+<link rel="manifest" href="manifest.json">
     <meta name="application-name" content="فكرة">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="فكرة">
-    <link rel="apple-touch-icon" href="logo.png">
-    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="./images/app-icon.jpeg">
+    <link rel="icon" type="image/png" href="./images/app-icon.jpeg">
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -135,7 +135,7 @@
             <div style="display: grid; grid-template-columns: 1fr; gap: 0.6rem; margin-bottom: 1rem;">
                 <div>
                     <label>مستوى الصعوبة 🎯</label>
-                    <select id="difficultySelect" onchange="toggleDifficultyOptions()">
+                    <select id="difficultySelect">
                         <option value="easy">سهل 🍼 (الكلمة معكوسة فقط)</option>
                         <option value="medium" selected>وسط ⚖️ (حروف ملخبطة + تلميح)</option>
                         <option value="hard">صعب 💀 (حروف ملخبطة + بدون مساعدة)</option>
@@ -284,7 +284,7 @@
             }
         });
 
-        // قاعدة بيانات الكلمات الموسعة (أكثر من 120 سؤال)
+        // قاعدة بيانات الكلمات
         const wordsDB = [
             // برمجة وتقنية (Tech)
             { word: "جافاسكربت", category: "tech", hint: "لغة برمجة أساسية للويب" },
@@ -428,7 +428,6 @@
         let currentRound = 0;
         let timerInterval;
         let nextRoundTimerInterval;
-        let playersList = [];
         let gameQuestions = [];
         let remainingAttempts = 3;
 
@@ -527,12 +526,17 @@
             }
 
             let shuffled = [...filteredWords].sort(() => 0.5 - Math.random());
-            gameQuestions = shuffled.slice(0, totalRounds);
+            let selectedQuestions = shuffled.slice(0, totalRounds);
             
-            gameQuestions = gameQuestions.map(q => ({
-                ...q,
-                scrambled: scrambleWordAlg(q.word, difficulty)
-            }));
+            // تجهيز الأسئلة كـ Object مع مفاتيح نصية لتجنب مشاكل الـ Array بالـ Firebase
+            let questionsObj = {};
+            selectedQuestions.forEach((q, idx) => {
+                questionsObj['q_' + (idx + 1)] = {
+                    word: q.word,
+                    hint: q.hint,
+                    scrambled: scrambleWordAlg(q.word, difficulty)
+                };
+            });
 
             currentRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
             document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
@@ -541,7 +545,7 @@
             roomRef.set({
                 host: playerName,
                 state: 'lobby',
-                settings: { totalRounds, roundTime, difficulty, questions: gameQuestions },
+                settings: { totalRounds, roundTime, difficulty, questions: questionsObj },
                 players: { [playerName]: { score: 0 } }
             }).then(() => {
                 listenToFirebase();
@@ -589,14 +593,20 @@
                 }
 
                 if(data.players) {
-                    playersList = Object.keys(data.players);
                     updatePlayersUI(data.players);
                 }
                 
                 if(data.settings) {
                     totalRounds = data.settings.totalRounds;
                     roundTime = data.settings.roundTime;
-                    gameQuestions = data.settings.questions;
+                    
+                    // تحويل كائن الأسئلة من Firebase إلى القائمة المحلية
+                    if(data.settings.questions) {
+                        gameQuestions = [];
+                        for(let key in data.settings.questions) {
+                            gameQuestions.push(data.settings.questions[key]);
+                        }
+                    }
 
                     let diffText = data.settings.difficulty === 'easy' ? 'سهل (معكوسة)' : data.settings.difficulty === 'medium' ? 'وسط (ملخبطة + تلميح)' : 'صعب (بدون مساعدة)';
 
@@ -647,6 +657,8 @@
 
             remainingAttempts = 3;
             let currentQ = gameQuestions[roundNum - 1];
+            if(!currentQ) return;
+
             let diff = settings?.difficulty || 'medium';
 
             document.getElementById('roundDisplay').innerText = `الجولة ${roundNum} من ${totalRounds}`;
@@ -700,6 +712,8 @@
             if(!input) return;
 
             let currentQ = gameQuestions[currentRound - 1];
+            if(!currentQ) return;
+
             let isCorrect = normalizeString(input) === normalizeString(currentQ.word);
             
             let feedbackEl = document.getElementById('answerFeedback');
@@ -714,7 +728,9 @@
 
                 roomRef.get().then((snap) => {
                     let data = snap.val();
-                    if(data && data.state === 'playing') roomRef.update({ state: 'results', roundWinner: playerName });
+                    if(data && data.state === 'playing') {
+                        roomRef.update({ state: 'results', roundWinner: playerName });
+                    }
                 });
 
                 feedbackEl.innerText = "كفوووو! مخك شغال صح 🧠✅";
