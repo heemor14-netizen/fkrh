@@ -786,6 +786,7 @@
 
             currentRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
             document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
+            if(window.broadcastRoom) window.broadcastRoom('draw', currentRoomCode, 'ارسم وخمّن', playerName, pAvatar);
 
             roomRef = db.ref('draw_rooms/' + currentRoomCode);
             roomRef.set({
@@ -815,6 +816,7 @@
                     const pAvatar = (window.currentUserAccount && window.currentUserAccount.avatar) ? window.currentUserAccount.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
                     roomRef.child('players/' + playerName).set({ score: 0, avatar: pAvatar, joined: true });
                     document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
+            if(window.broadcastRoom) window.broadcastRoom('draw', currentRoomCode, 'ارسم وخمّن', playerName, pAvatar);
                     listenToFirebase();
                     switchView('lobbyView');
                     document.getElementById('startGameBtn').style.display = 'none';
@@ -905,6 +907,7 @@
         }
 
         function hostStartGame() {
+            if(window.unbroadcastRoom) window.unbroadcastRoom('draw', currentRoomCode);
             if(!isHost) return;
             currentRound = 0;
             hostNextRound();
@@ -1115,6 +1118,8 @@
             confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
             switchView('winnerView');
         }
-    </script>
+    
+        if (window.initRoomDiscovery) window.initRoomDiscovery('draw', (code) => { if (typeof guestJoinRoom === 'function') guestJoinRoom(); });
+</script>
 </body>
 </html>

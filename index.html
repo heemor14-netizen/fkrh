@@ -1886,6 +1886,7 @@ function toggleCompactView() {
 
             currentRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
             document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
+            if(window.broadcastRoom) window.broadcastRoom('scattergories', currentRoomCode, 'إنسان حيوان جماد', playerName, pAvatar);
 
             roomRef = db.ref('rooms/' + currentRoomCode);
 
@@ -1918,6 +1919,7 @@ function toggleCompactView() {
                     const pAvatar = (window.currentUserAccount && window.currentUserAccount.avatar) ? window.currentUserAccount.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
                     roomRef.child('players/' + playerName).set({ joined: true, score: 0, avatar: pAvatar });
                     document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
+            if(window.broadcastRoom) window.broadcastRoom('scattergories', currentRoomCode, 'إنسان حيوان جماد', playerName, pAvatar);
                     listenToFirebaseRoom();
                     switchScatterSubView('lobbyView');
                     document.getElementById('startGameBtn').style.display = 'none';
@@ -2031,6 +2033,7 @@ function toggleCompactView() {
         }
 
         function hostStartGame() {
+            if(window.unbroadcastRoom) window.unbroadcastRoom('scattergories', currentRoomCode);
             if (!isHost) return;
             currentRound = 0;
             lastHandledRound = 0;
@@ -3033,6 +3036,8 @@ ${JSON.stringify(allAnswers, null, 2)}
                 `;
             });
         }
-    </script>
+    
+        if (window.initRoomDiscovery) window.initRoomDiscovery('scattergories', (code) => { if (typeof guestJoinRoom === 'function') guestJoinRoom(); });
+</script>
 </body>
 </html>

@@ -645,3 +645,167 @@ header {
     font-size: 0.85rem !important;
     margin-right: 4px !important;
 }
+
+
+/* ====================================================
+   نظام اكتشاف الغرف القريبة والانضمام السريع (Room Discovery CSS)
+   ==================================================== */
+.nearby-rooms-container {
+    width: 100%;
+    max-width: 480px;
+    margin: 1.2rem auto 0;
+    padding: 1.2rem 1.4rem;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-radius: 24px;
+    border: 1.5px solid rgba(255, 94, 54, 0.28);
+    box-shadow: 0 12px 35px rgba(255, 94, 54, 0.08);
+    direction: rtl;
+    box-sizing: border-box;
+    animation: authCardPop 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nearby-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0.9rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.nearby-pulse-dot {
+    width: 10px;
+    height: 10px;
+    background: #10B981;
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    animation: pulseRadar 1.8s infinite;
+}
+
+@keyframes pulseRadar {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.nearby-title {
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: #1E293B;
+}
+
+.nearby-rooms-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 220px;
+    overflow-y: auto;
+    padding-right: 2px;
+}
+
+.nearby-room-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.7rem 0.9rem;
+    background: #FFFFFF;
+    border-radius: 16px;
+    border: 1px solid #E2E8F0;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.nearby-room-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--auth-orange-main);
+    box-shadow: 0 8px 20px rgba(255, 94, 54, 0.16);
+    background: #FFFDFC;
+}
+
+.nearby-room-card.same-net-highlight {
+    border: 1.5px solid #10B981;
+    background: #F0FDF4;
+}
+.nearby-room-card.same-net-highlight:hover {
+    border-color: #059669;
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.2);
+}
+
+.nearby-host-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--auth-orange-main);
+    margin-left: 10px;
+    flex-shrink: 0;
+}
+
+.nearby-room-info {
+    flex: 1;
+    text-align: right;
+}
+
+.nearby-room-host {
+    font-weight: 800;
+    font-size: 0.92rem;
+    color: #1E293B;
+    margin-bottom: 2px;
+}
+
+.nearby-room-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    color: #64748B;
+    font-weight: 600;
+}
+
+.nearby-code {
+    background: #F1F5F9;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-weight: 800;
+    color: #334155;
+}
+
+.badge-same-net {
+    background: #DCFCE7;
+    color: #15803D;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 50px;
+    font-size: 0.74rem;
+}
+
+.badge-online {
+    background: #FEF3C7;
+    color: #B45309;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 50px;
+    font-size: 0.74rem;
+}
+
+.btn-quick-join {
+    padding: 0.45rem 1rem !important;
+    font-size: 0.85rem !important;
+    font-weight: 800 !important;
+    border-radius: 50px !important;
+    background: var(--auth-orange-grad) !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 12px var(--auth-orange-glow) !important;
+    transition: all 0.25s !important;
+    white-space: nowrap !important;
+}
+
+.btn-quick-join:hover {
+    transform: translateY(-2px) scale(1.04) !important;
+    box-shadow: 0 6px 16px rgba(255, 94, 54, 0.4) !important;
+}
