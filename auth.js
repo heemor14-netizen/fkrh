@@ -335,6 +335,8 @@
                 saveAccountToStorage(window.currentUserAccount);
                 updateHeaderAuthUI();
                 loadCloudFriends();
+                startPresence();
+                listenIncomingInvites();
                 window.closeAuthModal();
                 showToast('أهلاً بك! 🎉', `تم إنشاء حسابك بنجاح يا ${uInput}!`);
 
@@ -394,6 +396,8 @@
                     saveAccountToStorage(window.currentUserAccount);
                     updateHeaderAuthUI();
                     loadCloudFriends();
+                    startPresence();
+                    listenIncomingInvites();
                     window.closeAuthModal();
                     showToast('أهلاً بعودتك! 🔥', `تم تسجيل دخولك بنجاح يا ${loggedInAccount.name}!`);
                 } else {
@@ -675,6 +679,8 @@
                 window.currentUserAccount = { uid: user.uid, name: name, avatar: avatar };
                 saveAccountToStorage(window.currentUserAccount);
                 loadCloudFriends();
+                startPresence();
+                listenIncomingInvites();
             }
             updateHeaderAuthUI();
         });
@@ -927,18 +933,33 @@
             return;
         }
 
-        container.innerHTML = list.map(f => `
+        container.innerHTML = list.map(f => {
+            const uid = f.uid || usernameToSafeKey(f.name);
+            const presence = presenceCache[uid] || {};
+            const online = isPresenceOnline(presence);
+            const lastSeen = formatLastSeen(presence.lastSeen || f.addedAt);
+            const status = online
+                ? '<span class="friend-online-dot"></span> متصل الآن'
+                : 'غير متصل • آخر ظهور ' + lastSeen;
+            const canInvite = !!(window.__fikrhParty && window.__fikrhParty.code);
+            const inviteBtn = canInvite
+                ? `<button type="button" class="btn-invite-sm" onclick="window.sendRoomInvite('${uid}', decodeURIComponent('${encodeURIComponent(f.name || '')}'))">دعوة 📨</button>`
+                : '';
+            return `
             <div class="friend-item-card">
                 <div class="friend-info">
                     <img src="${f.avatar || DEFAULT_AVATAR}" class="friend-avatar" alt="${f.name}" onerror="this.src='${DEFAULT_AVATAR}'">
                     <div>
                         <div class="friend-name">${f.name}</div>
-                        <div class="friend-status">صديق في فِكْرَة ⚡</div>
+                        <div class="friend-status ${online ? 'is-online' : ''}">${status}</div>
                     </div>
                 </div>
-                <button type="button" class="btn-friend-action" onclick="window.removeFriend(decodeURIComponent('${encodeURIComponent(f.name || '')}'))" title="حذف من الأصدقاء">حذف ✕</button>
-            </div>
-        `).join('');
+                <div class="friend-item-actions">
+                    ${inviteBtn}
+                    <button type="button" class="btn-friend-action" onclick="window.removeFriend(decodeURIComponent('${encodeURIComponent(f.name || '')}'))" title="حذف من الأصدقاء">حذف ✕</button>
+                </div>
+            </div>`;
+        }).join('');
     }
 
     window.submitAddFriendAction = function() {
@@ -1017,11 +1038,475 @@
         // متوافق مع الاستدعاءات القديمة في صفحات الألعاب
     };
 
+    const LOBBY_TIMEOUT_MS = 3 * 60 * 1000;
+    const GAME_CATALOG = [
+        { type: 'scattergories', name: 'إنسان حيوان جماد', page: 'index.html', path: 'rooms' },
+        { type: 'country', name: 'خمّن الدولة', page: 'country.html', path: 'country_rooms' },
+        { type: 'klmat', name: 'الكلمات المبعثرة', page: 'klmat.html', path: 'scramble_rooms' },
+        { type: 'football', name: 'معلومات كروية', page: 'football.html', path: 'football_rooms' },
+        { type: 'mthl', name: 'أكمل الشطر', page: 'mthl.html', path: 'complete_rooms' },
+        { type: '3thr', name: 'فن الأعذار', page: '3thr.html', path: 'excuse_rooms' },
+        { type: 'gasos', name: 'مين الجاسوس', page: 'gasos.html', path: 'spy_rooms' },
+        { type: 'spy', name: 'مين الجاسوس', page: 'gasos.html', path: 'spy_rooms' },
+        { type: 'timer', name: 'تحدي السرعة', page: 'timer.html', path: 'fast_write_rooms' },
+        { type: 'draw', name: 'ارسم وتخمّن', page: 'draw.html', path: 'draw_rooms' }
+    ];
+
+    function catalogByType(type) {
+        return GAME_CATALOG.find(g => g.type === type) || GAME_CATALOG[0];
+    }
+
+    function roomDbPath(gameType) {
+        if (gameType === 'spy' && /index\.html/i.test(location.pathname || '')) return 'spyRooms';
+        if (gameType === 'draw' && /index\.html/i.test(location.pathname || '')) return 'drawRooms';
+        return catalogByType(gameType).path;
+    }
+
+    function formatLastSeen(ts) {
+        if (!ts) return 'غير معروف';
+        const diff = Date.now() - Number(ts);
+        if (diff < 20000) return 'الآن';
+        if (diff < 60000) return 'قبل لحظات';
+        if (diff < 3600000) return 'قبل ' + Math.floor(diff / 60000) + ' د';
+        if (diff < 86400000) return 'قبل ' + Math.floor(diff / 3600000) + ' س';
+        return 'قبل ' + Math.floor(diff / 86400000) + ' يوم';
+    }
+
+    function isPresenceOnline(p) {
+        if (!p) return false;
+        if (p.online && (!p.lastSeen || (Date.now() - Number(p.lastSeen)) < 45000)) return true;
+        return false;
+    }
+
+    let presenceTimer = null;
+    let presenceUnsub = null;
+    function startPresence() {
+        const { db } = getFirebase();
+        const me = window.currentUserAccount;
+        if (!db || !me || !me.uid) return;
+        const ref = db.ref('presence/' + me.uid);
+        const stamp = () => {
+            ref.update({
+                online: true,
+                name: me.name || '',
+                avatar: me.avatar || DEFAULT_AVATAR,
+                lastSeen: Date.now()
+            }).catch(() => {});
+        };
+        stamp();
+        try {
+            ref.onDisconnect().update({ online: false, lastSeen: Date.now() });
+        } catch (e) {}
+        if (presenceTimer) clearInterval(presenceTimer);
+        presenceTimer = setInterval(stamp, 20000);
+        document.addEventListener('visibilitychange', () => { if (!document.hidden) stamp(); });
+    }
+
+    let presenceCache = {};
+    function listenFriendsPresence() {
+        const { db } = getFirebase();
+        if (!db) return;
+        if (presenceUnsub) {
+            try { db.ref('presence').off('value', presenceUnsub); } catch (e) {}
+        }
+        presenceUnsub = function(snap) {
+            presenceCache = snap.exists() ? (snap.val() || {}) : {};
+            const listOpen = document.getElementById('fikrhFriendsModal');
+            if (listOpen && listOpen.style.display === 'flex') renderFriendsModalList();
+        };
+        db.ref('presence').on('value', presenceUnsub);
+    }
+
+    window.markRoomPlaying = function(gameType, code) {
+        const { db } = getFirebase();
+        if (!db || !code) return;
+        const roomKey = gameType + '_' + code;
+        db.ref('activeRooms/' + roomKey).update({
+            playState: 'playing',
+            lobbyExpiresAt: null
+        }).catch(() => {});
+        if (window.__fikrhParty) window.__fikrhParty.playState = 'playing';
+        updateLobbyTimerUi(true);
+    };
+
+    window.markRoomWaiting = function(gameType, code) {
+        const { db } = getFirebase();
+        if (!db || !code) return;
+        const roomKey = gameType + '_' + code;
+        const expires = Date.now() + LOBBY_TIMEOUT_MS;
+        db.ref('activeRooms/' + roomKey).update({
+            playState: 'waiting',
+            lobbyExpiresAt: expires
+        }).catch(() => {});
+        db.ref(roomDbPath(gameType) + '/' + code).update({
+            lobbyExpiresAt: expires,
+            state: 'lobby'
+        }).catch(() => {});
+        if (window.__fikrhParty) {
+            window.__fikrhParty.playState = 'waiting';
+            window.__fikrhParty.lobbyExpiresAt = expires;
+        }
+    };
+
+    function bindPartySession(gameType, code, gameName, isHost) {
+        window.__fikrhParty = {
+            code: String(code),
+            gameType,
+            gameName: gameName || catalogByType(gameType).name,
+            isHost: !!isHost,
+            sessionStart: Date.now(),
+            playState: 'waiting',
+            accessType: (window.getRoomCreateOptions && isHost) ? window.getRoomCreateOptions().accessType : 'public'
+        };
+        listenPartySwitch(code);
+        listenLobbyExpiry(gameType, code);
+        injectLobbyTools();
+        injectWinnerTools();
+    }
+
+    let partySwitchBound = null;
+    function listenPartySwitch(code) {
+        const { db } = getFirebase();
+        if (!db || !code) return;
+        const ref = db.ref('parties/' + code + '/switch');
+        if (partySwitchBound) {
+            try { db.ref('parties/' + partySwitchBound + '/switch').off(); } catch (e) {}
+        }
+        partySwitchBound = code;
+        ref.on('value', (snap) => {
+            const cmd = snap.val();
+            if (!cmd || !cmd.gameType || !cmd.ts) return;
+            const party = window.__fikrhParty || {};
+            if (cmd.ts <= (party.sessionStart || 0)) return;
+            if (String(cmd.gameType) === String(party.gameType)) return;
+            const cat = catalogByType(cmd.gameType);
+            const role = party.isHost ? 'host' : 'join';
+            const page = cat.page || 'index.html';
+            window.location.href = page + '?' + role + '=' + encodeURIComponent(code);
+        });
+    }
+
+    let lobbyExpiryTimer = null;
+    let lobbyRoomListener = null;
+    function listenLobbyExpiry(gameType, code) {
+        const { db } = getFirebase();
+        if (!db || !code) return;
+        const roomKey = gameType + '_' + code;
+        if (lobbyRoomListener) {
+            try { db.ref('activeRooms/' + lobbyRoomListener).off(); } catch (e) {}
+        }
+        lobbyRoomListener = roomKey;
+        db.ref('activeRooms/' + roomKey).on('value', (snap) => {
+            const room = snap.val() || {};
+            if (window.__fikrhParty) {
+                window.__fikrhParty.playState = room.playState || 'waiting';
+                window.__fikrhParty.lobbyExpiresAt = room.lobbyExpiresAt || null;
+            }
+            updateLobbyTimerUi(room.playState === 'playing');
+            if (room.playState === 'playing') return;
+            if (room.lobbyExpiresAt && Date.now() >= Number(room.lobbyExpiresAt)) {
+                expireLobbyNow(gameType, code);
+            }
+        });
+        if (lobbyExpiryTimer) clearInterval(lobbyExpiryTimer);
+        lobbyExpiryTimer = setInterval(() => {
+            const party = window.__fikrhParty;
+            if (!party || party.playState === 'playing') {
+                updateLobbyTimerUi(true);
+                return;
+            }
+            updateLobbyTimerUi(false);
+            if (party.lobbyExpiresAt && Date.now() >= Number(party.lobbyExpiresAt)) {
+                expireLobbyNow(party.gameType, party.code);
+            }
+        }, 1000);
+    }
+
+    function expireLobbyNow(gameType, code) {
+        const party = window.__fikrhParty;
+        if (party && party._expired) return;
+        if (party) party._expired = true;
+        if (lobbyExpiryTimer) clearInterval(lobbyExpiryTimer);
+        const { db } = getFirebase();
+        if (db && code) {
+            if (party && party.isHost) {
+                db.ref(roomDbPath(gameType) + '/' + code).remove().catch(() => {});
+                window.unbroadcastRoom(gameType, code);
+            }
+        }
+        showToast('انقفلت الغرفة ⏳', 'ما بدت اللعبة خلال 3 دقائق، فانقفلت الغرفة تلقائياً.');
+        setTimeout(() => {
+            if (typeof window.goHome === 'function') window.goHome();
+            else location.href = 'index.html';
+        }, 1200);
+    }
+
+    function updateLobbyTimerUi(hide) {
+        const el = document.getElementById('partyLobbyTimer');
+        if (!el) return;
+        const party = window.__fikrhParty;
+        if (hide || !party || party.playState === 'playing' || !party.lobbyExpiresAt) {
+            el.style.display = 'none';
+            return;
+        }
+        const left = Math.max(0, Number(party.lobbyExpiresAt) - Date.now());
+        const m = Math.floor(left / 60000);
+        const s = Math.floor((left % 60000) / 1000);
+        el.style.display = 'block';
+        el.innerHTML = `⏳ تنقفل الغرفة إذا ما بدت اللعبة خلال <strong>${m}:${String(s).padStart(2, '0')}</strong>`;
+    }
+
+    function gameSwitchSelectHtml(selectId) {
+        const current = (window.__fikrhParty && window.__fikrhParty.gameType) || '';
+        const opts = GAME_CATALOG.filter(g => g.type !== 'spy').map(g =>
+            `<option value="${g.type}" ${g.type === current ? 'selected' : ''}>${g.name}</option>`
+        ).join('');
+        return `<select id="${selectId}" class="party-game-select">${opts}</select>`;
+    }
+
+    function injectLobbyTools() {
+        const ids = ['lobbyView', 'spyLobbyView', 'drawLobbyView'];
+        ids.forEach((id) => {
+            const lobby = document.getElementById(id);
+            if (!lobby || lobby.querySelector('.party-lobby-tools')) return;
+            const box = document.createElement('div');
+            box.className = 'party-lobby-tools';
+            box.innerHTML = `
+                <div id="partyLobbyTimer" class="party-lobby-timer"></div>
+                <button type="button" class="btn-invite-friends" onclick="window.openInviteFriendsSheet()">📨 دعوة الأصدقاء للغرفة</button>
+                <div class="party-switch-wrap host-only-party">
+                    <label>تغيير اللعبة بدون تغيير الغرفة:</label>
+                    ${gameSwitchSelectHtml('lobbyGameSwitchSelect')}
+                    <button type="button" class="btn-switch-game" onclick="window.switchPartyGame(document.getElementById('lobbyGameSwitchSelect').value)">تحويل الكل لهذه اللعبة 🔄</button>
+                </div>
+            `;
+            const startBtn = lobby.querySelector('#startGameBtn, #spyStartGameBtn, #drawStartGameBtn');
+            if (startBtn) lobby.insertBefore(box, startBtn);
+            else lobby.appendChild(box);
+        });
+        syncHostOnlyPartyUi();
+    }
+
+    function injectWinnerTools() {
+        document.querySelectorAll('#winnerView, #spyResultView, #drawWinnerView').forEach((view) => {
+            if (!view || view.querySelector('.party-winner-tools')) return;
+            const box = document.createElement('div');
+            box.className = 'party-winner-tools';
+            box.innerHTML = `
+                <button type="button" class="auth-btn-action" onclick="window.returnPartyToLobby()">العودة للغرفة مع الجميع 🏠</button>
+                <div class="party-switch-wrap" style="margin-top:10px;">
+                    <label>تغيير اللعبة (تبقون بنفس الغرفة):</label>
+                    ${gameSwitchSelectHtml('winnerGameSwitchSelect')}
+                    <button type="button" class="btn-switch-game host-only-party" onclick="window.switchPartyGame(document.getElementById('winnerGameSwitchSelect').value)">تحويل الكل لهذه اللعبة 🔄</button>
+                </div>
+            `;
+            view.appendChild(box);
+        });
+        syncHostOnlyPartyUi();
+    }
+
+    function syncHostOnlyPartyUi() {
+        const isHost = !!(window.__fikrhParty && window.__fikrhParty.isHost);
+        document.querySelectorAll('.host-only-party').forEach(el => {
+            el.style.display = isHost ? '' : 'none';
+        });
+    }
+
+    window.returnPartyToLobby = async function() {
+        const party = window.__fikrhParty;
+        const { db } = getFirebase();
+        if (!party || !db) return;
+        const path = roomDbPath(party.gameType) + '/' + party.code;
+        const snap = await db.ref(path + '/players').once('value').catch(() => null);
+        const players = (snap && snap.val()) || {};
+        const updates = { state: 'lobby' };
+        Object.keys(players).forEach(p => {
+            updates['players/' + p + '/score'] = 0;
+            updates['players/' + p + '/spyScore'] = 0;
+        });
+        await db.ref(path).update(updates).catch(() => {});
+        window.markRoomWaiting(party.gameType, party.code);
+        showToast('رجعنا للغرفة 🏠', 'تقدرون تبدون جولة جديدة أو تغيرون اللعبة.');
+        const lobby = document.getElementById('lobbyView') || document.getElementById('spyLobbyView') || document.getElementById('drawLobbyView');
+        if (lobby) {
+            document.querySelectorAll('.glass-card').forEach(c => {
+                if (c.closest('#gameContainerView, #scattergoriesGameFlow, #spyGameFlow, #drawGameFlow')) {
+                    /* keep */
+                }
+            });
+            if (typeof window.switchView === 'function') window.switchView('lobbyView');
+            else if (typeof window.switchScatterSubView === 'function' && document.getElementById('lobbyView')) window.switchScatterSubView('lobbyView');
+            else if (typeof window.switchSpySubView === 'function' && document.getElementById('spyLobbyView')) window.switchSpySubView('spyLobbyView');
+            else if (typeof window.switchDrawSubView === 'function' && document.getElementById('drawLobbyView')) window.switchDrawSubView('drawLobbyView');
+        }
+    };
+
+    window.switchPartyGame = async function(newGameType) {
+        const party = window.__fikrhParty;
+        if (!party) return showToast('تنبيه ⚠️', 'ادخل غرفة أولاً عشان تحول اللعبة.');
+        if (!party.isHost) return showToast('للهوست فقط 👑', 'تحويل اللعبة متاح للهوست.');
+        if (!newGameType || newGameType === party.gameType || (newGameType === 'gasos' && party.gameType === 'spy')) {
+            return showToast('تنبيه ⚠️', 'أنت أصلاً على هاللعبة.');
+        }
+        const { db } = getFirebase();
+        const cat = catalogByType(newGameType);
+        const oldPath = roomDbPath(party.gameType);
+        const newPath = cat.path;
+        try {
+            const oldSnap = await db.ref(oldPath + '/' + party.code).once('value');
+            const oldData = oldSnap.val() || {};
+            const players = oldData.players || {};
+            Object.keys(players).forEach(p => {
+                players[p] = Object.assign({}, players[p], { score: 0, spyScore: 0, joined: true });
+            });
+            await db.ref(newPath + '/' + party.code).update({
+                host: oldData.host || (window.currentUserAccount && window.currentUserAccount.name) || 'الهوست',
+                state: 'lobby',
+                players: players,
+                lobbyExpiresAt: Date.now() + LOBBY_TIMEOUT_MS
+            });
+            window.unbroadcastRoom(party.gameType, party.code);
+            const pAvatar = (window.currentUserAccount && window.currentUserAccount.avatar) ? window.currentUserAccount.avatar : DEFAULT_AVATAR;
+            const pName = (window.currentUserAccount && window.currentUserAccount.name) || party.gameName;
+            window.broadcastRoom(newGameType, party.code, cat.name, pName, pAvatar, (oldData.roomTitle || ''), party.accessType || 'public');
+            await db.ref('parties/' + party.code).update({
+                gameType: newGameType,
+                switch: { gameType: newGameType, page: cat.page, ts: Date.now() }
+            });
+            window.location.href = cat.page + '?host=' + encodeURIComponent(party.code);
+        } catch (e) {
+            showToast('تعذر التحويل ❌', 'حاول مرة ثانية.');
+        }
+    };
+
+    window.partyWriteRoom = function(roomRef, data, playerName) {
+        if (!roomRef) return Promise.resolve();
+        const resume = !!(window.applyHostResumeCode && window.applyHostResumeCode());
+        if (!resume) return roomRef.set(data);
+        const upd = {
+            host: data.host,
+            state: data.state || 'lobby'
+        };
+        if (data.settings) upd.settings = data.settings;
+        if (playerName && data.players && data.players[playerName]) {
+            upd['players/' + playerName] = data.players[playerName];
+        }
+        return roomRef.update(upd);
+    };
+
+    window.autoResumeHostIfNeeded = function(createFn) {
+        const hostCode = window.applyHostResumeCode();
+        const joinCode = new URLSearchParams(window.location.search).get('join');
+        if (hostCode && typeof createFn === 'function') {
+            setTimeout(() => createFn(), 450);
+        } else if (joinCode) {
+            /* الصفحات تعالج join بنفسها */
+        }
+    };
+
+    window.openInviteFriendsSheet = function() {
+        if (!window.__fikrhParty) return showToast('تنبيه ⚠️', 'أنشئ غرفة أو انضم لها أولاً عشان ترسل دعوة.');
+        window.openFriendsModal();
+    };
+
+    window.sendRoomInvite = async function(friendUid, friendName) {
+        const party = window.__fikrhParty;
+        const me = window.currentUserAccount;
+        const { db } = getFirebase();
+        if (!party) return showToast('تنبيه ⚠️', 'ما في غرفة نشطة لإرسال الدعوة.');
+        if (!me || !me.uid) return showToast('سجّل دخولك 👤', 'لازم حساب عشان ترسل دعوة.');
+        if (!db) return;
+        const payload = {
+            fromUid: me.uid,
+            fromName: me.name,
+            fromAvatar: me.avatar || DEFAULT_AVATAR,
+            toUid: friendUid,
+            toName: friendName,
+            code: party.code,
+            gameType: party.gameType,
+            gameName: party.gameName,
+            createdAt: Date.now()
+        };
+        await db.ref('user_invites/' + friendUid).push(payload).catch(() => {});
+        showToast('تم الإرسال 📨', `أرسلنا دعوة انضمام إلى (${friendName}).`);
+    };
+
+    function listenIncomingInvites() {
+        const { db } = getFirebase();
+        const me = window.currentUserAccount;
+        if (!db || !me || !me.uid) return;
+        db.ref('user_invites/' + me.uid).limitToLast(8).on('child_added', (snap) => {
+            const inv = snap.val();
+            if (!inv || !inv.code) return;
+            if (Date.now() - Number(inv.createdAt || 0) > 10 * 60 * 1000) return;
+            if (inv._shown) return;
+            showIncomingInvite(snap.key, inv);
+        });
+    }
+
+    function showIncomingInvite(id, inv) {
+        let bar = document.getElementById('fikrhInviteBanner');
+        if (!bar) {
+            bar = document.createElement('div');
+            bar.id = 'fikrhInviteBanner';
+            bar.className = 'fikrh-invite-banner';
+            document.body.appendChild(bar);
+        }
+        const cat = catalogByType(inv.gameType);
+        bar.innerHTML = `
+            <div>
+                <strong>📨 دعوة من ${inv.fromName || 'صديق'}</strong>
+                <div>انضم لغرفة ${inv.gameName || cat.name} — رمز ${inv.code}</div>
+            </div>
+            <div class="fikrh-invite-actions">
+                <button type="button" onclick="window.acceptRoomInvite('${id}','${inv.gameType}','${inv.code}')">قبول ⚡</button>
+                <button type="button" class="ghost" onclick="document.getElementById('fikrhInviteBanner').style.display='none'">تجاهل</button>
+            </div>
+        `;
+        bar.style.display = 'flex';
+    }
+
+    window.acceptRoomInvite = function(inviteId, gameType, code) {
+        const { db } = getFirebase();
+        const me = window.currentUserAccount;
+        if (db && me) db.ref('user_invites/' + me.uid + '/' + inviteId).remove().catch(() => {});
+        const cat = catalogByType(gameType);
+        if (!cat.page || cat.page === 'index.html' || gameType === 'scattergories') {
+            window.location.href = 'index.html?join=' + encodeURIComponent(code);
+        } else {
+            window.location.href = cat.page + '?join=' + encodeURIComponent(code);
+        }
+    };
+
+    // تعديل البث لإضافة حالة اللعب ومؤقت اللوبي
+    const _origBroadcast = window.broadcastRoom;
+    window.broadcastRoom = function(gameType, code, gameName, hostName, hostAvatar, roomTitle, accessType) {
+        _origBroadcast(gameType, code, gameName, hostName, hostAvatar, roomTitle, accessType);
+        const isHost = arguments.length >= 7;
+        bindPartySession(gameType, code, gameName, isHost);
+        if (isHost) {
+            const { db } = getFirebase();
+            if (db && code) {
+                const expires = Date.now() + LOBBY_TIMEOUT_MS;
+                db.ref('activeRooms/' + gameType + '_' + code).update({
+                    playState: 'waiting',
+                    lobbyExpiresAt: expires
+                }).catch(() => {});
+                if (window.__fikrhParty) window.__fikrhParty.lobbyExpiresAt = expires;
+            }
+        }
+    };
+
     function bootAuthUi() {
         updateHeaderAuthUI();
         setupAuthListener();
         injectRoomCreateFields();
         loadCloudFriends();
+        startPresence();
+        listenFriendsPresence();
+        listenIncomingInvites();
+        injectLobbyTools();
+        injectWinnerTools();
     }
 
     if (document.readyState === 'loading') {

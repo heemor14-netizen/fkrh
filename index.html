@@ -2153,7 +2153,7 @@ function toggleCompactView() {
             globalScore = 0;
             isHost = true;
 
-            currentRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
+            currentRoomCode = (window.applyHostResumeCode && window.applyHostResumeCode()) || Math.floor(1000 + Math.random() * 9000).toString();
             document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
             const pAvatar = (window.currentUserAccount && window.currentUserAccount.avatar) ? window.currentUserAccount.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
             const roomOpts = window.getRoomCreateOptions ? window.getRoomCreateOptions() : { roomTitle: '', accessType: 'public' };
@@ -2161,12 +2161,17 @@ function toggleCompactView() {
 
             roomRef = db.ref('rooms/' + currentRoomCode);
 
-            roomRef.set({
+            (window.partyWriteRoom ? window.partyWriteRoom(roomRef, {
                 host: playerName,
                 state: 'lobby',
                 settings: { totalRounds, selectedTime, maxCategories, activeCategories },
                 players: { [playerName]: { joined: true, score: 0 } }
-            }).then(() => {
+            }, playerName) : roomRef.set({
+                host: playerName,
+                state: 'lobby',
+                settings: { totalRounds, selectedTime, maxCategories, activeCategories },
+                players: { [playerName]: { joined: true, score: 0 } }
+            })).then(() => {
                 listenToFirebaseRoom();
                 switchScatterSubView('lobbyView');
                 document.getElementById('startGameBtn').style.display = 'block';
@@ -2240,6 +2245,17 @@ function toggleCompactView() {
                     switchScatterSubView('resultsView');
                 } else if (data.state === 'finished') {
                     renderWinnerScreen(data.players);
+                } else if (data.state === 'lobby') {
+                    const winner = document.getElementById('winnerView');
+                    const play = document.getElementById('gamePlayView');
+                    const results = document.getElementById('resultsView');
+                    if ((winner && winner.style.display === 'block') || (play && play.style.display === 'block') || (results && results.style.display === 'block')) {
+                        switchScatterSubView('lobbyView');
+                        const sb = document.getElementById('startGameBtn');
+                        const wt = document.getElementById('waitingHostText');
+                        if (sb) sb.style.display = isHost ? 'block' : 'none';
+                        if (wt) wt.style.display = isHost ? 'none' : 'block';
+                    }
                 }
 
                 if (data.powerupAction && data.powerupAction.timestamp > lastHandledPowerup) {
@@ -2304,7 +2320,7 @@ function toggleCompactView() {
         }
 
         function hostStartGame() {
-            if(window.unbroadcastRoom) window.unbroadcastRoom('scattergories', currentRoomCode);
+            if(window.markRoomPlaying) window.markRoomPlaying('scattergories', currentRoomCode);
             if (!isHost) return;
             currentRound = 0;
             lastHandledRound = 0;
@@ -2827,7 +2843,7 @@ ${JSON.stringify(allAnswers, null, 2)}
         }
 
         function spyHostStartGame() {
-            if(window.unbroadcastRoom) window.unbroadcastRoom('spy', spyRoomCode);
+            if(window.markRoomPlaying) window.markRoomPlaying('spy', spyRoomCode);
             if (!isHost) return;
             spyRoomRef.child('players').get().then(snapshot => {
                 const pKeys = Object.keys(snapshot.val());
@@ -2889,6 +2905,12 @@ ${JSON.stringify(allAnswers, null, 2)}
                 } else if (data.state === 'ended') {
                     renderSpyResultScreen(data);
                     switchSpySubView('spyResultView');
+                } else if (data.state === 'lobby') {
+                    const res = document.getElementById('spyResultView');
+                    const role = document.getElementById('spyRoleView');
+                    if ((res && res.style.display === 'block') || (role && role.style.display === 'block')) {
+                        switchSpySubView('spyLobbyView');
+                    }
                 }
 
                 if (data.lastReaction && data.lastReaction.timestamp > lastHandledReaction) {
@@ -3065,7 +3087,7 @@ ${JSON.stringify(allAnswers, null, 2)}
         }
 
         function drawHostStartGame() {
-            if(window.unbroadcastRoom) window.unbroadcastRoom('draw', drawRoomCode);
+            if(window.markRoomPlaying) window.markRoomPlaying('draw', drawRoomCode);
             if (!isHost) return;
             drawRoomRef.child('players').get().then(snapshot => {
                 const pKeys = Object.keys(snapshot.val());
@@ -3122,6 +3144,12 @@ ${JSON.stringify(allAnswers, null, 2)}
                 } else if (data.state === 'ended') {
                     renderDrawWinnerScreen(data.players);
                     switchDrawSubView('drawWinnerView');
+                } else if (data.state === 'lobby') {
+                    const win = document.getElementById('drawWinnerView');
+                    const play = document.getElementById('drawGamePlayView');
+                    if ((win && win.style.display === 'block') || (play && play.style.display === 'block')) {
+                        switchDrawSubView('drawLobbyView');
+                    }
                 }
 
                 if (data.lastReaction && data.lastReaction.timestamp > lastHandledReaction) {
@@ -3574,6 +3602,10 @@ ${JSON.stringify(allAnswers, null, 2)}
                 `<span class="room-type-badge room-type-friends">👥 للأصدقاء</span>` : 
                 `<span class="room-type-badge room-type-public">🌐 عامة</span>`;
 
+            const playBadge = (room.playState === 'playing')
+                ? `<span class="room-type-badge room-type-playing">🎮 بدوا اللعب</span>`
+                : `<span class="room-type-badge room-type-waiting">⏳ ما بدوا بعد</span>`;
+
             return `
                 <div class="nearby-room-card ${isFriendRoom ? 'friend-room-highlight' : ''}">
                     <div class="nearby-room-info">
@@ -3582,6 +3614,7 @@ ${JSON.stringify(allAnswers, null, 2)}
                             <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
                                 <span class="nearby-room-game">${displayTitle}</span>
                                 ${privacyBadge}
+                                ${playBadge}
                             </div>
                             <span class="nearby-room-host">🎮 ${gInfo.title} • الهوست: <strong>${room.hostName || 'اللاعب'}</strong> • رمز: <strong>${room.code}</strong></span>
                         </div>
@@ -3649,6 +3682,24 @@ ${JSON.stringify(allAnswers, null, 2)}
 
         // تشغيل اكتشاف الغرف عند تحميل الصفحة
         window.initHomeAllRoomsDiscovery();
+
+        const homeParams = new URLSearchParams(window.location.search);
+        const homeJoin = homeParams.get('join');
+        const homeHost = homeParams.get('host');
+        if (homeHost) {
+            setTimeout(() => {
+                openGameRoom('scattergories');
+                if (typeof hostCreateRoom === 'function') hostCreateRoom();
+            }, 400);
+        } else if (homeJoin) {
+            setTimeout(() => {
+                const input = document.getElementById('homeQuickRoomCode') || document.getElementById('roomCodeInput');
+                if (document.getElementById('homeQuickRoomCode')) {
+                    document.getElementById('homeQuickRoomCode').value = homeJoin;
+                    window.homeJoinAnyRoom();
+                }
+            }, 400);
+        }
 
 </script>
 

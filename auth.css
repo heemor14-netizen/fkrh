@@ -1321,3 +1321,111 @@ header {
     }
 }
 
+.friend-online-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22C55E;
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.18);
+    margin-left: 4px;
+}
+.friend-status.is-online { color: #15803D !important; }
+.friend-item-actions { display: flex; gap: 6px; align-items: center; }
+.btn-invite-sm {
+    background: #EFF6FF;
+    color: #1D4ED8;
+    border: none;
+    border-radius: 8px;
+    padding: 0.3rem 0.55rem;
+    font-size: 0.74rem;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+}
+.party-lobby-tools, .party-winner-tools {
+    margin: 0.9rem 0;
+    text-align: right;
+}
+.party-lobby-timer {
+    display: none;
+    background: #FFF7ED;
+    border: 1.5px solid #FDBA74;
+    color: #C2410C;
+    font-weight: 800;
+    font-size: 0.86rem;
+    border-radius: 12px;
+    padding: 0.55rem 0.8rem;
+    margin-bottom: 0.7rem;
+    text-align: center;
+}
+.btn-invite-friends, .btn-switch-game {
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    padding: 0.7rem 1rem;
+    font-weight: 800;
+    font-family: inherit;
+    cursor: pointer;
+    margin-bottom: 0.55rem;
+}
+.btn-invite-friends { background: #EEF2FF; color: #3730A3; }
+.btn-switch-game { background: var(--auth-orange-grad); color: #fff; }
+.party-switch-wrap {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 14px;
+    padding: 0.7rem;
+}
+.party-switch-wrap label {
+    font-size: 0.8rem;
+    font-weight: 800;
+    margin-bottom: 6px;
+    display: block;
+}
+.party-game-select {
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 0.55rem 0.7rem;
+    border-radius: 10px;
+    border: 2px solid #E2E8F0;
+    font-family: inherit;
+    font-weight: 800;
+}
+.room-type-playing { background: #FEF3C7; color: #B45309; border: 1px solid #FDE68A; }
+.room-type-waiting { background: #ECFDF5; color: #047857; border: 1px solid #A7F3D0; }
+.fikrh-invite-banner {
+    position: fixed;
+    top: 76px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100000;
+    width: calc(100% - 24px);
+    max-width: 520px;
+    background: #fff;
+    border: 2px solid #FF5E36;
+    box-shadow: 0 16px 40px rgba(255,94,54,0.2);
+    border-radius: 16px;
+    padding: 0.8rem 1rem;
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    direction: rtl;
+    font-family: inherit;
+}
+.fikrh-invite-banner strong { color: #0F172A; }
+.fikrh-invite-banner div { font-size: 0.82rem; font-weight: 700; color: #475569; }
+.fikrh-invite-actions { display: flex; gap: 6px; }
+.fikrh-invite-actions button {
+    border: none;
+    background: var(--auth-orange-grad);
+    color: #fff;
+    border-radius: 10px;
+    padding: 0.4rem 0.7rem;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+}
+.fikrh-invite-actions button.ghost { background: #E2E8F0; color: #334155; }
+
