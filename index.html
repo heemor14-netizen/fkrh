@@ -18,6 +18,7 @@
     <title>فِكْرَة 💡 | عالم الألعاب الجماعية</title>
     <!-- خط تجوال من جوجل -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="auth.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
@@ -724,8 +725,8 @@
             <span>💡</span> فِكْرَة
         </div>
         <div class="nav-btns" id="headerAuthArea">
-            <button class="btn btn-login" onclick="openAuthModal('login')">دخول</button>
-            <button class="btn btn-primary" onclick="openAuthModal('register')">حساب جديد</button>
+            <button type="button" class="btn-auth-nav btn-auth-login" onclick="openAuthModal('login')">دخول</button>
+            <button type="button" class="btn-auth-nav btn-auth-register" onclick="openAuthModal('register')">حساب جديد</button>
         </div>
     </header>
 
@@ -1311,6 +1312,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    <script src="auth.js"></script>
 <!-- قسم الحسابات في مربع واحد وعريض -->
 <div class="accounts-wide-container">
     <div class="accounts-wide-box">
@@ -1372,7 +1374,7 @@ function toggleCompactView() {
             measurementId: "G-2G8NQ7FF96"
         };
 
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps || !firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const db = firebase.database();
         const auth = firebase.auth();
         const storage = firebase.storage();
@@ -1482,198 +1484,8 @@ function toggleCompactView() {
             } catch(e) {}
         }
 
-        // يحوّل اسم المستخدم إلى بريد وهمي ثابت يستخدمه Firebase Authentication داخلياً
-        // (تجربة المستخدم تبقى "اسم مستخدم + كلمة مرور" بينما الحساب فعلياً محمي عبر Firebase)
-        function usernameToAuthEmail(username) {
-            const clean = username.trim().toLowerCase().replace(/[^a-z0-9_\.\u0600-\u06FF]/g, '');
-            return clean + '@fikra-players.app';
-        }
+        // Auth functions are managed in auth.js
 
-        function openAuthModal(mode) {
-            const modal = document.getElementById('authModal');
-            const content = document.getElementById('authModalContent');
-            modal.style.display = 'flex';
-
-            if (mode === 'profile') {
-                content.innerHTML = `
-                    <div class="auth-icon-badge">👤</div>
-                    <h2>الملف الشخصي</h2>
-                    <p class="auth-subtitle">حسابك محفوظ بأمان عبر Firebase</p>
-                    <div class="profile-avatar-container">
-                        <img id="modalAvatarPreview" src="${currentUserAccount.avatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}" class="profile-avatar-img">
-                        <label for="avatarFileInput" class="avatar-upload-btn" title="تغيير الصورة">📷</label>
-                        <input type="file" id="avatarFileInput" accept="image/*" style="display:none;" onchange="handleImageUpload(event)">
-                    </div>
-                    <div class="auth-field">
-                        <input type="text" id="profileNameInput" value="${currentUserAccount.name || ''}" placeholder=" " maxlength="15">
-                        <label for="profileNameInput">اسم المستخدم</label>
-                    </div>
-                    <div id="authErrorBox" class="auth-error-box"></div>
-                    <button id="authSubmitBtn" onclick="saveProfileChanges()" class="btn btn-primary">حفظ التعديلات ✨</button>
-                    <button onclick="logoutAccount()" class="btn btn-danger" style="margin-top: 0.5rem;">تسجيل الخروج 🚪</button>
-                    <button class="btn" style="color: var(--text-muted); margin-top: 6px;" onclick="closeAuthModal()">إغلاق</button>
-                `;
-            } else {
-                let isReg = mode === 'register';
-                content.innerHTML = `
-                    <div class="auth-icon-badge">${isReg ? '🚀' : '🔐'}</div>
-                    <h2>${isReg ? 'حساب جديد' : 'تسجيل الدخول'}</h2>
-                    <p class="auth-subtitle">${isReg ? 'انضم لعالم فِكْرَة في ثوانٍ' : 'أهلاً بعودتك! سجّل دخولك للمتابعة'}</p>
-                    <div class="auth-field">
-                        <input type="text" id="authUserInput" placeholder=" " autocomplete="username">
-                        <label for="authUserInput">اسم المستخدم</label>
-                    </div>
-                    <div class="auth-field">
-                        <input type="password" id="authPassInput" placeholder=" " autocomplete="${isReg ? 'new-password' : 'current-password'}">
-                        <label for="authPassInput">كلمة المرور</label>
-                        <span class="auth-eye-toggle" onclick="toggleAuthPassVisibility()">👁️</span>
-                    </div>
-                    <div id="authErrorBox" class="auth-error-box"></div>
-                    <button id="authSubmitBtn" onclick="submitAuthAction('${mode}')" class="btn btn-primary">${isReg ? 'إنشاء حساب' : 'دخول'}</button>
-                    <button class="btn" style="color: var(--text-muted); margin-top: 8px;" onclick="closeAuthModal()">إلغاء</button>
-                    <div class="auth-switch-line">
-                        ${isReg ? 'عندك حساب؟' : 'ما عندك حساب؟'}
-                        <a onclick="openAuthModal('${isReg ? 'login' : 'register'}')">${isReg ? 'سجّل دخولك' : 'أنشئ حساب جديد'}</a>
-                    </div>
-                `;
-            }
-        }
-
-        function toggleAuthPassVisibility() {
-            const input = document.getElementById('authPassInput');
-            if (input) input.type = input.type === 'password' ? 'text' : 'password';
-        }
-
-        function showAuthError(msg) {
-            const box = document.getElementById('authErrorBox');
-            if (box) { box.innerText = msg; box.classList.add('show'); }
-        }
-
-        function setAuthLoading(isLoading, label) {
-            const btn = document.getElementById('authSubmitBtn');
-            if (!btn) return;
-            btn.disabled = isLoading;
-            btn.innerHTML = isLoading ? `<span class="spinner" style="border-top-color:#fff; border-color: rgba(255,255,255,0.4); border-top-color:#fff;"></span> جارِ التحقق...` : label;
-        }
-
-        function closeAuthModal() {
-            document.getElementById('authModal').style.display = 'none';
-        }
-
-        async function submitAuthAction(mode) {
-            const uInput = document.getElementById('authUserInput').value.trim();
-            const pInput = document.getElementById('authPassInput').value;
-            const isReg = mode === 'register';
-            const originalLabel = isReg ? 'إنشاء حساب' : 'دخول';
-
-            if (!uInput) return showAuthError('أدخل اسم المستخدم لو سمحت!');
-            if (uInput.length < 3) return showAuthError('اسم المستخدم لازم يكون 3 أحرف على الأقل!');
-            if (!pInput || pInput.length < 6) return showAuthError('كلمة المرور لازم تكون 6 أحرف على الأقل!');
-
-            const email = usernameToAuthEmail(uInput);
-            setAuthLoading(true, originalLabel);
-
-            try {
-                if (isReg) {
-                    const cred = await auth.createUserWithEmailAndPassword(email, pInput);
-                    const avatar = 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
-                    await cred.user.updateProfile({ displayName: uInput, photoURL: avatar });
-                    await db.ref('users/' + cred.user.uid).set({ name: uInput, avatar: avatar, createdAt: Date.now() });
-                    currentUserAccount = { uid: cred.user.uid, name: uInput, avatar: avatar };
-                    triggerUniversalToast('أهلاً بك! 🔥', `تم إنشاء حسابك بنجاح يا ${uInput}!`, false);
-                } else {
-                    const cred = await auth.signInWithEmailAndPassword(email, pInput);
-                    const snap = await db.ref('users/' + cred.user.uid).once('value');
-                    const profile = snap.val() || { name: uInput, avatar: cred.user.photoURL || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png' };
-                    currentUserAccount = { uid: cred.user.uid, name: profile.name, avatar: profile.avatar };
-                    triggerUniversalToast('أهلاً بعودتك! 🔥', `تم تسجيل دخولك بنجاح يا ${profile.name}!`, false);
-                }
-                updateHeaderAuthUI();
-                closeAuthModal();
-            } catch (err) {
-                setAuthLoading(false, originalLabel);
-                showAuthError(firebaseAuthErrorToArabic(err));
-            }
-        }
-
-        function firebaseAuthErrorToArabic(err) {
-            const code = err && err.code;
-            const map = {
-                'auth/email-already-in-use': 'اسم المستخدم هذا محجوز، جرّب اسم ثاني!',
-                'auth/user-not-found': 'ما فيه حساب بهذا الاسم، تأكد أو سجّل حساب جديد!',
-                'auth/wrong-password': 'كلمة المرور غلط، حاول مرة ثانية!',
-                'auth/invalid-email': 'اسم المستخدم يحتوي على رموز غير مسموحة!',
-                'auth/weak-password': 'كلمة المرور ضعيفة، اختر كلمة مرور أقوى!',
-                'auth/network-request-failed': 'تأكد من اتصالك بالإنترنت وحاول مرة ثانية!',
-                'auth/too-many-requests': 'محاولات كثيرة، استنّ شوي وحاول مرة ثانية!'
-            };
-            return map[code] || 'صار خطأ غير متوقع، حاول مرة ثانية!';
-        }
-
-        function handleImageUpload(event) {
-            const file = event.target.files[0];
-            if (!file || !currentUserAccount) return;
-            const preview = document.getElementById('modalAvatarPreview');
-            const reader = new FileReader();
-            reader.onload = (e) => { if (preview) preview.src = e.target.result; };
-            reader.readAsDataURL(file);
-
-            const fileRef = storage.ref('avatars/' + currentUserAccount.uid + '.jpg');
-            fileRef.put(file).then(() => fileRef.getDownloadURL()).then((url) => {
-                currentUserAccount.avatar = url;
-                if (preview) preview.src = url;
-            }).catch(() => {
-                triggerUniversalToast('تنبيه ⚠️', 'تعذّر رفع الصورة، حاول مرة ثانية.', false);
-            });
-        }
-
-        async function saveProfileChanges() {
-            const newName = document.getElementById('profileNameInput').value.trim();
-            if (newName) currentUserAccount.name = newName;
-            setAuthLoading(true, 'حفظ التعديلات ✨');
-            try {
-                await db.ref('users/' + currentUserAccount.uid).update({ name: currentUserAccount.name, avatar: currentUserAccount.avatar });
-                if (auth.currentUser) await auth.currentUser.updateProfile({ displayName: currentUserAccount.name, photoURL: currentUserAccount.avatar });
-                updateHeaderAuthUI();
-                closeAuthModal();
-                triggerUniversalToast('تم الحفظ ✨', 'تم حفظ تعديلات بروفايلك بنجاح!', false);
-            } catch (e) {
-                setAuthLoading(false, 'حفظ التعديلات ✨');
-                showAuthError('تعذّر حفظ التعديلات، حاول مرة ثانية.');
-            }
-        }
-
-        function logoutAccount() {
-            auth.signOut().finally(() => {
-                currentUserAccount = null;
-                updateHeaderAuthUI();
-                closeAuthModal();
-                triggerUniversalToast('تم الخروج 🚪', 'تم تسجيل الخروج بنجاح.', false);
-            });
-        }
-
-        function updateHeaderAuthUI() {
-            const area = document.getElementById('headerAuthArea');
-            if (currentUserAccount) {
-                area.innerHTML = `
-                    <div class="user-profile-badge" onclick="openAuthModal('profile')">
-                        <img src="${currentUserAccount.avatar}" class="user-avatar-sm" alt="صورة">
-                        <span class="user-name-sm">${currentUserAccount.name}</span>
-                    </div>
-                `;
-                const pNameInput = document.getElementById('playerNameInput');
-                if (pNameInput) pNameInput.value = currentUserAccount.name;
-                const spyNameInput = document.getElementById('spyPlayerNameInput');
-                if (spyNameInput) spyNameInput.value = currentUserAccount.name;
-                const drawNameInput = document.getElementById('drawPlayerNameInput');
-                if (drawNameInput) drawNameInput.value = currentUserAccount.name;
-            } else {
-                area.innerHTML = `
-                    <button class="btn btn-login" onclick="openAuthModal('login')">دخول</button>
-                    <button class="btn btn-primary" onclick="openAuthModal('register')">حساب جديد</button>
-                `;
-            }
-        }
 
         function filterGames() {
             const query = document.getElementById('searchInput').value.trim().toLowerCase();
