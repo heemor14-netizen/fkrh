@@ -780,6 +780,153 @@
             box-shadow: 0 20px 45px rgba(255, 94, 54, 0.18), 0 0 0 1px rgba(255, 94, 54, 0.2) !important;
         }
 
+        /* === بطاقة الانضمام السريع === */
+        .home-quick-join-card {
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-radius: 18px;
+            padding: 1rem 1.1rem;
+            margin: 1rem auto 0.5rem auto;
+            max-width: 500px;
+            box-shadow: 0 4px 24px rgba(255,94,54,0.10), 0 0 0 1px rgba(255,94,54,0.08);
+        }
+        .quick-join-input-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            direction: rtl;
+        }
+        .quick-join-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        .quick-join-input {
+            flex: 1;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 0.6rem 0.9rem;
+            font-size: 0.95rem;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 700;
+            outline: none;
+            transition: border-color 0.3s;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+        .quick-join-input:focus {
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 3px var(--orange-glow);
+        }
+        .btn-home-quick-join {
+            background: var(--orange-gradient);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.95rem;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 800;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-home-quick-join:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px var(--orange-glow);
+        }
+        .btn-home-quick-join:active {
+            transform: scale(0.96);
+        }
+
+        /* === قائمة الغرف القريبة === */
+        .home-nearby-rooms-list {
+            margin-top: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .nearby-rooms-title {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--primary-orange);
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .nearby-room-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255,94,54,0.06);
+            border: 1.5px solid rgba(255,94,54,0.15);
+            border-radius: 14px;
+            padding: 0.6rem 0.9rem;
+            transition: all 0.25s;
+            direction: rtl;
+        }
+        .nearby-room-card:hover {
+            background: rgba(255,94,54,0.12);
+            border-color: rgba(255,94,54,0.3);
+            transform: translateY(-1px);
+        }
+        .nearby-room-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .nearby-room-info img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-orange);
+        }
+        .nearby-room-details {
+            display: flex;
+            flex-direction: column;
+        }
+        .nearby-room-game {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+        .nearby-room-host {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+        .btn-nearby-join {
+            background: var(--orange-gradient);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 0.4rem 1rem;
+            font-size: 0.85rem;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-nearby-join:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px var(--orange-glow);
+        }
+        .nearby-pulse {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #2E7D32;
+            margin-left: 0.3rem;
+            animation: nearbyPulse 1.5s infinite;
+        }
+        @keyframes nearbyPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.4); }
+        }
+
     </style>
 </head>
 <body>
@@ -1897,6 +2044,7 @@ function toggleCompactView() {
 
             currentRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
             document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
+            const pAvatar = (window.currentUserAccount && window.currentUserAccount.avatar) ? window.currentUserAccount.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
             if(window.broadcastRoom) window.broadcastRoom('scattergories', currentRoomCode, 'إنسان حيوان جماد', playerName, pAvatar);
 
             roomRef = db.ref('rooms/' + currentRoomCode);
@@ -2512,6 +2660,7 @@ ${JSON.stringify(allAnswers, null, 2)}
             spyRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
             isHost = true;
             document.getElementById('spyDisplayRoomCode').innerText = spyRoomCode + " 📋";
+            if(window.broadcastRoom) window.broadcastRoom('spy', spyRoomCode, 'مين الجاسوس', playerName, (window.currentUserAccount && window.currentUserAccount.avatar) ? window.currentUserAccount.avatar : null);
 
             spyRoomRef = db.ref('spyRooms/' + spyRoomCode);
             spyRoomRef.set({
@@ -2565,6 +2714,7 @@ ${JSON.stringify(allAnswers, null, 2)}
         }
 
         function spyHostStartGame() {
+            if(window.unbroadcastRoom) window.unbroadcastRoom('spy', spyRoomCode);
             if (!isHost) return;
             spyRoomRef.child('players').get().then(snapshot => {
                 const pKeys = Object.keys(snapshot.val());
@@ -2748,6 +2898,7 @@ ${JSON.stringify(allAnswers, null, 2)}
             drawRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
             isHost = true;
             document.getElementById('drawDisplayRoomCode').innerText = drawRoomCode + " 📋";
+            if(window.broadcastRoom) window.broadcastRoom('draw', drawRoomCode, 'ارسم وتخمّن', playerName, (window.currentUserAccount && window.currentUserAccount.avatar) ? window.currentUserAccount.avatar : null);
 
             drawRoomRef = db.ref('drawRooms/' + drawRoomCode);
             drawRoomRef.set({
@@ -2800,6 +2951,7 @@ ${JSON.stringify(allAnswers, null, 2)}
         }
 
         function drawHostStartGame() {
+            if(window.unbroadcastRoom) window.unbroadcastRoom('draw', drawRoomCode);
             if (!isHost) return;
             drawRoomRef.child('players').get().then(snapshot => {
                 const pKeys = Object.keys(snapshot.val());
@@ -3047,9 +3199,148 @@ ${JSON.stringify(allAnswers, null, 2)}
                 `;
             });
         }
-    
-        if (window.initHomeAllRoomsDiscovery) window.initHomeAllRoomsDiscovery();
-        if (window.initRoomDiscovery) window.initRoomDiscovery('scattergories', (code) => { if (typeof guestJoinRoom === 'function') guestJoinRoom(); });
+
+        // ==================== دوال الانضمام السريع واكتشاف الغرف ====================
+
+        // دالة الانضمام السريع من الصفحة الرئيسية — تبحث في كل أنواع الغرف
+        window.homeJoinAnyRoom = function() {
+            const codeInput = document.getElementById('homeQuickRoomCode');
+            const code = codeInput.value.trim();
+            if (!code) {
+                triggerUniversalToast('أدخل الرمز 🔑', 'اكتب رمز الغرفة عشان تدخل!', false);
+                return;
+            }
+
+            // تعطيل الزر أثناء البحث
+            const btn = document.querySelector('.btn-home-quick-join');
+            const originalText = btn.textContent;
+            btn.textContent = 'جاري البحث...';
+            btn.disabled = true;
+
+            // البحث في غرف إنسان حيوان جماد
+            db.ref('rooms/' + code).once('value').then(snap => {
+                if (snap.exists()) {
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                    openGameRoom('scattergories');
+                    document.getElementById('roomCodeInput').value = code;
+                    if (currentUserAccount && currentUserAccount.name) {
+                        document.getElementById('playerNameInput').value = currentUserAccount.name;
+                    }
+                    guestJoinRoom();
+                    codeInput.value = '';
+                    return;
+                }
+
+                // البحث في غرف الجاسوس
+                db.ref('spyRooms/' + code).once('value').then(snap2 => {
+                    if (snap2.exists()) {
+                        btn.textContent = originalText;
+                        btn.disabled = false;
+                        openGameRoom('spy');
+                        document.getElementById('spyRoomCodeInput').value = code;
+                        if (currentUserAccount && currentUserAccount.name) {
+                            document.getElementById('spyPlayerNameInput').value = currentUserAccount.name;
+                        }
+                        spyGuestJoinRoom();
+                        codeInput.value = '';
+                        return;
+                    }
+
+                    // البحث في غرف الرسم
+                    db.ref('drawRooms/' + code).once('value').then(snap3 => {
+                        btn.textContent = originalText;
+                        btn.disabled = false;
+                        if (snap3.exists()) {
+                            openGameRoom('draw');
+                            document.getElementById('drawRoomCodeInput').value = code;
+                            if (currentUserAccount && currentUserAccount.name) {
+                                document.getElementById('drawPlayerNameInput').value = currentUserAccount.name;
+                            }
+                            drawGuestJoinRoom();
+                            codeInput.value = '';
+                        } else {
+                            triggerUniversalToast('غير موجود ❌', 'ما لقينا غرفة بهالرمز، تأكد منه!', false);
+                        }
+                    });
+                });
+            }).catch(() => {
+                btn.textContent = originalText;
+                btn.disabled = false;
+                triggerUniversalToast('خطأ في الاتصال ❌', 'تأكد من اتصالك بالإنترنت وحاول مرة ثانية.', false);
+            });
+        };
+
+        // نشر الغرفة في قائمة الغرف النشطة عشان الكل يشوفها
+        window.broadcastRoom = function(gameType, code, gameName, hostName, hostAvatar) {
+            const roomKey = gameType + '_' + code;
+            db.ref('activeRooms/' + roomKey).set({
+                gameType: gameType,
+                code: code,
+                gameName: gameName,
+                hostName: hostName,
+                hostAvatar: hostAvatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+                createdAt: firebase.database.ServerValue.TIMESTAMP
+            });
+        };
+
+        // إزالة الغرفة من القائمة لما اللعبة تبدأ أو تنتهي
+        window.unbroadcastRoom = function(gameType, code) {
+            const roomKey = gameType + '_' + code;
+            db.ref('activeRooms/' + roomKey).remove();
+        };
+
+        // اكتشاف الغرف النشطة وعرضها في الصفحة الرئيسية
+        window.initHomeAllRoomsDiscovery = function() {
+            const listEl = document.getElementById('homeNearbyRoomsList');
+            if (!listEl) return;
+
+            db.ref('activeRooms').on('value', (snapshot) => {
+                if (!snapshot.exists() || snapshot.numChildren() === 0) {
+                    listEl.style.display = 'none';
+                    listEl.innerHTML = '';
+                    return;
+                }
+
+                listEl.style.display = 'block';
+                let html = '<div class="nearby-rooms-title"><span class="nearby-pulse"></span> غرف متاحة الحين</div>';
+
+                snapshot.forEach(child => {
+                    const room = child.val();
+                    const gameLabels = {
+                        'scattergories': '🧠 إنسان حيوان جماد',
+                        'spy': '🕵️ مين الجاسوس',
+                        'draw': '🎨 ارسم وتخمّن'
+                    };
+                    const gameLabel = gameLabels[room.gameType] || room.gameName || room.gameType;
+                    const avatar = room.hostAvatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
+
+                    html += `
+                        <div class="nearby-room-card">
+                            <div class="nearby-room-info">
+                                <img src="${avatar}" alt="${room.hostName}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+                                <div class="nearby-room-details">
+                                    <span class="nearby-room-game">${gameLabel}</span>
+                                    <span class="nearby-room-host">🎮 ${room.hostName} • رمز: ${room.code}</span>
+                                </div>
+                            </div>
+                            <button class="btn-nearby-join" onclick="document.getElementById('homeQuickRoomCode').value='${room.code}'; window.homeJoinAnyRoom();">انضم ⚡</button>
+                        </div>
+                    `;
+                });
+
+                listEl.innerHTML = html;
+            });
+        };
+
+        // تهيئة اكتشاف الغرف (تُستدعى عند فتح لعبة معينة - اختياري)
+        window.initRoomDiscovery = function(gameType, callback) {
+            // هذه الدالة اختيارية — الاكتشاف الرئيسي يتم من initHomeAllRoomsDiscovery
+        };
+
+        // تشغيل اكتشاف الغرف عند تحميل الصفحة
+        window.initHomeAllRoomsDiscovery();
+
 </script>
 </body>
 </html>
