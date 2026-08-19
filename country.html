@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="manifest.json">
     <meta name="application-name" content="فكرة">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="فكرة">
     <link rel="apple-touch-icon" href="./images/app-icon.jpeg">
@@ -67,24 +67,24 @@
             100% { transform: translate(30px, 50px) scale(1.1); }
         }
 
-        /* الهيدر النظيف بدون حساب */
+        /* الهيدر الموحد */
         header {
-            background: rgba(255, 255, 255, 0.65);
+            background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             position: sticky;
             top: 0;
             z-index: 100;
             border-bottom: 1px solid rgba(255, 255, 255, 0.8);
-            padding: 1rem 5%;
+            padding: 0.9rem 5%;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
         }
 
         .logo {
-            font-size: 1.7rem;
+            font-size: 1.6rem;
             font-weight: 900;
             background: var(--orange-gradient);
             -webkit-background-clip: text;
@@ -123,33 +123,88 @@
         .btn-back:hover { background: #FFF; border-color: var(--primary-orange); color: var(--primary-orange); }
 
         .btn {
-            padding: 0.55rem 1.2rem; border-radius: 50px; font-weight: 700; cursor: pointer;
-            border: none; transition: all 0.3s; text-decoration: none; font-size: 0.9rem;
+            padding: 0.6rem 1.3rem; border-radius: 50px; font-weight: 800; cursor: pointer;
+            border: none; transition: all 0.3s; text-decoration: none; font-size: 0.95rem;
             display: inline-flex; justify-content: center; align-items: center; gap: 0.4rem;
         }
         .btn-primary { background: var(--orange-gradient); color: white; box-shadow: 0 8px 20px var(--orange-glow); }
-        .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 25px rgba(255, 94, 54, 0.45); }
+        .btn-primary:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 12px 25px rgba(255, 94, 54, 0.45); }
         .btn-secondary { background: #475569; color: white; }
         .btn-danger { background: var(--red-danger); color: white; }
         .btn:disabled { background: #CBD5E1 !important; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.9); border-radius: 20px; padding: 1.4rem 1rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #E2E8F0; margin-bottom: 1rem;
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.92); border-radius: 22px; padding: 1.5rem 1.2rem;
+            box-shadow: 0 12px 35px rgba(255, 94, 54, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.8);
+            border: 1px solid #E2E8F0; margin-bottom: 1rem;
+            backdrop-filter: blur(14px);
         }
 
-        .title { text-align: center; font-weight: 900; font-size: 1.7rem; color: var(--primary-orange); margin-bottom: 0.3rem; }
-        .subtitle { text-align: center; color: #666; margin-bottom: 1.2rem; font-size: 0.88rem; font-weight: 700;}
-        .form-group { margin-bottom: 1rem; }
-        label { display: block; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main); font-size: 0.9rem; }
+        .title { text-align: center; font-weight: 900; font-size: 1.8rem; color: var(--primary-orange); margin-bottom: 0.2rem; }
+        .subtitle { text-align: center; color: #64748B; margin-bottom: 1.2rem; font-size: 0.9rem; font-weight: 700;}
+        .form-group { margin-bottom: 1.1rem; }
+        label { display: block; font-weight: 800; margin-bottom: 0.45rem; color: var(--text-main); font-size: 0.92rem; }
+        
         input[type="text"], select {
-            width: 100%; padding: 0.8rem 1rem; border-radius: 12px; border: 2px solid #E2E8F0;
+            width: 100%; padding: 0.85rem 1.1rem; border-radius: 14px; border: 2px solid #E2E8F0;
             font-size: 0.95rem; outline: none; transition: all 0.3s ease; background: #FAFAFA; font-weight: 700;
         }
-        input[type="text"]:focus, select:focus { border-color: var(--primary-orange); background: #FFF; box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.15); }
+        input[type="text"]:focus, select:focus { border-color: var(--primary-orange); background: #FFF; box-shadow: 0 0 0 4px rgba(255, 94, 54, 0.15); }
         
-        /* تنسيق خانات اختيار التصنيفات والمستويات */
+        /* بطاقات اختيار نمط اللعبة */
+        .mode-cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.6rem;
+            margin-top: 0.3rem;
+        }
+        .mode-card {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: #F8FAFC;
+            border: 2px solid #E2E8F0;
+            padding: 0.7rem 0.8rem;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .mode-card input[type="radio"] {
+            display: none;
+        }
+        .mode-card:hover {
+            border-color: var(--primary-orange);
+            background: #FFF8F5;
+            transform: translateY(-2px);
+        }
+        .mode-card.active {
+            border-color: var(--primary-orange);
+            background: #FFF3EF;
+            box-shadow: 0 4px 14px var(--orange-glow);
+        }
+        .mode-icon {
+            font-size: 1.6rem;
+            flex-shrink: 0;
+        }
+        .mode-info {
+            display: flex;
+            flex-direction: column;
+            text-align: right;
+        }
+        .mode-name {
+            font-weight: 900;
+            font-size: 0.88rem;
+            color: var(--text-main);
+        }
+        .mode-desc {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #64748B;
+            line-height: 1.2;
+        }
+
+        /* تصنيفات المناطق الجغرافية */
         .categories-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -162,11 +217,11 @@
             gap: 0.5rem;
             background: #F8FAFC;
             border: 2px solid #E2E8F0;
-            padding: 0.6rem 0.8rem;
+            padding: 0.65rem 0.8rem;
             border-radius: 12px;
             cursor: pointer;
             font-weight: 700;
-            font-size: 0.88rem;
+            font-size: 0.86rem;
             transition: all 0.2s ease;
         }
         .category-checkbox-label input[type="checkbox"] {
@@ -180,59 +235,95 @@
             background: #FFF3EF;
         }
 
-        .header-status { display: flex; justify-content: space-between; align-items: center; background: #F8FAFC; padding: 0.8rem; border-radius: 14px; margin-bottom: 1.2rem; border: 1px solid #E2E8F0; }
-        .timer-display { font-size: 1.5rem; font-weight: 900; color: var(--text-main); }
-        .player-chip { display: flex; justify-content: space-between; align-items: center; background: #F1F5F9; padding: 0.5rem 0.8rem; border-radius: 10px; margin-bottom: 0.4rem; font-weight: 800; font-size: 0.88rem; }
+        .header-status { display: flex; justify-content: space-between; align-items: center; background: #F8FAFC; padding: 0.8rem 1rem; border-radius: 14px; margin-bottom: 1.2rem; border: 1px solid #E2E8F0; }
+        .timer-display { font-size: 1.6rem; font-weight: 900; color: var(--text-main); }
+        .player-chip { display: flex; justify-content: space-between; align-items: center; background: #FFFFFF; padding: 0.6rem 0.9rem; border-radius: 12px; margin-bottom: 0.45rem; font-weight: 800; font-size: 0.88rem; border: 1px solid #E2E8F0; }
+        .player-chip-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-orange); margin-left: 0.4rem; }
         
-        .emoji-display-box {
-            background: #FFF3EF;
-            border: 2px dashed var(--primary-orange);
-            border-radius: 16px;
-            padding: 2rem 1rem;
+        /* صندوق عرض اللغز (علم / إيموجي / معلم) */
+        .clue-display-card {
+            background: #FFF8F5;
+            border: 2px dashed rgba(255, 94, 54, 0.4);
+            border-radius: 18px;
+            padding: 1.5rem 1rem;
             text-align: center;
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            letter-spacing: 10px;
-            box-shadow: inset 0 0 20px rgba(255, 94, 54, 0.1);
+            margin-bottom: 1.2rem;
+            box-shadow: inset 0 0 20px rgba(255, 94, 54, 0.06);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            gap: 12px;
+            min-height: 140px;
+        }
+        .mode-badge-indicator {
+            background: var(--orange-gradient);
+            color: #fff;
+            font-size: 0.78rem;
+            font-weight: 800;
+            padding: 0.25rem 0.8rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px var(--orange-glow);
+        }
+        .flag-view-large {
+            font-size: 4.8rem;
+            line-height: 1;
+            filter: drop-shadow(0 6px 14px rgba(0,0,0,0.12));
+            animation: flagPop 0.4s ease-out;
+        }
+        @keyframes flagPop {
+            0% { transform: scale(0.7); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .emojis-riddle-view {
+            font-size: 3rem;
+            letter-spacing: 12px;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.08));
+        }
+        .landmark-view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .landmark-icon-large {
+            font-size: 3rem;
+        }
+        .landmark-title-text {
+            font-size: 1.15rem;
+            font-weight: 900;
+            color: var(--text-main);
+        }
+        .landmark-sub-text {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #64748B;
         }
 
-        /* تنسيق بارز ورايق لرمز الدولة بخلفية بيضاء وتأثير الماوس البرتقالي */
         .country-code-badge {
             background: #FFFFFF;
             color: var(--primary-orange);
-            border: 2px solid #E2E8F0;
-            padding: 0.4rem 1rem;
-            border-radius: 30px;
-            font-size: 1.1rem;
+            border: 1.5px solid rgba(255, 94, 54, 0.25);
+            padding: 0.35rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.88rem;
             font-weight: 900;
-            letter-spacing: 2px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+            letter-spacing: 1.5px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
             display: inline-block;
-            transition: all 0.3s ease;
-            cursor: default;
-        }
-        .country-code-badge:hover {
-            border-color: var(--primary-orange);
-            box-shadow: 0 6px 15px var(--orange-glow);
-            transform: translateY(-2px);
         }
 
         .hint-box {
             background: #FEF3C7;
             border: 2px solid #F59E0B;
             border-radius: 12px;
-            padding: 0.8rem;
+            padding: 0.8rem 1rem;
             text-align: center;
             font-weight: 800;
             color: #92400E;
             margin-bottom: 1rem;
             display: none;
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             animation: pulse-hint 1s infinite alternate;
         }
         @keyframes pulse-hint {
@@ -246,7 +337,6 @@
         .podium-2 { height: 75%; background: linear-gradient(180deg, #C0C0C0, #A8A8A8); }
         .podium-3 { height: 55%; background: linear-gradient(180deg, #CD7F32, #B36B25); }
         
-        /* التنبيه بتصميم رايق وجميل ينزل من الأسفل ثم يعود للأعلى */
         .toast { 
             position: fixed; 
             bottom: -100px; 
@@ -265,9 +355,7 @@
             text-align: center;
             max-width: 90%;
         }
-        .toast.show {
-            bottom: 30px;
-        }
+        .toast.show { bottom: 30px; }
 
         @keyframes pulse-timer {
             0% { transform: scale(0.8); opacity: 0.5; }
@@ -283,7 +371,7 @@
     <div class="ambient-orb orb-2"></div>
     <div class="toast" id="toastMessage">تنبيه!</div>
 
-    <!-- الهيدر النظيف -->
+    <!-- الهيدر -->
     <header>
         <div class="logo" onclick="goBackStep()">
             <span>💡</span> فِكْرَة
@@ -296,104 +384,117 @@
 
     <!-- زر الرجوع للخلف -->
     <div class="back-btn-container">
-        <button class="btn-back" onclick="goBackStep()">⬅️ رجوع للخلف</button>
+        <button class="btn-back" onclick="goBackStep()">⬅️ رجوع للرئيسية</button>
     </div>
 
     <div id="gameContainerView" style="max-width: 600px; margin: 1rem auto; padding: 0 0.8rem;">
         
-        <!-- واجهة اختيار الغرفة -->
+        <!-- واجهة اختيار الغرفة والإعدادات -->
         <div id="roomSelectionView" class="glass-card">
-            <h1 class="title">🤔 خمن الدولة</h1>
-            <p class="subtitle">كل لاعب له 3 محاولات لكل جولة، ركز واكتب اسم الدولة!</p>
+            <h1 class="title">🌍 خمّن الدولة</h1>
+            <p class="subtitle">تحدٍ جغرافي وثقافي شيق.. اختر النمط وتنافس مع أصدقائك!</p>
 
             <div class="form-group">
                 <label>اسمك في اللعبة</label>
                 <input type="text" id="playerNameInput" placeholder="أدخل اسمك هنا..." maxlength="15">
             </div>
 
-            <!-- إعدادات الصعوبة والتلميحات -->
-            <div style="display: grid; grid-template-columns: 1fr; gap: 0.6rem; margin-bottom: 1rem;">
-                <div>
-                    <label>مستوى الصعوبة 🎯</label>
-                    <select id="difficultySelect" onchange="toggleDifficultyOptions()">
-                        <option value="easy">سهل 🍼 (3 إيموجي)</option>
-                        <option value="medium" selected>وسط ⚖️ (2 إيموجي)</option>
-                        <option value="hard">صعب 💀 (بدون تلميحات مساعدة)</option>
-                    </select>
-                </div>
-                <!-- خيار التلميح يظهر للسهل والوسط فقط -->
-                <div id="hintOptionsContainer" style="background: #F8FAFC; padding: 0.6rem; border-radius: 10px; border: 1px solid #E2E8F0;">
-                    <label class="category-checkbox-label" style="margin: 0; background: transparent; border: none;">
-                        <input type="checkbox" id="useHintCheckbox" checked> 
-                        تفعيل الحروف والتلميح المساعد 💡
-                    </label>
-                </div>
-            </div>
-
-            <!-- خيارات الهوست الإضافية: رمز الدولة وعلم الدولة -->
-            <div style="display: grid; grid-template-columns: 1fr; gap: 0.6rem; margin-bottom: 1rem;">
-                <div style="background: #F8FAFC; padding: 0.6rem; border-radius: 10px; border: 1px solid #E2E8F0;">
-                    <label class="category-checkbox-label" style="margin: 0; background: transparent; border: none;">
-                        <input type="checkbox" id="showCountryCodeCheckbox" checked> 
-                        📌 إظهار رمز الدولة (اختياري)
-                    </label>
-                </div>
-                <div style="background: #F8FAFC; padding: 0.6rem; border-radius: 10px; border: 1px solid #E2E8F0;">
-                    <label class="category-checkbox-label" style="margin: 0; background: transparent; border: none;">
-                        <input type="checkbox" id="showFlagInsteadCheckbox" checked> 
-                        🏴 استبدال أحد الإيموجيات بعلم الدولة الأساسي
-                    </label>
-                </div>
-            </div>
-
-            <!-- تصنيفات الدول بالـ Checkboxes -->
+            <!-- اختيار نمط اللعبة المفضل -->
             <div class="form-group">
-                <label>تصنيفات الدول:</label>
+                <label>🎯 نمط التحدي المختار:</label>
+                <div class="mode-cards-grid">
+                    <label class="mode-card active" onclick="selectGameMode('flags', this)">
+                        <input type="radio" name="gameMode" value="flags" checked>
+                        <div class="mode-icon">🚩</div>
+                        <div class="mode-info">
+                            <span class="mode-name">تحدي الأعلام</span>
+                            <span class="mode-desc">خمن الدولة من العلم الرسمي</span>
+                        </div>
+                    </label>
+                    <label class="mode-card" onclick="selectGameMode('emojis', this)">
+                        <input type="radio" name="gameMode" value="emojis">
+                        <div class="mode-icon">🧩</div>
+                        <div class="mode-info">
+                            <span class="mode-name">ألغاز الإيموجي</span>
+                            <span class="mode-desc">أيقونات تعبيرية تعكس ثقافة الدولة</span>
+                        </div>
+                    </label>
+                    <label class="mode-card" onclick="selectGameMode('landmarks', this)">
+                        <input type="radio" name="gameMode" value="landmarks">
+                        <div class="mode-icon">🏛️</div>
+                        <div class="mode-info">
+                            <span class="mode-name">العواصم والمعالم</span>
+                            <span class="mode-desc">أشهر العواصم والمعالم الجغرافية</span>
+                        </div>
+                    </label>
+                    <label class="mode-card" onclick="selectGameMode('mixed', this)">
+                        <input type="radio" name="gameMode" value="mixed">
+                        <div class="mode-icon">🌍</div>
+                        <div class="mode-info">
+                            <span class="mode-name">المكس الشامل</span>
+                            <span class="mode-desc">تحدي أساطير يجمع كل الأنماط</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- تصنيفات المناطق الجغرافية -->
+            <div class="form-group">
+                <label>🗺️ تصنيفات القارات والدول:</label>
                 <div class="categories-grid">
                     <label class="category-checkbox-label">
                         <input type="checkbox" id="catArab" value="arab" checked> 
-                        🌍 دول عربية
+                        🌴 دول عربية وخليجية
                     </label>
                     <label class="category-checkbox-label">
                         <input type="checkbox" id="catEuro" value="euro" checked> 
-                        🇪🇺 دول أوروبية
+                        🏰 دول أوروبية
                     </label>
                     <label class="category-checkbox-label">
                         <input type="checkbox" id="catLatin" value="latin" checked> 
-                        🌎 دول لاتينية وأمريكية
+                        🗽 الأمريكتين
                     </label>
                     <label class="category-checkbox-label">
                         <input type="checkbox" id="catAsia" value="asia" checked> 
-                        🌏 دول آسيوية وأفريقية
+                        🏯 آسيا وأفريقيا
                     </label>
                 </div>
             </div>
 
+            <!-- الجولات والوقت والتلميحات -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1rem;">
                 <div>
-                    <label>عدد الجولات</label>
+                    <label>عدد الجولات 🏁</label>
                     <select id="roundsSelect">
                         <option value="3">3 دول (سريع ⚡)</option>
                         <option value="5" selected>5 دول</option>
-                        <option value="10">10 دول (للأساطير 💀)</option>
+                        <option value="7">7 دول</option>
+                        <option value="10">10 دول (للأساطير 🔥)</option>
                     </select>
                 </div>
                 <div>
-                    <label>وقت التخمين</label>
+                    <label>وقت التخمين ⏱️</label>
                     <select id="timeSelect">
-                        <option value="15">15 ثانية (نار 🔥)</option>
-                        <option value="30" selected>30 ثانية</option>
-                        <option value="45">45 ثانية</option>
+                        <option value="15">15 ثانية (سريع جداً ⚡)</option>
+                        <option value="25" selected>25 ثانية (متوازن ⚖️)</option>
+                        <option value="40">40 ثانية (مريح ☕)</option>
                     </select>
                 </div>
             </div>
 
-            <button onclick="hostCreateRoom()" class="btn btn-primary" style="width: 100%;">إنشاء غرفة تخمين 🚀</button>
+            <div style="background: #F8FAFC; padding: 0.6rem 0.8rem; border-radius: 12px; border: 1px solid #E2E8F0; margin-bottom: 1.2rem;">
+                <label class="category-checkbox-label" style="margin: 0; background: transparent; border: none; padding: 0;">
+                    <input type="checkbox" id="useHintCheckbox" checked> 
+                    💡 تفعيل التلميح الذكي المساعد عند تبقي 10 ثوانٍ
+                </label>
+            </div>
+
+            <button onclick="hostCreateRoom()" class="btn btn-primary" style="width: 100%;">إنشاء غرفة التحدي 🚀</button>
             
-            <div style="margin: 1rem 0; text-align: center; font-weight: 700; color: #888; font-size: 0.85rem;">أو</div>
+            <div style="margin: 1.2rem 0; text-align: center; font-weight: 800; color: #94A3B8; font-size: 0.85rem;">— أو انضم لغرفة خويك —</div>
 
             <div class="form-group">
-                <input type="text" id="roomCodeInput" placeholder="أدخل رمز الغرفة" maxlength="6" style="text-align: center; letter-spacing: 2px; font-weight: 900;">
+                <input type="text" id="roomCodeInput" placeholder="أدخل رمز الغرفة (مثال: 4582)" maxlength="6" style="text-align: center; letter-spacing: 2px; font-weight: 900;">
             </div>
             <button onclick="guestJoinRoom()" class="btn btn-primary" style="width: 100%;">انضمام لغرفة 🔗</button>
         </div>
@@ -402,35 +503,36 @@
         <div id="lobbyView" class="glass-card" style="display: none; text-align: center;">
             <h2 style="margin-bottom: 0.3rem; font-size: 1.3rem;">غرفة الانتظار ✈️</h2>
             <p style="color: #666; font-size: 0.85rem;">شارك هذا الرمز مع أصدقائك:</p>
-            <div id="displayRoomCode" style="font-size: 2rem; font-weight: 900; color: var(--primary-orange); background: #FFF3EF; padding: 0.6rem; border-radius: 12px; border: 2px dashed var(--primary-orange); margin: 0.8rem 0; letter-spacing: 3px;">
+            <div id="displayRoomCode" style="font-size: 2.2rem; font-weight: 900; color: var(--primary-orange); background: #FFF3EF; padding: 0.7rem; border-radius: 14px; border: 2px dashed var(--primary-orange); margin: 0.8rem 0; letter-spacing: 4px; cursor: pointer;" onclick="copyRoomCode()">
                 0000 📋
             </div>
 
             <div style="margin-bottom: 0.8rem; text-align: right;">
                 <label>إعدادات الغرفة الحالية:</label>
-                <div id="roomSettingsSummary" style="background: #F8FAFC; padding: 0.6rem; border-radius: 10px; font-size: 0.85rem; font-weight: 700; color: #475569; margin-bottom: 0.8rem; border: 1px solid #E2E8F0;"></div>
+                <div id="roomSettingsSummary" style="background: #F8FAFC; padding: 0.6rem 0.8rem; border-radius: 12px; font-size: 0.85rem; font-weight: 700; color: #475569; margin-bottom: 0.8rem; border: 1px solid #E2E8F0;"></div>
 
                 <label>اللاعبون الجاهزون:</label>
                 <div id="connectedPlayersContainer" style="margin-top: 0.4rem;"></div>
             </div>
 
-            <button id="startGameBtn" onclick="hostStartGame()" class="btn btn-primary" style="display: none; margin-top: 1.2rem; width: 100%;">إقلاع الرحلة 🛫</button>
-            <p id="waitingHostText" style="color: #888; font-weight: 700; display: none; margin-top: 0.8rem; font-size: 0.85rem;">في انتظار كابتن الطيارة (الهوست) ليبدأ...</p>
+            <button id="startGameBtn" onclick="hostStartGame()" class="btn btn-primary" style="display: none; margin-top: 1.2rem; width: 100%;">إقلاع الرحلة وبدء التحدي 🛫</button>
+            <p id="waitingHostText" style="color: #888; font-weight: 700; display: none; margin-top: 0.8rem; font-size: 0.85rem;">في انتظار صانع الغرفة (الهوست) ليبدأ اللعب...</p>
         </div>
 
         <!-- واجهة اللعب -->
         <div id="gamePlayView" class="glass-card" style="display: none;">
             <div class="header-status">
                 <div>
-                    <span id="roundDisplay" style="font-size: 0.85rem; font-weight: 800; color: #666;">الدولة 1 من 5</span>
-                    <div style="font-weight: 800; font-size: 1rem; margin-top: 0.1rem; color: var(--primary-orange);">خمن الدولة من الايموجي:</div>
+                    <span id="roundDisplay" style="font-size: 0.85rem; font-weight: 800; color: #64748B;">الدولة 1 من 5</span>
+                    <div id="roundModeHeaderTitle" style="font-weight: 900; font-size: 1rem; margin-top: 0.1rem; color: var(--primary-orange);">خمن الدولة:</div>
                 </div>
-                <div class="timer-display" id="timer">30s</div>
+                <div class="timer-display" id="timer">25s</div>
             </div>
 
-            <!-- صندوق الإيموجيات ورمز الدولة بجانبها -->
-            <div class="emoji-display-box" id="emojiDisplayBoxContainer">
-                <div id="emojiDisplay"></div>
+            <!-- بطاقة عرض اللغز التفاعلية المحدثة -->
+            <div class="clue-display-card" id="clueDisplayContainer">
+                <span class="mode-badge-indicator" id="clueBadgeIndicator">🚩 تحدي الأعلام</span>
+                <div id="clueContentBox"></div>
                 <div id="countryCodeBadgeContainer"></div>
             </div>
 
@@ -440,47 +542,46 @@
             </div>
 
             <div class="form-group">
-                <input type="text" id="answerInput" placeholder="اكتب اسم الدولة هنا بسرعة! ✍️" onkeydown="if(event.key === 'Enter') submitAnswer()">
+                <input type="text" id="answerInput" placeholder="اكتب اسم الدولة هنا واضغط Enter... ✍️" onkeydown="if(event.key === 'Enter') submitAnswer()">
             </div>
             
-            <button id="submitAnswerBtn" onclick="submitAnswer()" class="btn btn-primary" style="width: 100%;">إرسال الإجابة 🚀</button>
-            <div id="answerFeedback" style="text-align: center; font-weight: 800; margin-top: 1rem; display: none;"></div>
+            <button id="submitAnswerBtn" onclick="submitAnswer()" class="btn btn-primary" style="width: 100%;">إرسال الإجابة 🚀 (3 محاولات)</button>
+            <div id="answerFeedback" style="text-align: center; font-weight: 900; margin-top: 0.8rem; display: none;"></div>
         </div>
 
         <!-- واجهة نتيجة الجولة -->
         <div id="resultsView" class="glass-card" style="display: none; text-align: center;">
-            <h2 id="resultTitle" style="margin-bottom: 0.5rem; font-size: 1.5rem;">انتهى الوقت! ⏱️</h2>
-            <div style="font-size: 1.2rem; font-weight: 900; color: var(--primary-orange); margin-bottom: 1rem;">
-                الدولة كانت: <span id="correctCountryDisplay" style="color: var(--text-main);">...</span>
+            <h2 id="resultTitle" style="margin-bottom: 0.4rem; font-size: 1.4rem;">انتهت الجولة! ⏱️</h2>
+            <div style="font-size: 1.25rem; font-weight: 900; color: var(--primary-orange); margin-bottom: 0.8rem;" id="correctCountryDisplay">
+                الدولة كانت: ...
             </div>
 
-            <div id="winnerAnnouncement" style="font-size: 1.2rem; font-weight: 900; color: var(--green-success); margin-bottom: 1rem; display: none; background: #E8F5E9; padding: 10px; border-radius: 12px; border: 1px dashed var(--green-success);"></div>
+            <div id="winnerAnnouncement" style="font-size: 1.1rem; font-weight: 900; color: var(--green-success); margin-bottom: 1rem; display: none; background: #E8F5E9; padding: 10px; border-radius: 12px; border: 1px dashed var(--green-success);"></div>
 
-            <div id="roundScoresContainer" style="text-align: right; margin-bottom: 1.5rem;"></div>
+            <div id="roundScoresContainer" style="text-align: right; margin-bottom: 1.2rem;"></div>
 
             <div id="nextRoundTimerContainer" style="display: none; font-size: 1.1rem; font-weight: 900; color: #475569;">
-                الجولة الجاية بتبدأ بعد<br>
-                <span id="nextRoundTimerDisplay" style="font-size: 3.5rem; color: var(--primary-orange); display: inline-block; margin-top: 10px;">3</span>
+                الجولة القادمة تبدأ خلال<br>
+                <span id="nextRoundTimerDisplay" style="font-size: 3.2rem; color: var(--primary-orange); display: inline-block; margin-top: 6px;">3</span>
             </div>
         </div>
 
-        <!-- واجهة التتويج -->
+        <!-- واجهة التتويج النهائي -->
         <div id="winnerView" class="glass-card" style="display: none; text-align: center;">
-            <h1 class="title" style="font-size: 1.5rem;">🎉 أساطير الجغرافيا 🎉</h1>
-            <p class="subtitle">شوفوا مين اللي ختم خرائط جوجل! 😂</p>
+            <h1 class="title" style="font-size: 1.6rem;">🎉 أساطير الجغرافيا 🎉</h1>
+            <p class="subtitle">ختام الرحلة! انظروا إلى صدارة الترتيب 🏆</p>
 
             <div id="podiumDisplay" class="podium-container"></div>
 
-            <button onclick="window.location.reload()" class="btn btn-primary" style="margin-top: 1.2rem; width: 100%;">لعب مرة ثانية 🔄</button>
+            <button onclick="window.location.reload()" class="btn btn-primary" style="margin-top: 1.2rem; width: 100%;">لعب جولة جديدة 🔄</button>
         </div>
 
     </div>
 
-    <!-- Firebase -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
     <script src="auth.js"></script>
 
     <script>
@@ -493,138 +594,302 @@
             messagingSenderId: "523229194032",
             appId: "1:523229194032:web:29e3a5ef0ce27d8b3d0af5"
         };
-        if (!firebase.apps || !firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const db = firebase.database();
 
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedUser = localStorage.getItem('currentUser') || 
-                              localStorage.getItem('fikrh_username') || 
-                              localStorage.getItem('username') || 
-                              localStorage.getItem('playerName');
-            if(savedUser) {
-                document.getElementById('playerNameInput').value = savedUser;
-            }
-        });
-
-        function toggleDifficultyOptions() {
-            let diff = document.getElementById('difficultySelect').value;
-            let hintContainer = document.getElementById('hintOptionsContainer');
-            if(diff === 'hard') {
-                hintContainer.style.display = 'none';
-            } else {
-                hintContainer.style.display = 'block';
+        function selectGameMode(mode, el) {
+            document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
+            if(el) {
+                el.classList.add('active');
+                const radio = el.querySelector('input[type="radio"]');
+                if(radio) radio.checked = true;
             }
         }
 
-        let backAttemptTime = 0;
         function goBackStep() {
-            const lobbyView = document.getElementById('lobbyView');
-            const gamePlayView = document.getElementById('gamePlayView');
-            const resultsView = document.getElementById('resultsView');
-            const winnerView = document.getElementById('winnerView');
-
-            if ((lobbyView && lobbyView.style.display === 'block') || 
-                (gamePlayView && gamePlayView.style.display === 'block') || 
-                (resultsView && resultsView.style.display === 'block') || 
-                (winnerView && winnerView.style.display === 'block')) {
-                
-                let now = Date.now();
-                if (now - backAttemptTime > 10000) {
-                    backAttemptTime = now;
-                    showToast('⚠️ اضغط مرة أخرى خلال 10 ثواني لتأكيد الخروج من الغرفة!');
-                    return;
-                }
-
-                if(roomRef && currentRoomCode) {
-                    let pName = document.getElementById('playerNameInput').value.trim();
-                    if(pName) {
-                        roomRef.child('players/' + pName).remove().then(() => {
-                            roomRef.child('players').get().then((snap) => {
-                                if(!snap.exists() || Object.keys(snap.val()).length === 0) {
-                                    roomRef.remove();
-                                }
-                            });
-                        });
-                    }
+            if (document.getElementById('lobbyView').style.display === 'block' || 
+                document.getElementById('gamePlayView').style.display === 'block' || 
+                document.getElementById('resultsView').style.display === 'block' || 
+                document.getElementById('winnerView').style.display === 'block') {
+                if(roomRef && isHost) {
+                    roomRef.remove();
+                    if(window.unbroadcastRoom) window.unbroadcastRoom('country', currentRoomCode);
                 }
                 switchView('roomSelectionView');
             } else {
-                if (window.history.length > 1) {
-                    window.history.back();
-                } else {
-                    window.location.href = 'index.html';
-                }
+                window.location.href = 'index.html';
             }
         }
 
+        // ==================== بنك معلومات الدول المطور والشامل ====================
         const countriesDB = [
-            // دول عربية
-            { name: "السعودية", code: "SA", flag: "🇸🇦", hint: "تبدأ بحرف السين وتشتهر بالحرمين الشريفين", emojis: "🇸🇦 🕋 🐪 ☕", category: "arab" },
-            { name: "مصر", code: "EG", flag: "🇪🇬", hint: "تقع في قارتين وتبدأ بحرف الميم وتشتهر بالأهرامات", emojis: "🇪🇬 🐪 🔺 🎬", category: "arab" },
-            { name: "الإمارات", code: "AE", flag: "🇦🇪", hint: "دولة خليجية تضم برج خليفة ودبي", emojis: "🇦🇪 🏙️ 🦅 🐪", category: "arab" },
-            { name: "المغرب", code: "MA", flag: "🇲🇦", hint: "دولة مغاربية عاصمتها الرباط", emojis: "🇲🇦 🫖 🏜️ 🕌", category: "arab" },
-            { name: "فلسطين", code: "PS", flag: "🇵🇸", hint: "عاصمتها القدس الشريف", emojis: "🇵🇸 🕌 🫒 🍉", category: "arab" },
-            { name: "الجزائر", code: "DZ", flag: "🇩🇿", hint: "أكبر دولة عربية من حيث المساحة", emojis: "🇩🇿 🏜️ ⚽ 🏛️", category: "arab" },
-            { name: "العراق", code: "IQ", flag: "🇮🇶", hint: "بلد الرافدين وبابل التاريخية", emojis: "🇮🇶 🦁 🌴 🏺", category: "arab" },
-            { name: "الأردن", code: "JO", flag: "🇯🇴", hint: "تشتهر بمدينة البتراء الأثرية", emojis: "🇯🇴 🏛️ 🐪 🦅", category: "arab" },
-            { name: "الكويت", code: "KW", flag: "🇰🇼", hint: "دولة خليجية تقع على الخليج العربي وأبراجها شهيرة", emojis: "🇰🇼 ⛵ 🛢️ 🐪", category: "arab" },
-            { name: "قطر", code: "QA", flag: "🇶🇦", hint: "استضافت كأس العالم 2022", emojis: "🇶🇦 ⚽ 🏙️ 🦅", category: "arab" },
-            { name: "البحرين", code: "BH", flag: "🇧🇭", hint: "أرض اللؤلؤ وخليجية جزيرية صغيرة", emojis: "🇧🇭 🦙 🌴 🌊", category: "arab" },
-            { name: "عمان", code: "OM", flag: "🇴🇲", hint: "سلطنة تقع في شبه الجزيرة العربية عاصمتها مسقط", emojis: "🇴🇲 ⛵ 🏜️ ☕", category: "arab" },
-            { name: "لبنان", code: "LB", flag: "🇱🇧", hint: "تشتهر بأشجار الأرز وعاصمتها بيروت", emojis: "🇱🇧 🌲 🏛️ ☕", category: "arab" },
-            { name: "تونس", code: "TN", flag: "🇹🇳", hint: "تقع في شمال إفريقيا وعاصمتها تحمل نفس الاسم", emojis: "🇹🇳 🏛️ 🌊 🫒", category: "arab" },
-            { name: "سوريا", code: "SY", flag: "🇸🇾", hint: "بلد الشام وعاصمتها دمشق التاريخية", emojis: "🇸🇾 🏛️ 🌹 🏺", category: "arab" },
-            { name: "السودان", code: "SD", flag: "🇸🇩", hint: "تقع جنوب مصر ويخترقها نهر النيل", emojis: "🇸🇩 🐪 🏺 🌴", category: "arab" },
-            { name: "اليمن", code: "YE", flag: "🇾🇪", hint: "بلد المذاق العريق والبن واليمن السعيد", emojis: "🇾🇪 ⛰️ ☕ 🍯", category: "arab" },
-            { name: "ليبيا", code: "LY", flag: "🇱🇾", hint: "تقع في شمال إفريقيا على ساحل البحر المتوسط وتشتهر بالنفط", emojis: "LY 🏜️ 🏛️ 🛢️", category: "arab" },
-            { name: "موريتانيا", code: "MR", flag: "🇲🇷", hint: "تقع في غرب إفريقيا المطلة على المحيط الأطلسي", emojis: "🇲🇷 🏜️ 🐪 📜", category: "arab" },
-            { name: "الصومال", code: "SO", flag: "🇸🇴", hint: "تقع في القرن الإفريقي ولها أطول ساحل إفريقي", emojis: "🇸🇴 🌊 🐪 🌴", category: "arab" },
-            
-            // دول أوروبية
-            { name: "فرنسا", code: "FR", flag: "🇫🇷", hint: "عاصمتها باريس وبرج إيفل", emojis: "🇫🇷 🗼 🥐 🎨", category: "euro" },
-            { name: "إيطاليا", code: "IT", flag: "🇮🇹", hint: "تشبه شكل الجزيرة المعزولة أو الحذاء وتشتهر بالبيتزا", emojis: "🇮🇹 🍕 🍝 🏛️", category: "euro" },
-            { name: "إسبانيا", code: "ES", flag: "🇪🇸", hint: "مشهورة بمصارعة الثيران وكرة القدم في جنوب أوروبا", emojis: "🇪🇸 🐂 🥘 💃", category: "euro" },
-            { name: "بريطانيا", code: "GB", flag: "🇬🇧", hint: "تشمل إنجلترا وعاصمتها لندن وساعة بيج بن", emojis: "🇬🇧 ☕ 🇬🇧 🎡", category: "euro" },
-            { name: "ألمانيا", code: "DE", flag: "🇩🇪", hint: "أكبر قوة اقتصادية في أوروبا وتشتهر بالسيارات والكرة", emojis: "🇩🇪 🍺 🏰 ⚽", category: "euro" },
-            { name: "روسيا", code: "RU", flag: "🇷🇺", hint: "أكبر دولة في العالم مساحة وتمتد عبر قارتين", emojis: "🇷🇺 🐻 ❄️ 🏰", category: "euro" },
-            { name: "البرتغال", code: "PT", flag: "🇵🇹", hint: "موطن اللاعب كريستيانو رونالدو غرب أوروبا", emojis: "🇵🇹 ⚽ 🌊 🍷", category: "euro" },
-            { name: "هولندا", code: "NL", flag: "🇳🇱", hint: "دولة الطواحين والورود والتوليد", emojis: "🇳🇱 🌷 🚲 🧀", category: "euro" },
-            { name: "اليونان", code: "GR", flag: "🇬🇷", hint: "مهد الحضارة القديمة والأساطير في جنوب أوروبا", emojis: "🇬🇷 🏛️ 🌊 🫒", category: "euro" },
-            { name: "سويسرا", code: "CH", flag: "🇨🇭", hint: "بلد الجبال السويسرية، الشوكولاتة والساعات", emojis: "🇨🇭 🏔️ 🍫 ⌚", category: "euro" },
-            { name: "السويد", code: "SE", flag: "🇸🇪", hint: "دولة اسكندنافية باردة وتشتهر بـ آيكيا", emojis: "🇸🇪 🌲 🦌 ❄️", category: "euro" },
-            { name: "بلجيكا", code: "BE", flag: "🇧🇪", hint: "عاصمتها بروكسل وتشتهر بالشوكولاتة والبطاطس", emojis: "🇧🇪 🍫 🍟 🏰", category: "euro" },
-            { name: "أوكرانيا", code: "UA", flag: "🇺🇦", hint: "مشهورة بزراعة عباد الشمس وشرق أوروبا", emojis: "🇺🇦 🌻 🌾 🏰", category: "euro" },
+            // --- دول عربية وخليجية ---
+            { 
+                name: "السعودية", 
+                aliases: ["المملكة العربية السعودية", "مملكة", "سعوديه", "المملكه العربيه السعوديه", "بلاد الحرمين"],
+                code: "SA", flag: "🇸🇦", capital: "الرياض", landmark: "الحرمين الشريفين وبرج المملكة",
+                landmarkIcon: "🕋", emojis: "🕋 🐪 🌴 ☕",
+                hint: "دولة خليجية كبرى، عاصمتها الرياض وموطن الحرمين الشريفين", category: "arab" 
+            },
+            { 
+                name: "مصر", 
+                aliases: ["جمهورية مصر العربية", "جمهوريه مصر", "مصريه", "ام الدنيا"],
+                code: "EG", flag: "🇪🇬", capital: "القاهرة", landmark: "أهرامات الجيزة ونهر النيل",
+                landmarkIcon: "🔺", emojis: "🔺 🐪 🌊 🎬",
+                hint: "دولة تقع بين قارتين، عاصمتها القاهرة وتشتهر بالأهرامات", category: "arab" 
+            },
+            { 
+                name: "الإمارات", 
+                aliases: ["الامارات", "الامارات العربية المتحدة", "دولة الامارات", "ابوظبي", "دبي"],
+                code: "AE", flag: "🇦🇪", capital: "أبوظبي", landmark: "برج خليفة وجامع الشيخ زايد",
+                landmarkIcon: "🏙️", emojis: "🏙️ 🦅 🐪 ⛵",
+                hint: "دولة خليجية تضم أطول برج في العالم وعاصمتها أبوظبي", category: "arab" 
+            },
+            { 
+                name: "المغرب", 
+                aliases: ["مملكة المغرب", "المملكة المغربية", "مراكش", "مغرب"],
+                code: "MA", flag: "🇲🇦", capital: "الرباط", landmark: "جامع الفنا ومسجد الحسن الثاني",
+                landmarkIcon: "🕌", emojis: "🫖 🏜️ 🕌 🌊",
+                hint: "دولة مغاربية عاصمتها الرباط وتشتهر بأتاي والشاي المغربي", category: "arab" 
+            },
+            { 
+                name: "قطر", 
+                aliases: ["دولة قطر", "الدوحة"],
+                code: "QA", flag: "🇶🇦", capital: "الدوحة", landmark: "متحف الفن الإسلامي واستاد لوسيل",
+                landmarkIcon: "⚽", emojis: "⚽ 🏙️ 🦅 🐪",
+                hint: "استضافت كأس العالم 2022 وعاصمتها الدوحة", category: "arab" 
+            },
+            { 
+                name: "الكويت", 
+                aliases: ["دولة الكويت"],
+                code: "KW", flag: "🇰🇼", capital: "مدينة الكويت", landmark: "أبراج الكويت وسوق المباركية",
+                landmarkIcon: "🗼", emojis: "🗼 ⛵ 🛢️ 🐪",
+                hint: "دولة خليجية تشتهر بأبراجها الثلاثة وعملتها الدينار الكويتي", category: "arab" 
+            },
+            { 
+                name: "عمان", 
+                aliases: ["سلطنة عمان", "عُمان", "مسقط"],
+                code: "OM", flag: "🇴🇲", capital: "مسقط", landmark: "جامع السلطان قابوس وقلعة بهلاء",
+                landmarkIcon: "⛵", emojis: "⛵ 🏜️ ☕ 🏰",
+                hint: "سلطنة تقع في جنوب شبه الجزيرة وعاصمتها مسقط واللبان", category: "arab" 
+            },
+            { 
+                name: "البحرين", 
+                aliases: ["مملكة البحرين", "المنامة"],
+                code: "BH", flag: "🇧🇭", capital: "المنامة", landmark: "جسر الملك فهد وقلعة البحرين",
+                landmarkIcon: "🌴", emojis: "🌴 🌊 🏎️ 💎",
+                hint: "أرخبيل جزر خليجي عاصمتها المنامة وتشتهر بصيد اللؤلؤ", category: "arab" 
+            },
+            { 
+                name: "الأردن", 
+                aliases: ["الاردن", "المملكة الأردنية", "عمان"],
+                code: "JO", flag: "🇯🇴", capital: "عمّان", landmark: "مدينة البتراء الوردية والبحر الميت",
+                landmarkIcon: "🏛️", emojis: "🏛️ 🏜️ 🦅 ☕",
+                hint: "تشتهر بالمدينة الوردية المنحوتة بالصخر (البتراء) وعاصمتها عمّان", category: "arab" 
+            },
+            { 
+                name: "العراق", 
+                aliases: ["جمهورية العراق", "بلاد الرافدين", "بغداد"],
+                code: "IQ", flag: "🇮🇶", capital: "بغداد", landmark: "بابل الأثرية والملوية في سامراء",
+                landmarkIcon: "🦁", emojis: "🦁 🌴 🏺 📜",
+                hint: "أرض الرافدين دجلة والفرات وعاصمتها بغداد", category: "arab" 
+            },
+            { 
+                name: "فلسطين", 
+                aliases: ["دولة فلسطين", "القدس"],
+                code: "PS", flag: "🇵🇸", capital: "القدس الشريف", landmark: "المسجد الأقصى وقبة الصخرة",
+                landmarkIcon: "🕌", emojis: "🕌 🫒 🍉 🕊️",
+                hint: "أرض الإسراء والمعراج وعاصمتها الأبدية القدس الشريف", category: "arab" 
+            },
+            { 
+                name: "لبنان", 
+                aliases: ["الجمهورية اللبنانية", "بيروت"],
+                code: "LB", flag: "🇱🇧", capital: "بيروت", landmark: "صخرة الروشة ومغارة جعيتا",
+                landmarkIcon: "🌲", emojis: "🌲 🏛️ ☕ ⛰️",
+                hint: "تشتهر بشجرة الأرز وتلقب بسويسرا الشرق وعاصمتها بيروت", category: "arab" 
+            },
+            { 
+                name: "الجزائر", 
+                aliases: ["جمهورية الجزائر", "بلد المليون شهيد"],
+                code: "DZ", flag: "🇩🇿", capital: "الجزائر", landmark: "مقام الشهيد وجبال الأوراس",
+                landmarkIcon: "🏛️", emojis: "🏜️ ⚽ 🏛️ 🌲",
+                hint: "أكبر دولة عربية وأفريقية مساحة وبلد المليون ونصف شهيد", category: "arab" 
+            },
+            { 
+                name: "تونس", 
+                aliases: ["الجمهورية التونسية", "قرطاج"],
+                code: "TN", flag: "🇹🇳", capital: "تونس", landmark: "مدرج الجم وقرطاج الأثرية",
+                landmarkIcon: "🏛️", emojis: "🏛️ 🌊 🫒 ☕",
+                hint: "دولة خضراء شمال أفريقيا تشتهر بقرطاج والزيتون", category: "arab" 
+            },
+            { 
+                name: "السودان", 
+                aliases: ["جمهورية السودان", "الخرطوم"],
+                code: "SD", flag: "🇸🇩", capital: "الخرطوم", landmark: "أهرامات مروي وملتقى النيلين",
+                landmarkIcon: "🌴", emojis: "🐪 🏺 🌴 🌊",
+                hint: "يلتقي في عاصمتها الخرطوم النيل الأزرق والنيل الأبيض", category: "arab" 
+            },
 
-            // دول لاتينية وأمريكية
-            { name: "أمريكا", code: "US", flag: "🇺🇸", hint: "الولايات المتحدة الأمريكية، تمثال الحرية", emojis: "🇺🇸 🗽 🍔 🦅", category: "latin" },
-            { name: "البرازيل", code: "BR", flag: "🇧🇷", hint: "عملاق أمريكا الجنوبية وساحر السامبا وكرة القدم", emojis: "🇧🇷 ⚽ 💃 🦜", category: "latin" },
-            { name: "المكسيك", code: "MX", flag: "🇲🇽", hint: "موطن التاكو والأكل الحار شمال أمريكا اللاتينية", emojis: "🇲🇽 🌮 🌵 🎸", category: "latin" },
-            { name: "كندا", code: "CA", flag: "🇨🇦", hint: "ثاني أكبر دولة في العالم مساحة في أمريكا الشمالية", emojis: "🇨🇦 🍁 🏒 🐻", category: "latin" },
-            { name: "الأرجنتين", code: "AR", flag: "🇦🇷", hint: "موطن ميسي وتانغو ولحم البقر الشهير", emojis: "🇦🇷 ⚽ 🥩 💃", category: "latin" },
-            { name: "كولومبيا", code: "CO", flag: "🇨🇴", hint: "مشهورة بإنتاج أجود أنواع القهوة في أمريكا الجنوبية", emojis: "🇨🇴 ☕ 🦜 ⛰️", category: "latin" },
-            { name: "تشيلي", code: "CL", flag: "🇨🇱", hint: "دولة طويلة وضيقة على ساحل المحيط الهادئ", emojis: "🇨🇱 ⛰️ 🍷 🗿", category: "latin" },
-            { name: "بيرو", code: "PE", flag: "🇵🇪", hint: "موطن حضارة الإنكا وجبال الأنديز", emojis: "🇵🇪 🦙 🏔️ 🌽", category: "latin" },
+            // --- دول أوروبية ---
+            { 
+                name: "فرنسا", 
+                aliases: ["الجمهورية الفرنسية", "باريس", "فرنسية"],
+                code: "FR", flag: "🇫🇷", capital: "باريس", landmark: "برج إيفل ومتحف اللوفر",
+                landmarkIcon: "🗼", emojis: "🗼 🥐 🎨 🍷",
+                hint: "عاصمتها باريس وتشتهر ببرج إيفل والكرواسون", category: "euro" 
+            },
+            { 
+                name: "إيطاليا", 
+                aliases: ["ايطاليا", "الجمهورية الإيطالية", "روما"],
+                code: "IT", flag: "🇮🇹", capital: "روما", landmark: "الكولوسيوم وبرج بيزا المائل",
+                landmarkIcon: "🏛️", emojis: "🍕 🍝 🏛️ ☕",
+                hint: "تشتهر بالبيتزا والباستا وعاصمتها التاريخية روما", category: "euro" 
+            },
+            { 
+                name: "إسبانيا", 
+                aliases: ["اسبانيا", "مملكة إسبانيا", "مدريد", "برشلونة"],
+                code: "ES", flag: "🇪🇸", capital: "مدريد", landmark: "قصر الحمراء وساغرادا فاميليا",
+                landmarkIcon: "🐂", emojis: "🐂 🥘 💃 ⚽",
+                hint: "موطن مصارعة الثيران والدوري الإسباني وعاصمتها مدريد", category: "euro" 
+            },
+            { 
+                name: "ألمانيا", 
+                aliases: ["المانيا", "جمهورية ألمانيا الاتحادية", "برلين"],
+                code: "DE", flag: "🇩🇪", capital: "برلين", landmark: "بوابة براندنبورغ وقصر نويشفانشتاين",
+                landmarkIcon: "🏰", emojis: "🍺 🏰 ⚽ 🚗",
+                hint: "أقوى اقتصاد في أوروبا وتشتهر بصناعة السيارات وعاصمتها برلين", category: "euro" 
+            },
+            { 
+                name: "بريطانيا", 
+                aliases: ["المملكة المتحدة", "إنجلترا", "انجلترا", "لندن", "بريطانية"],
+                code: "GB", flag: "🇬🇧", capital: "لندن", landmark: "ساعة بيغ بن وعين لندن",
+                landmarkIcon: "🎡", emojis: "☕ 🎡 🏰 👑",
+                hint: "تضم إنجلترا واسكتلندا وتشتهر بساعة بيغ بن والملكية", category: "euro" 
+            },
+            { 
+                name: "سويسرا", 
+                aliases: ["الاتحاد السويسري", "بيرن", "جنيف"],
+                code: "CH", flag: "🇨🇭", capital: "بيرن", landmark: "جبال الألب وماترهورن",
+                landmarkIcon: "🏔️", emojis: "🏔️ 🍫 ⌚ 🧀",
+                hint: "بلد الشوكولاتة الفاخرة والساعات الدقيقة وجبال الألب", category: "euro" 
+            },
+            { 
+                name: "تركيا", 
+                aliases: ["الجمهورية التركية", "اسطنبول", "انقرة"],
+                code: "TR", flag: "🇹🇷", capital: "أنقرة", landmark: "مسجد آيا صوفيا وكابادوكيا",
+                landmarkIcon: "🕌", emojis: "☕ 🧿 🕌 🎈",
+                hint: "جسر بين آسيا وأوروبا وتشتهر بآيا صوفيا ومناطيد كابادوكيا", category: "euro" 
+            },
+            { 
+                name: "روسيا", 
+                aliases: ["الاتحاد الروسي", "موسكو"],
+                code: "RU", flag: "🇷🇺", capital: "موسكو", landmark: "الكرملين والساحة الحمراء",
+                landmarkIcon: "🏰", emojis: "🐻 ❄️ 🏰 🚀",
+                hint: "أكبر دولة في العالم من حيث المساحة وعاصمتها موسكو", category: "euro" 
+            },
+            { 
+                name: "البرتغال", 
+                aliases: ["جمهورية البرتغال", "لشبونة"],
+                code: "PT", flag: "🇵🇹", capital: "لشبونة", landmark: "برج بيليم وقصر بينا",
+                landmarkIcon: "⚽", emojis: "⚽ 🌊 🏰 🐟",
+                hint: "موطن الأسطورة كريستيانو رونالدو وعاصمتها لشبونة", category: "euro" 
+            },
+            { 
+                name: "اليونان", 
+                aliases: ["جمهورية اليونان", "أثينا"],
+                code: "GR", flag: "🇬🇷", capital: "أثينا", landmark: "الأكروبوليس والبارثينون",
+                landmarkIcon: "🏛️", emojis: "🏛️ 🌊 🫒 ⛵",
+                hint: "مهد الألعاب الأولمبية والحضارة الإغريقية وعاصمتها أثينا", category: "euro" 
+            },
 
-            // دول آسيوية وأفريقية أخرى
-            { name: "اليابان", code: "JP", flag: "🇯🇵", hint: "بلد الشمس المشرقة والأنمي والساموراي", emojis: "🇯🇵 🍣 🌸 🗻", category: "asia" },
-            { name: "الصين", code: "CN", flag: "🇨🇳", hint: "أكبر دولة سكاناً وسورها العظيم شهير", emojis: "🇨🇳 🐼 🐉 🏯", category: "asia" },
-            { name: "الهند", code: "IN", flag: "🇮🇳", hint: "بلد الألوان، التوابل الكثيرة وتاج محل", emojis: "🇮🇳 🐘 🥻 🍛", category: "asia" },
-            { name: "كوريا الجنوبية", code: "KR", flag: "🇰🇷", hint: "عاصمتها سيول ومشهورة بالثقافة والبوب الكوري", emojis: "🇰🇷 🐯 🎤 🍜", category: "asia" },
-            { name: "تركيا", code: "TR", flag: "🇹🇷", hint: "جسر بين آسيا وأوروبا وعاصمتها إسطنبول وأنقرة", emojis: "🇹🇷 ☕ 🧿 🏛️", category: "asia" },
-            { name: "إندونيسيا", code: "ID", flag: "🇮🇩", hint: "أكبر دولة إسلامية من حيث السكان وجزرها كثيرة بالي", emojis: "🇮🇩 🏝️ 🌋 🐅", category: "asia" },
-            { name: "باكستان", code: "PK", flag: "🇵🇰", hint: "تقع جنوب آسيا ولها حدود مع الهند وتشتهر بالجبال", emojis: "🇵🇰 🏔️ 🏏 🍛", category: "asia" },
-            { name: "إيران", code: "IR", flag: "🇮🇷", hint: "بلد فارس التاريخي وعاصمتها طهران", emojis: "🇮🇷 🐈 🏺 🏛️", category: "asia" },
-            { name: "ماليزيا", code: "MY", flag: "🇲🇾", hint: "تشتهر بأبراج بتروناس وجزيرة لنكاوي", emojis: "🇲🇾 🏙️ 🌴 🦧", category: "asia" },
-            { name: "تايلاند", code: "TH", flag: "🇹🇭", hint: "تسمى بلد الأفيال وتشتهر بالسياحة الآسيوية", emojis: "🇹🇭 🐘 🛕 🍜", category: "asia" },
-            { name: "فيتنام", code: "VN", flag: "🇻🇳", hint: "تقع في جنوب شرق آسيا ومشهورة بالمناظر الطبيعية والأرز", emojis: "🇻🇳 🍜 🌾 🚲", category: "asia" },
-            { name: "الفلبين", code: "PH", flag: "🇵🇭", hint: "أرخبيل جزيري كبير في جنوب شرق آسيا", emojis: "🇵🇭 🏝️ 🥭 🐒", category: "asia" },
-            { name: "أستراليا", code: "AU", flag: "🇦🇺", hint: "دولة قارة في أقصى الجنوب وتشتهر بالكنغر", emojis: "🇦🇺 🦘 🐨 🏄‍♂️", category: "asia" },
-            { name: "نيوزيلندا", code: "NZ", flag: "🇳🇿", hint: "مشهورة بطبيعتها الخلابة وطائر الكيوي في أوقيانوسيا", emojis: "🇳🇿 🥝 🏉 🏔️", category: "asia" },
-            { name: "جنوب إفريقيا", code: "ZA", flag: "🇿🇦", hint: "تقع في أقصى جنوب القرن الإفريقي ومنجم للذهب والماس", emojis: "🇿🇦 🦁 💎 🏉", category: "asia" },
-            { name: "نيجيريا", code: "NG", flag: "🇳🇬", hint: "أكثر دولة إفريقية سكاناً وعاصمة السينما نوليوود", emojis: "🇳🇬 🦅 🎬 🌴", category: "asia" },
-            { name: "إثيوبيا", code: "ET", flag: "🇪🇹", hint: "موطن البقر والقهوة التاريخية في شرق إفريقيا", emojis: "🇪🇹 ☕ 🏃‍♂️ 🏔️", category: "asia" },
-            { name: "كينيا", code: "KE", flag: "🇰🇪", hint: "مشهورة بالسفاري والحيوانات البرية وعدائي المسافات", emojis: "🇰🇪 🦁 🏃‍♂️ ☕", category: "asia" },
-            { name: "غانا", code: "GH", flag: "🇬🇭", hint: "تقع في غرب إفريقيا وتشتهر بإنتاج الكاكاو", emojis: "🇬🇭 🍫 ⚽ 🥁", category: "asia" }
+            // --- الأمريكتين ---
+            { 
+                name: "أمريكا", 
+                aliases: ["الولايات المتحدة", "الولايات المتحدة الأمريكية", "امريكا", "واشنطن"],
+                code: "US", flag: "🇺🇸", capital: "واشنطن", landmark: "تمثال الحرية وغراند كانيون",
+                landmarkIcon: "🗽", emojis: "🗽 🍔 🦅 🚀",
+                hint: "أكبر قوة عالمية وتشتهر بتمثال الحرية وهوليوود", category: "latin" 
+            },
+            { 
+                name: "البرازيل", 
+                aliases: ["جمهورية البرازيل الاتحادية", "برازيليا", "ريو"],
+                code: "BR", flag: "🇧🇷", capital: "برازيليا", landmark: "تمثال المسيح الفادي وغابات الأمازون",
+                landmarkIcon: "⚽", emojis: "⚽ 💃 🦜 🌴",
+                hint: "أكبر دولة في أمريكا الجنوبية، بلاد السامبا والأكثر تتويجاً بالمونديال", category: "latin" 
+            },
+            { 
+                name: "الأرجنتين", 
+                aliases: ["الارجنتين", "جمهورية الأرجنتين", "بوينس آيرس"],
+                code: "AR", flag: "🇦🇷", capital: "بوينس آيرس", landmark: "مسلة بوينس آيرس وشلالات إيغواسو",
+                landmarkIcon: "⚽", emojis: "⚽ 🥩 💃 ⛰️",
+                hint: "موطن ميسي ومارادونا ورقصة التانغو وحاملة لقب كأس العالم", category: "latin" 
+            },
+            { 
+                name: "المكسيك", 
+                aliases: ["الولايات المكسيكية", "مكسيكو سيتي"],
+                code: "MX", flag: "🇲🇽", capital: "مكسيكو سيتي", landmark: "أهرامات تشيتشن إيتزا لحضارة المايا",
+                landmarkIcon: "🌮", emojis: "🌮 🌵 🎸 🌶️",
+                hint: "تشتهر بالتاكو والأكل الحار وحضارة المايا في أمريكا الشمالية", category: "latin" 
+            },
+            { 
+                name: "كندا", 
+                aliases: ["دولة كندا", "أوتاوا"],
+                code: "CA", flag: "🇨🇦", capital: "أوتاوا", landmark: "شلالات نياجرا وبرج سي إن",
+                landmarkIcon: "🍁", emojis: "🍁 🏒 🐻 ❄️",
+                hint: "ثاني أكبر دولة مساحة وتشتهر بورقة القيقب في علمها والجليد", category: "latin" 
+            },
+
+            // --- آسيا وأفريقيا ---
+            { 
+                name: "اليابان", 
+                aliases: ["كوكب اليابان", "طوكيو"],
+                code: "JP", flag: "🇯🇵", capital: "طوكيو", landmark: "جبل فوجي وبرج طوكيو",
+                landmarkIcon: "🌸", emojis: "🍣 🌸 🗻 🏯",
+                hint: "بلاد الشمس المشرقة وموطن الأنمي والسوشي والساموراي", category: "asia" 
+            },
+            { 
+                name: "الصين", 
+                aliases: ["جمهورية الصين الشعبية", "بكين"],
+                code: "CN", flag: "🇨🇳", capital: "بكين", landmark: "سور الصين العظيم والمدينة المحرمة",
+                landmarkIcon: "🏯", emojis: "🐼 🐉 🏯 🍜",
+                hint: "تضم أطول سور بناه الإنسان وتشتهر بدب الباندا وعاصمتها بكين", category: "asia" 
+            },
+            { 
+                name: "كوريا الجنوبية", 
+                aliases: ["كوريا", "كوريا الجنوبيه", "سيول"],
+                code: "KR", flag: "🇰🇷", capital: "سيول", landmark: "برج إن سيول وقصر غيونغبوك",
+                landmarkIcon: "🎤", emojis: "🐯 🎤 🍜 📱",
+                hint: "عاصمتها سيول وتشتهر بالدراما والكي بوب والتكنولوجيا", category: "asia" 
+            },
+            { 
+                name: "الهند", 
+                aliases: ["جمهورية الهند", "نيودلهي"],
+                code: "IN", flag: "🇮🇳", capital: "نيودلهي", landmark: "قصر تاج محل والقلعة الحمراء",
+                landmarkIcon: "🕌", emojis: "🐘 🥻 🍛 🕌",
+                hint: "بلد التوابل والبهارات وقصر تاج محل وتعتبر من الأكثر سكاناً", category: "asia" 
+            },
+            { 
+                name: "أستراليا", 
+                aliases: ["استراليا", "سيدني", "كانبيرا"],
+                code: "AU", flag: "🇦🇺", capital: "كانبيرا", landmark: "دار أوبرا سيدني والحاجز المرجاني",
+                landmarkIcon: "🦘", emojis: "🦘 🐨 🏄‍♂️ 🌊",
+                hint: "قارة ودولة في النصف الجنوبي تشتهر بحيوان الكنغر والكوالا", category: "asia" 
+            },
+            { 
+                name: "إندونيسيا", 
+                aliases: ["اندونيسيا", "جاكرتا", "بالي"],
+                code: "ID", flag: "🇮🇩", capital: "جاكرتا", landmark: "معبد برامبانان وجزيرة بالي",
+                landmarkIcon: "🏝️", emojis: "🏝️ 🌋 🐅 🌴",
+                hint: "أكبر دولة جزرية إسلامية في العالم وتشتهر بالسياحة في بالي", category: "asia" 
+            },
+            { 
+                name: "جنوب إفريقيا", 
+                aliases: ["جنوب افريقيا", "بريتوريا", "كيب تاون"],
+                code: "ZA", flag: "🇿🇦", capital: "بريتوريا", landmark: "جبل الطاولة ومحمية كروغر",
+                landmarkIcon: "🦁", emojis: "🦁 💎 🏉 🌊",
+                hint: "تقع في أقصى جنوب القارة السمراء وتشتهر بالذهب والماس والسفاري", category: "asia" 
+            }
         ];
 
         let isHost = false;
@@ -632,11 +897,10 @@
         let roomRef = null;
         let playerName = "";
         let totalRounds = 5;
-        let roundTime = 30;
+        let roundTime = 25;
         let currentRound = 0;
         let timerInterval;
         let nextRoundTimerInterval;
-        let playersList = [];
         let gameQuestions = [];
         let remainingAttempts = 3;
 
@@ -646,14 +910,13 @@
             t.innerText = msg;
             t.classList.add('show');
             clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                t.classList.remove('show');
-            }, 3000);
+            toastTimeout = setTimeout(() => { t.classList.remove('show'); }, 3000);
         }
 
         function switchView(viewId) {
             document.querySelectorAll('#gameContainerView .glass-card').forEach(c => c.style.display = 'none');
-            document.getElementById(viewId).style.display = 'block';
+            const v = document.getElementById(viewId);
+            if(v) v.style.display = 'block';
         }
 
         function normalizeString(str) {
@@ -667,15 +930,33 @@
                 .replace(/\s+/g, '');
         }
 
+        function isAnswerMatching(input, country) {
+            if (!input || !country) return false;
+            const cleanIn = normalizeString(input);
+            if (!cleanIn) return false;
+            
+            if (cleanIn === normalizeString(country.name)) return true;
+            if (country.aliases && country.aliases.some(a => normalizeString(a) === cleanIn)) return true;
+            return false;
+        }
+
+        function copyRoomCode() {
+            if (!currentRoomCode) return;
+            navigator.clipboard.writeText(currentRoomCode);
+            showToast('تم نسخ رمز الغرفة بنجاح! 📋');
+        }
+
+        // ==================== دوال إنشاء الغرفة والانضمام ====================
         function hostCreateRoom() {
-            playerName = document.getElementById('playerNameInput').value.trim() || "الهوست";
+            playerName = document.getElementById('playerNameInput').value.trim() || 
+                (window.currentUserAccount ? window.currentUserAccount.name : "الهوست الجغرافي");
+            
             totalRounds = parseInt(document.getElementById('roundsSelect').value);
             roundTime = parseInt(document.getElementById('timeSelect').value);
-            let difficulty = document.getElementById('difficultySelect').value;
             let useHint = document.getElementById('useHintCheckbox').checked;
-            let showCountryCode = document.getElementById('showCountryCodeCheckbox').checked;
-            let showFlagInstead = document.getElementById('showFlagInsteadCheckbox').checked;
-            isHost = true;
+            
+            const modeRadio = document.querySelector('input[name="gameMode"]:checked');
+            let chosenMode = modeRadio ? modeRadio.value : 'flags';
 
             let selectedCategories = [];
             if(document.getElementById('catArab').checked) selectedCategories.push('arab');
@@ -684,13 +965,12 @@
             if(document.getElementById('catAsia').checked) selectedCategories.push('asia');
 
             if(selectedCategories.length === 0) {
-                return showToast('اختر تصنيف واحد على الأقل يا كابتن! ⚠️');
+                return showToast('اختر تصنيف قارة واحد على الأقل يا كابتن! 🗺️');
             }
 
             let filteredCountries = countriesDB.filter(c => selectedCategories.includes(c.category));
-
             if(filteredCountries.length < totalRounds) {
-                return showToast(`عدد الدول المتاحة (${filteredCountries.length}) أقل من عدد الجولات (${totalRounds})! اختر تصنيفات أكثر.`);
+                filteredCountries = [...countriesDB];
             }
 
             let shuffled = [...filteredCountries].sort(() => 0.5 - Math.random());
@@ -698,15 +978,24 @@
 
             currentRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
             document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
+            isHost = true;
+
             const pAvatar = (window.currentUserAccount && window.currentUserAccount.avatar) ? window.currentUserAccount.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
-            if(window.broadcastRoom) window.broadcastRoom('country', currentRoomCode, 'خمّن الدولة', playerName, pAvatar);
+            const roomOpts = window.getRoomCreateOptions ? window.getRoomCreateOptions() : { roomTitle: '', accessType: 'public' };
+            if(window.broadcastRoom) window.broadcastRoom('country', currentRoomCode, 'خمّن الدولة', playerName, pAvatar, roomOpts.roomTitle, roomOpts.accessType);
 
             roomRef = db.ref('country_rooms/' + currentRoomCode);
             roomRef.set({
                 host: playerName,
                 state: 'lobby',
-                settings: { totalRounds, roundTime, difficulty, useHint, showCountryCode, showFlagInstead, questions: gameQuestions },
-                players: { [playerName]: { score: 0 } }
+                settings: { 
+                    totalRounds, 
+                    roundTime, 
+                    useHint, 
+                    gameMode: chosenMode,
+                    questions: gameQuestions 
+                },
+                players: { [playerName]: { score: 0, avatar: pAvatar, joined: true } }
             }).then(() => {
                 listenToFirebase();
                 switchView('lobbyView');
@@ -716,9 +1005,10 @@
         }
 
         function guestJoinRoom() {
-            playerName = document.getElementById('playerNameInput').value.trim() || "الضيف";
+            playerName = document.getElementById('playerNameInput').value.trim() || 
+                (window.currentUserAccount ? window.currentUserAccount.name : "الضيف المكتشف");
             const code = document.getElementById('roomCodeInput').value.trim();
-            if(!code) return showToast('أدخل رمز الغرفة يا كابتن!');
+            if(!code) return showToast('أدخل رمز الغرفة يا بطل!');
 
             isHost = false;
             currentRoomCode = code;
@@ -729,7 +1019,6 @@
                     const pAvatar = (window.currentUserAccount && window.currentUserAccount.avatar) ? window.currentUserAccount.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
                     roomRef.child('players/' + playerName).set({ score: 0, avatar: pAvatar, joined: true });
                     document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
-            if(window.broadcastRoom) window.broadcastRoom('country', currentRoomCode, 'خمّن الدولة', playerName, pAvatar);
                     listenToFirebase();
                     switchView('lobbyView');
                     document.getElementById('startGameBtn').style.display = 'none';
@@ -743,10 +1032,9 @@
         function listenToFirebase() {
             roomRef.on('value', (snapshot) => {
                 const data = snapshot.val();
-                
                 if(!data || !data.players || Object.keys(data.players).length === 0) {
                     if(document.getElementById('roomSelectionView').style.display !== 'block') {
-                        showToast('انتهت الغرفة لخروج كل اللاعبين! 🚪');
+                        showToast('انتهت الغرفة أو غادر الجميع! 🚪');
                         clearInterval(timerInterval);
                         clearInterval(nextRoundTimerInterval);
                         switchView('roomSelectionView');
@@ -755,7 +1043,6 @@
                 }
 
                 if(data.players) {
-                    playersList = Object.keys(data.players);
                     updatePlayersUI(data.players);
                 }
                 
@@ -763,15 +1050,16 @@
                     totalRounds = data.settings.totalRounds;
                     roundTime = data.settings.roundTime;
                     gameQuestions = data.settings.questions;
-
-                    let diffText = data.settings.difficulty === 'easy' ? 'سهل (3 إيموجي)' : data.settings.difficulty === 'medium' ? 'وسط (2 إيموجي)' : 'صعب (بدون تلميح)';
-                    let hintText = data.settings.useHint ? 'مفعلة' : 'معطلة';
-                    let codeText = data.settings.showCountryCode ? 'مفعل' : 'معطل';
-                    let flagText = data.settings.showFlagInstead ? 'مفعل' : 'معطل';
+                    
+                    const modeLabels = {
+                        'flags': '🚩 أعلام الدول',
+                        'emojis': '🧩 ألغاز الإيموجي',
+                        'landmarks': '🏛️ العواصم والمعالم',
+                        'mixed': '🌍 المكس الشامل'
+                    };
 
                     document.getElementById('roomSettingsSummary').innerHTML = `
-                        🎯 الصعوبة: ${diffText} | ⏱️ الوقت: ${roundTime} ث | 💡 التلميح: ${hintText}<br>
-                        📌 رمز الدولة: ${codeText} | 🏴 علم الدولة بدل إيموجي: ${flagText} | 🏁 الجولات: ${totalRounds}
+                        🎯 النمط: <strong>${modeLabels[data.settings.gameMode] || 'أعلام'}</strong> | ⏱️ الوقت: ${roundTime}ث | 🏁 الجولات: ${totalRounds}
                     `;
                 }
 
@@ -788,18 +1076,20 @@
 
         function updatePlayersUI(playersObj) {
             const container = document.getElementById('connectedPlayersContainer');
-            if (!container) return;
             container.innerHTML = '';
             for(let p in playersObj) {
-                const pData = playersObj[p] || {};
-                const pScore = (typeof pData.score === 'number') ? pData.score : (pData.score || 0);
-                const pAvatar = pData.avatar || ((p === playerName && window.currentUserAccount) ? window.currentUserAccount.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png');
+                const pData = playersObj[p];
+                const pScore = pData.score || 0;
                 const isMe = (p === playerName);
+                const pAvatar = pData.avatar || ((p === playerName && window.currentUserAccount) ? window.currentUserAccount.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png');
+                
                 container.innerHTML += `
                     <div class="player-chip">
-                        <img src="${pAvatar}" class="player-chip-avatar" alt="${p}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
-                        <span class="player-chip-name">${p}${isMe ? ' (أنت)' : ''}</span>
-                        <span class="player-chip-score">${pScore} نقطة</span>
+                        <div style="display:flex; align-items:center;">
+                            <img src="${pAvatar}" class="player-chip-avatar" alt="${p}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+                            <span>${p}${isMe ? ' (أنت)' : ''}</span>
+                        </div>
+                        <span style="color: var(--primary-orange); font-weight: 900;">${pScore} نقطة</span>
                     </div>
                 `;
             }
@@ -827,54 +1117,56 @@
             }
         }
 
+        // ==================== تشغيل الجولة وعرض الألغاز بدقة 100% ====================
         function startRoundPlay(roundNum, startTime, settings) {
             clearInterval(timerInterval);
             clearInterval(nextRoundTimerInterval);
 
             remainingAttempts = 3;
             let currentQ = gameQuestions[roundNum - 1];
+            if (!currentQ) return;
             
-            let diff = settings?.difficulty || 'medium';
+            let chosenMode = settings?.gameMode || 'flags';
             let useHint = settings?.useHint ?? true;
-            let showCountryCode = settings?.showCountryCode ?? true;
-            let showFlagInstead = settings?.showFlagInstead ?? true;
 
-            let emojisArray = currentQ.emojis.split(' ').filter(e => e !== currentQ.flag);
-            
-            let finalEmojisList = [];
-            if (diff === 'easy') {
-                finalEmojisList = emojisArray.slice(0, 3);
-                if (showFlagInstead && finalEmojisList.length > 0) {
-                    finalEmojisList[0] = currentQ.flag;
-                }
-            } else if (diff === 'medium') {
-                finalEmojisList = emojisArray.slice(0, 2);
-                if (showFlagInstead && finalEmojisList.length > 0) {
-                    finalEmojisList[0] = currentQ.flag;
-                }
-            } else {
-                finalEmojisList = emojisArray.slice(0, 2);
+            // تحديد النمط الفعلي للجولة (إذا كان مكس نختار عشوائي بناءً على رقم الجولة)
+            let actualMode = chosenMode;
+            if (chosenMode === 'mixed') {
+                const modes = ['flags', 'emojis', 'landmarks'];
+                actualMode = modes[(roundNum - 1) % modes.length];
             }
 
-            let displayEmojis = finalEmojisList.join(' ');
+            const badgeEl = document.getElementById('clueBadgeIndicator');
+            const contentBox = document.getElementById('clueContentBox');
+            const codeBadgeBox = document.getElementById('countryCodeBadgeContainer');
+            const roundTitleEl = document.getElementById('roundModeHeaderTitle');
 
-            document.getElementById('roundDisplay').innerText = `الدولة ${roundNum} من ${totalRounds} (${diff.toUpperCase()})`;
-            document.getElementById('emojiDisplay').innerText = displayEmojis;
-            
-            // تم إزالة الكود النصي للرمز من بجانب الإيموجي والاعتماد فقط على البادج بالأسفل إذا كان مفعلاً
-            let codeBadgeContainer = document.getElementById('countryCodeBadgeContainer');
-            if (showCountryCode && currentQ.code) {
-                codeBadgeContainer.innerHTML = `<div class="country-code-badge">📌 رمز الدولة: ${currentQ.code}</div>`;
-                codeBadgeContainer.style.display = 'block';
-            } else {
-                codeBadgeContainer.innerHTML = '';
-                codeBadgeContainer.style.display = 'none';
+            document.getElementById('roundDisplay').innerText = `الجولة ${roundNum} من ${totalRounds}`;
+            codeBadgeBox.innerHTML = `<div class="country-code-badge">📌 رمز الدولة: ${currentQ.code}</div>`;
+
+            if (actualMode === 'flags') {
+                badgeEl.innerText = "🚩 نمط الأعلام الرسمية";
+                roundTitleEl.innerText = "خمن الدولة من علمها الرسمي:";
+                contentBox.innerHTML = `<div class="flag-view-large">${currentQ.flag}</div>`;
+            } else if (actualMode === 'emojis') {
+                badgeEl.innerText = "🧩 نمط ألغاز الإيموجي";
+                roundTitleEl.innerText = "خمن الدولة من رموزها وثقافتها:";
+                contentBox.innerHTML = `<div class="emojis-riddle-view">${currentQ.emojis}</div>`;
+            } else if (actualMode === 'landmarks') {
+                badgeEl.innerText = "🏛️ نمط العواصم والمعالم";
+                roundTitleEl.innerText = "خمن الدولة من المعلم والعاصمة:";
+                contentBox.innerHTML = `
+                    <div class="landmark-view">
+                        <div class="landmark-icon-large">${currentQ.landmarkIcon || '🏛️'}</div>
+                        <div class="landmark-title-text">📍 المعلم: ${currentQ.landmark}</div>
+                        <div class="landmark-sub-text">🏙️ العاصمة: ${currentQ.capital}</div>
+                    </div>
+                `;
             }
 
             let hintBox = document.getElementById('hintBox');
             let hintTextEl = document.getElementById('hintText');
             hintBox.style.display = 'none';
-            
             hintTextEl.innerText = currentQ.hint;
 
             let inputEl = document.getElementById('answerInput');
@@ -884,7 +1176,7 @@
             
             let btnEl = document.getElementById('submitAnswerBtn');
             btnEl.disabled = false;
-            btnEl.innerText = 'إرسال الإجابة 🚀 (باقي لك 3 محاولات)';
+            btnEl.innerText = 'إرسال الإجابة 🚀 (3 محاولات)';
 
             let feedbackEl = document.getElementById('answerFeedback');
             feedbackEl.style.display = 'none';
@@ -895,7 +1187,7 @@
                 let elapsed = Math.floor((Date.now() - startTime) / 1000);
                 let timeLeft = roundTime - elapsed;
                 
-                if (timeLeft <= 10 && timeLeft > 0 && diff !== 'hard' && useHint) {
+                if (timeLeft <= 10 && timeLeft > 0 && useHint) {
                     hintBox.style.display = 'block';
                 }
 
@@ -922,7 +1214,7 @@
             if(!input) return;
 
             let currentQ = gameQuestions[currentRound - 1];
-            let isCorrect = normalizeString(input) === normalizeString(currentQ.name);
+            let isCorrect = isAnswerMatching(input, currentQ);
             
             let feedbackEl = document.getElementById('answerFeedback');
             feedbackEl.style.display = 'block';
@@ -943,7 +1235,7 @@
                     }
                 });
 
-                feedbackEl.innerText = "كفوووو! أنت الذيب اللي حلها 🐺✅";
+                feedbackEl.innerText = "كفوووو! أنت الأسطورة اللي عرفها 🐺✅ (+100 نقطة)";
                 feedbackEl.style.color = "var(--green-success)";
                 confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
             } else {
@@ -951,15 +1243,15 @@
                 roomRef.child('round_answers/' + playerName).set({ correct: false });
 
                 if(remainingAttempts > 0) {
-                    feedbackEl.innerText = `غلط يا وحش! ❌ باقي لك (${remainingAttempts}) محاولات`;
+                    feedbackEl.innerText = `إجابة خاطئة! ❌ باقي لك (${remainingAttempts}) محاولات`;
                     feedbackEl.style.color = "var(--red-danger)";
-                    document.getElementById('submitAnswerBtn').innerText = `إرسال الإجابة 🚀 (باقي لك ${remainingAttempts} محاولات)`;
+                    document.getElementById('submitAnswerBtn').innerText = `إرسال الإجابة 🚀 (باقي ${remainingAttempts} محاولات)`;
                     document.getElementById('answerInput').value = '';
                     document.getElementById('answerInput').focus();
                 } else {
                     document.getElementById('answerInput').disabled = true;
                     document.getElementById('submitAnswerBtn').disabled = true;
-                    feedbackEl.innerText = "خلصت محاولاتك الثلاث في هذه الجولة! ⛔ انتظر النتائج";
+                    feedbackEl.innerText = "انتهت محاولاتك الثلاث في هذه الجولة! ⛔ انتظر النتائج";
                     feedbackEl.style.color = "var(--red-danger)";
                 }
             }
@@ -971,16 +1263,19 @@
 
             let currentQ = gameQuestions[currentRound - 1];
             if(currentQ) {
-                let codePart = currentQ.code ? ` (${currentQ.code})` : '';
-                document.getElementById('correctCountryDisplay').innerText = `${currentQ.flag || ''} ${currentQ.name}${codePart}`;
+                document.getElementById('correctCountryDisplay').innerHTML = `
+                    الدولة الصحيحة كانت:<br>
+                    <span style="font-size: 1.8rem; display: inline-block; margin-top: 6px;">${currentQ.flag} ${currentQ.name}</span>
+                    <div style="font-size: 0.9rem; color: #64748B; margin-top: 4px;">العاصمة: ${currentQ.capital} | المعلم: ${currentQ.landmark}</div>
+                `;
             }
             
             let winnerBox = document.getElementById('winnerAnnouncement');
             let resultTitle = document.getElementById('resultTitle');
             
             if(data.roundWinner) {
-                resultTitle.innerText = "تم حل الجولة بنجاح! 🥊";
-                winnerBox.innerHTML = `البطل اللي فاز بالجولة: 👑 ${data.roundWinner}`;
+                resultTitle.innerText = "تم حل الجولة بنجاح! 🎯";
+                winnerBox.innerHTML = `البطل الأسرع اللي جاوب صح: 👑 ${data.roundWinner}`;
                 winnerBox.style.display = 'block';
             } else {
                 resultTitle.innerText = "انتهى الوقت للأسف! ⏱️";
@@ -996,11 +1291,11 @@
                 let color = "#888";
                 if(answers[p]) {
                     if(answers[p].correct) { status = "صح ✅ (+100)"; color = "var(--green-success)"; }
-                    else { status = "خطأ بالمحاولات ❌"; color = "var(--red-danger)"; }
+                    else { status = "أخطأ ❌"; color = "var(--red-danger)"; }
                 }
                 container.innerHTML += `
                     <div class="player-chip">
-                        <span>👤 ${p} (المجموع: ${data.players[p].score})</span>
+                        <span>👤 ${p} (المجموع: ${data.players[p].score || 0})</span>
                         <span style="color: ${color}; font-weight: 900;">${status}</span>
                     </div>
                 `;
@@ -1008,19 +1303,15 @@
 
             switchView('resultsView');
 
-            let countdown = 3;
+            let countdown = 4;
             let displayElement = document.getElementById('nextRoundTimerDisplay');
             document.getElementById('nextRoundTimerContainer').style.display = 'block';
             
             displayElement.innerText = countdown;
-            displayElement.classList.remove('timer-pop');
-            void displayElement.offsetWidth; 
-            displayElement.classList.add('timer-pop');
 
             nextRoundTimerInterval = setInterval(() => {
                 countdown--;
                 displayElement.innerText = countdown;
-                
                 displayElement.classList.remove('timer-pop');
                 void displayElement.offsetWidth; 
                 displayElement.classList.add('timer-pop');
@@ -1038,23 +1329,21 @@
             clearInterval(timerInterval);
             clearInterval(nextRoundTimerInterval);
 
-            showToast('🏁 انتهت اللعبة بنجاح، إليكم منصة التتويج! 🎉');
+            showToast('🏁 انتهت الرحلة بنجاح، مبروك للأبطال! 🎉');
 
-            let sorted = Object.entries(playersObj).sort((a, b) => b[1].score - a[1].score);
+            let sorted = Object.entries(playersObj).sort((a, b) => (b[1].score || 0) - (a[1].score || 0));
             let podiumHTML = '';
             
             if(sorted.length > 0) {
-                podiumHTML += `<div class="podium-step podium-2" style="order: 1;"><div style="font-size:1.5rem">🥈</div><div>${sorted[1] ? sorted[1][0] : '-'}</div><div>${sorted[1] ? sorted[1][1].score : ''}</div></div>`;
-                podiumHTML += `<div class="podium-step podium-1" style="order: 2; z-index:2; box-shadow: 0 -10px 20px rgba(255,215,0,0.5);"><div style="font-size:2rem; position:absolute; top:-35px;">👑</div><div>${sorted[0][0]}</div><div>${sorted[0][1].score}</div></div>`;
-                podiumHTML += `<div class="podium-step podium-3" style="order: 3;"><div style="font-size:1.5rem">🥉</div><div>${sorted[2] ? sorted[2][0] : '-'}</div><div>${sorted[2] ? sorted[2][1].score : ''}</div></div>`;
+                podiumHTML += `<div class="podium-step podium-2" style="order: 1;"><div style="font-size:1.5rem">🥈</div><div>${sorted[1] ? sorted[1][0] : '-'}</div><div>${sorted[1] ? (sorted[1][1].score || 0) : ''}</div></div>`;
+                podiumHTML += `<div class="podium-step podium-1" style="order: 2; z-index:2; box-shadow: 0 -10px 20px rgba(255,215,0,0.5);"><div style="font-size:2rem; position:absolute; top:-35px;">👑</div><div>${sorted[0][0]}</div><div>${sorted[0][1].score || 0}</div></div>`;
+                podiumHTML += `<div class="podium-step podium-3" style="order: 3;"><div style="font-size:1.5rem">🥉</div><div>${sorted[2] ? sorted[2][0] : '-'}</div><div>${sorted[2] ? (sorted[2][1].score || 0) : ''}</div></div>`;
             }
             
             document.getElementById('podiumDisplay').innerHTML = podiumHTML;
             confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
             switchView('winnerView');
         }
-    
-        if (window.initRoomDiscovery) window.initRoomDiscovery('country', (code) => { if (typeof guestJoinRoom === 'function') guestJoinRoom(); });
 
         // الانضمام التلقائي عند فتح الرابط المباشر
         const urlParams = new URLSearchParams(window.location.search);

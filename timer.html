@@ -539,7 +539,8 @@
             currentRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
             document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
             const pAvatar = (window.currentUserAccount && window.currentUserAccount.avatar) ? window.currentUserAccount.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
-            if(window.broadcastRoom) window.broadcastRoom('timer', currentRoomCode, 'تحدي السرعة', playerName, pAvatar);
+            const roomOpts = window.getRoomCreateOptions ? window.getRoomCreateOptions() : { roomTitle: '', accessType: 'public' };
+            if(window.broadcastRoom) window.broadcastRoom('timer', currentRoomCode, 'تحدي السرعة', playerName, pAvatar, roomOpts.roomTitle, roomOpts.accessType);
 
             roomRef = db.ref('fast_write_rooms/' + currentRoomCode);
             roomRef.set({

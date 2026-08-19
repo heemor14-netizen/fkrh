@@ -839,92 +839,149 @@
             transform: scale(0.96);
         }
 
-        /* === قائمة الغرف القريبة === */
-        .home-nearby-rooms-list {
-            margin-top: 0.8rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+        /* === قائمة وقسم الغرف المباشرة في الرئيسية === */
+        .home-live-rooms-container {
+            margin-top: 1rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid rgba(255, 94, 54, 0.12);
         }
-        .nearby-rooms-title {
-            font-size: 0.9rem;
-            font-weight: 800;
-            color: var(--primary-orange);
-            margin-bottom: 0.3rem;
+        .live-rooms-header {
             display: flex;
             align-items: center;
-            gap: 0.3rem;
+            justify-content: space-between;
+            margin-bottom: 0.7rem;
+            direction: rtl;
+        }
+        .live-indicator-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .live-dot-pulse {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #FF5E36;
+            box-shadow: 0 0 0 0 rgba(255, 94, 54, 0.7);
+            animation: livePulseAnim 1.6s infinite;
+        }
+        @keyframes livePulseAnim {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 94, 54, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(255, 94, 54, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 94, 54, 0); }
+        }
+        .live-header-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+        .live-header-badge {
+            background: rgba(255, 94, 54, 0.1);
+            color: var(--primary-orange);
+            font-size: 0.78rem;
+            font-weight: 800;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 94, 54, 0.2);
+        }
+        .home-nearby-rooms-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+        .no-rooms-placeholder {
+            background: #FAF8F5;
+            border: 1.5px dashed rgba(255, 94, 54, 0.25);
+            border-radius: 14px;
+            padding: 1rem 0.8rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .radar-ping-icon {
+            font-size: 1.6rem;
+            animation: floatRadar 2s ease-in-out infinite;
+        }
+        @keyframes floatRadar {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+        .no-rooms-text {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #718096;
+            line-height: 1.4;
+            max-width: 380px;
         }
         .nearby-room-card {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: rgba(255,94,54,0.06);
-            border: 1.5px solid rgba(255,94,54,0.15);
+            background: #FFFFFF;
+            border: 1.5px solid rgba(255, 94, 54, 0.18);
             border-radius: 14px;
-            padding: 0.6rem 0.9rem;
-            transition: all 0.25s;
+            padding: 0.7rem 0.9rem;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             direction: rtl;
+            box-shadow: 0 4px 12px rgba(255, 94, 54, 0.05);
         }
         .nearby-room-card:hover {
-            background: rgba(255,94,54,0.12);
-            border-color: rgba(255,94,54,0.3);
-            transform: translateY(-1px);
+            background: #FFF8F5;
+            border-color: var(--primary-orange);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 94, 54, 0.15);
         }
         .nearby-room-info {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.6rem;
         }
         .nearby-room-info img {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--primary-orange);
+            box-shadow: 0 2px 6px rgba(255, 94, 54, 0.2);
         }
         .nearby-room-details {
             display: flex;
             flex-direction: column;
+            text-align: right;
         }
         .nearby-room-game {
-            font-size: 0.85rem;
+            font-size: 0.88rem;
             font-weight: 800;
             color: var(--text-main);
         }
         .nearby-room-host {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-muted);
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: #718096;
+        }
+        .nearby-room-host strong {
+            color: var(--primary-orange);
+            font-weight: 900;
+            letter-spacing: 1px;
         }
         .btn-nearby-join {
             background: var(--orange-gradient);
             color: #fff;
             border: none;
-            border-radius: 10px;
-            padding: 0.4rem 1rem;
+            border-radius: 12px;
+            padding: 0.45rem 1.1rem;
             font-size: 0.85rem;
             font-family: 'Tajawal', sans-serif;
             font-weight: 800;
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .btn-nearby-join:hover {
-            transform: translateY(-1px);
             box-shadow: 0 4px 12px var(--orange-glow);
         }
-        .nearby-pulse {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #2E7D32;
-            margin-left: 0.3rem;
-            animation: nearbyPulse 1.5s infinite;
-        }
-        @keyframes nearbyPulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.4); }
+        .btn-nearby-join:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px var(--orange-glow);
         }
 
     </style>
@@ -987,14 +1044,40 @@
     </button>
 </div>
             
-        <!-- بطاقة الانضمام السريع وكشف غرف نفس الشبكة في الرئيسية -->
+        <!-- بطاقة الانضمام السريع وقسم الغرف المباشرة -->
         <div class="home-quick-join-card">
             <div class="quick-join-input-wrap">
                 <span class="quick-join-icon">🔑</span>
                 <input type="text" id="homeQuickRoomCode" class="quick-join-input" placeholder="أدخل رمز أي غرفة للدخول المباشر..." maxlength="10" onkeydown="if(event.key==='Enter') window.homeJoinAnyRoom()">
                 <button type="button" class="btn-home-quick-join" onclick="window.homeJoinAnyRoom()">دخول سريع ⚡</button>
             </div>
-            <div id="homeNearbyRoomsList" class="home-nearby-rooms-list" style="display:none;"></div>
+            
+            <!-- قسم الغرف المتاحة حالياً -->
+            <div class="home-live-rooms-container">
+                <div class="live-rooms-header">
+                    <div class="live-indicator-wrap">
+                        <span class="live-dot-pulse"></span>
+                        <span class="live-header-title">غرف متاحة الحين</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <button type="button" class="btn-compact" onclick="window.openAllRoomsModal()" style="font-size:0.78rem; padding:0.35rem 0.8rem; background:#FFF; border:1.5px solid var(--primary-orange); color:var(--primary-orange); border-radius:20px; font-weight:800; cursor:pointer;">عرض الكل 🔍</button>
+                        <span class="live-header-badge" id="liveRoomsCountBadge">0 غرف نشطة</span>
+                    </div>
+                </div>
+                
+                <!-- تبويبات تصفية الغرف في الرئيسية -->
+                <div style="display: flex; gap: 6px; margin: 0.6rem 0; padding-bottom: 6px; border-bottom: 1px solid #F1F5F9;">
+                    <button type="button" class="room-filter-tab active" id="homeTabAllRooms" onclick="switchHomeRoomsFilter('all', this)">🌟 جميع الغرف</button>
+                    <button type="button" class="room-filter-tab" id="homeTabFriendsRooms" onclick="switchHomeRoomsFilter('friends', this)">👥 غرف الأصدقاء</button>
+                </div>
+
+                <div id="homeNearbyRoomsList" class="home-nearby-rooms-list">
+                    <div class="no-rooms-placeholder">
+                        <div class="radar-ping-icon">📡</div>
+                        <div class="no-rooms-text">رادار البحث نشط.. لا توجد غرف مفتوحة حالياً، اختر لعبتك وأنشئ غرفة ليظهر بثها للجميع! 🚀</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
             <div class="categories">
@@ -1187,6 +1270,25 @@
                         <label class="checkbox-label"><input type="checkbox" value="famous" data-name="مشاهير"> مشاهير</label>
                         <label class="checkbox-label"><input type="checkbox" value="movie" data-name="فيلم/مسلسل"> فيلم/مسلسل</label>
                     </div>
+                </div>
+
+                <div class="room-create-extras">
+                <div class="form-group">
+                    <label>اسم الغرفة (اختياري 🏷️)</label>
+                    <input type="text" id="customRoomTitleInput" class="custom-room-title-input" placeholder="مثال: غرفة الأساطير 🔥" maxlength="25">
+                </div>
+
+                <div class="room-privacy-group">
+                    <label>نوع الغرفة والدخول:</label>
+                    <div class="room-privacy-grid">
+                        <label class="privacy-card-label">
+                            <input type="radio" name="roomAccessType" value="public" checked> 🌐 للجميع
+                        </label>
+                        <label class="privacy-card-label">
+                            <input type="radio" name="roomAccessType" value="friends"> 👥 للأصدقاء فقط
+                        </label>
+                    </div>
+                </div>
                 </div>
 
                 <button onclick="hostCreateRoom()" class="btn btn-primary" style="width: 100%;">إنشاء غرفة أونلاين 🚀</button>
@@ -1761,6 +1863,11 @@ function toggleCompactView() {
         }
 
         function handleStepBack() {
+            const allPage = document.getElementById('allRoomsFullPage');
+            if (allPage && allPage.style.display === 'block') {
+                window.closeAllRoomsModal();
+                return;
+            }
             const gameContainer = document.getElementById('gameContainerView');
             if (gameContainer.style.display === 'block') {
                 if (activeGameType === 'scattergories') {
@@ -1910,6 +2017,8 @@ function toggleCompactView() {
         function openGameRoom(gameType) {
             activeGameType = gameType;
             document.getElementById('homeMainView').style.display = 'none';
+            const allPage = document.getElementById('allRoomsFullPage');
+            if (allPage) allPage.style.display = 'none';
             document.getElementById('gameContainerView').style.display = 'block';
             document.getElementById('backBtnContainer').style.display = 'block';
 
@@ -1944,6 +2053,8 @@ function toggleCompactView() {
             cleanupRoomCompletely();
             document.getElementById('homeMainView').style.display = 'block';
             document.getElementById('gameContainerView').style.display = 'none';
+            const allPage = document.getElementById('allRoomsFullPage');
+            if (allPage) allPage.style.display = 'none';
             document.getElementById('backBtnContainer').style.display = 'none';
             dismissLeaveToast();
         }
@@ -2045,7 +2156,8 @@ function toggleCompactView() {
             currentRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
             document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
             const pAvatar = (window.currentUserAccount && window.currentUserAccount.avatar) ? window.currentUserAccount.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
-            if(window.broadcastRoom) window.broadcastRoom('scattergories', currentRoomCode, 'إنسان حيوان جماد', playerName, pAvatar);
+            const roomOpts = window.getRoomCreateOptions ? window.getRoomCreateOptions() : { roomTitle: '', accessType: 'public' };
+            if(window.broadcastRoom) window.broadcastRoom('scattergories', currentRoomCode, 'إنسان حيوان جماد', playerName, pAvatar, roomOpts.roomTitle, roomOpts.accessType);
 
             roomRef = db.ref('rooms/' + currentRoomCode);
 
@@ -2660,7 +2772,8 @@ ${JSON.stringify(allAnswers, null, 2)}
             spyRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
             isHost = true;
             document.getElementById('spyDisplayRoomCode').innerText = spyRoomCode + " 📋";
-            if(window.broadcastRoom) window.broadcastRoom('spy', spyRoomCode, 'مين الجاسوس', playerName, (window.currentUserAccount && window.currentUserAccount.avatar) ? window.currentUserAccount.avatar : null);
+            const spyOpts = window.getRoomCreateOptions ? window.getRoomCreateOptions() : { roomTitle: '', accessType: 'public' };
+            if(window.broadcastRoom) window.broadcastRoom('spy', spyRoomCode, 'مين الجاسوس', playerName, (window.currentUserAccount && window.currentUserAccount.avatar) ? window.currentUserAccount.avatar : null, spyOpts.roomTitle, spyOpts.accessType);
 
             spyRoomRef = db.ref('spyRooms/' + spyRoomCode);
             spyRoomRef.set({
@@ -2898,7 +3011,8 @@ ${JSON.stringify(allAnswers, null, 2)}
             drawRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
             isHost = true;
             document.getElementById('drawDisplayRoomCode').innerText = drawRoomCode + " 📋";
-            if(window.broadcastRoom) window.broadcastRoom('draw', drawRoomCode, 'ارسم وتخمّن', playerName, (window.currentUserAccount && window.currentUserAccount.avatar) ? window.currentUserAccount.avatar : null);
+            const drawOpts = window.getRoomCreateOptions ? window.getRoomCreateOptions() : { roomTitle: '', accessType: 'public' };
+            if(window.broadcastRoom) window.broadcastRoom('draw', drawRoomCode, 'ارسم وتخمّن', playerName, (window.currentUserAccount && window.currentUserAccount.avatar) ? window.currentUserAccount.avatar : null, drawOpts.roomTitle, drawOpts.accessType);
 
             drawRoomRef = db.ref('drawRooms/' + drawRoomCode);
             drawRoomRef.set({
@@ -3251,6 +3365,13 @@ ${JSON.stringify(allAnswers, null, 2)}
 
                 if (match) {
                     restoreBtn();
+                    if (window.canJoinListedRoom) {
+                        const listed = cachedActiveRooms.find(r => String(r.code).trim() === String(code).trim());
+                        if (listed && !window.canJoinListedRoom(listed)) {
+                            triggerUniversalToast('للأصدقاء فقط 👥', 'هذي الغرفة مخصصة لأصدقاء الهوست. أضفه من قائمة أصدقائي أولاً.', false);
+                            return;
+                        }
+                    }
                     if (codeInput) codeInput.value = '';
 
                     if (match.page === null) {
@@ -3283,6 +3404,10 @@ ${JSON.stringify(allAnswers, null, 2)}
 
                     if (foundRoom) {
                         restoreBtn();
+                        if (window.canJoinListedRoom && !window.canJoinListedRoom(foundRoom)) {
+                            triggerUniversalToast('للأصدقاء فقط 👥', 'هذي الغرفة مخصصة لأصدقاء الهوست. أضفه من قائمة أصدقائي أولاً.', false);
+                            return;
+                        }
                         if (codeInput) codeInput.value = '';
                         const gameRedirectMap = {
                             'scattergories': null,
@@ -3323,70 +3448,244 @@ ${JSON.stringify(allAnswers, null, 2)}
             }
         };
 
-        // اكتشاف الغرف النشطة وعرضها تلقائياً في الصفحة الرئيسية لجميع الألعاب
-        window.initHomeAllRoomsDiscovery = function() {
+        // متغيرات تصفية الغرف
+        let currentHomeRoomsFilter = 'all';
+        let currentModalGameFilter = 'all';
+        let cachedActiveRooms = [];
+
+        window.switchHomeRoomsFilter = function(filter, el) {
+            currentHomeRoomsFilter = filter;
+            document.querySelectorAll('#homeTabAllRooms, #homeTabFriendsRooms').forEach(b => b.classList.remove('active'));
+            if (el) el.classList.add('active');
+            renderHomeRoomsList();
+        };
+
+        window.openAllRoomsModal = function() {
+            const page = document.getElementById('allRoomsFullPage');
+            if (!page) return;
+            document.getElementById('homeMainView').style.display = 'none';
+            document.getElementById('gameContainerView').style.display = 'none';
+            page.style.display = 'block';
+            document.getElementById('backBtnContainer').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            renderAllRoomsGrid();
+        };
+
+        window.closeAllRoomsModal = function() {
+            const page = document.getElementById('allRoomsFullPage');
+            if (page) page.style.display = 'none';
+            document.getElementById('homeMainView').style.display = 'block';
+            document.getElementById('backBtnContainer').style.display = 'none';
+        };
+
+        window.filterAllRoomsModal = function(type, el) {
+            currentModalGameFilter = type;
+            document.querySelectorAll('.all-rooms-tabs .room-filter-tab').forEach(t => t.classList.remove('active'));
+            if (el) el.classList.add('active');
+            renderAllRoomsGrid();
+        };
+
+        const gameMap = {
+            'scattergories': { title: '🧠 إنسان حيوان جماد', page: null },
+            'country': { title: '🌍 خمّن الدولة', page: 'country.html' },
+            'klmat': { title: '📝 الكلمات المبعثرة', page: 'klmat.html' },
+            'football': { title: '⚽ معلومات كروية', page: 'football.html' },
+            'mthl': { title: '📜 أكمل الشطر', page: 'mthl.html' },
+            '3thr': { title: '🎭 فن الأعذار', page: '3thr.html' },
+            'gasos': { title: '🕵️ مين الجاسوس', page: 'gasos.html' },
+            'spy': { title: '🕵️ مين الجاسوس', page: 'gasos.html' },
+            'timer': { title: '⚡ تحدي السرعة', page: 'timer.html' },
+            'draw': { title: '🎨 ارسم وتخمّن', page: 'draw.html' }
+        };
+
+        function getVisibleRooms() {
+            return cachedActiveRooms.filter(r => !window.canSeeListedRoom || window.canSeeListedRoom(r));
+        }
+
+        function getRoomJoinAction(room, gInfo) {
+            const safeType = String(room.gameType || '').replace(/'/g, '');
+            const safeCode = String(room.code || '').replace(/'/g, '');
+            return `window.attemptJoinListedRoom('${safeCode}','${safeType}')`;
+        }
+
+        window.attemptJoinListedRoom = function(code, gameType) {
+            const room = cachedActiveRooms.find(r => String(r.code) === String(code) && String(r.gameType) === String(gameType)) || { code, gameType };
+            if (window.canJoinListedRoom && !window.canJoinListedRoom(room)) {
+                triggerUniversalToast('للأصدقاء فقط 👥', 'هذي الغرفة مخصصة لأصدقاء الهوست. أضفه من قائمة أصدقائي أولاً.', false);
+                return;
+            }
+            const gInfo = gameMap[gameType] || { page: null };
+            if (gInfo.page) {
+                window.location.href = gInfo.page + '?join=' + encodeURIComponent(code);
+            } else {
+                const input = document.getElementById('homeQuickRoomCode');
+                if (input) input.value = code;
+                window.homeJoinAnyRoom();
+            }
+        };
+
+        function renderHomeRoomsList() {
             const listEl = document.getElementById('homeNearbyRoomsList');
+            const countBadge = document.getElementById('liveRoomsCountBadge');
             if (!listEl) return;
 
-            db.ref('activeRooms').on('value', (snapshot) => {
-                if (!snapshot.exists() || snapshot.numChildren() === 0) {
-                    listEl.style.display = 'none';
-                    listEl.innerHTML = '';
-                    return;
+            const visible = getVisibleRooms();
+            let roomsToRender = visible;
+            if (currentHomeRoomsFilter === 'friends') {
+                roomsToRender = visible.filter(r => window.isFriend && window.isFriend(r.hostUid, r.hostName));
+            }
+
+            if (countBadge) {
+                countBadge.innerText = visible.length > 0 ? `${visible.length} غرف نشطة 🔥` : '0 غرف نشطة';
+            }
+
+            if (roomsToRender.length === 0) {
+                const emptyMsg = (currentHomeRoomsFilter === 'friends') ?
+                    'لا توجد غرف نشطة لأصدقائك حالياً! 👥 أضف أصدقاءك من زر أصدقائي فوق، وبمجرد ما يسوون غرفة تظهر لك هنا فوراً.' :
+                    'رادار البحث نشط.. لا توجد غرف مفتوحة حالياً، اختر لعبتك وأنشئ غرفة ليظهر بثها للجميع! 🚀';
+
+                listEl.innerHTML = `
+                    <div class="no-rooms-placeholder">
+                        <div class="radar-ping-icon">📡</div>
+                        <div class="no-rooms-text">${emptyMsg}</div>
+                    </div>
+                `;
+                return;
+            }
+
+            const preview = roomsToRender.slice(0, 4);
+            let html = '';
+            preview.forEach(room => {
+                html += buildRoomCardHtml(room);
+            });
+            if (roomsToRender.length > 4) {
+                html += `<button type="button" class="btn-view-more-rooms" onclick="window.openAllRoomsModal()">عرض باقي الغرف (${roomsToRender.length - 4}+) 🔍</button>`;
+            }
+            listEl.innerHTML = html;
+        }
+
+        function buildRoomCardHtml(room) {
+            const gInfo = gameMap[room.gameType] || { title: '🎮 ' + (room.gameName || 'لعبة جماعية'), page: null };
+            const avatar = room.hostAvatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
+            const isFriendRoom = window.isFriend && window.isFriend(room.hostUid, room.hostName);
+            const joinAction = getRoomJoinAction(room, gInfo);
+            const displayTitle = room.roomTitle || gInfo.title;
+            const privacyBadge = (room.accessType === 'friends') ? 
+                `<span class="room-type-badge room-type-friends">👥 للأصدقاء</span>` : 
+                `<span class="room-type-badge room-type-public">🌐 عامة</span>`;
+
+            return `
+                <div class="nearby-room-card ${isFriendRoom ? 'friend-room-highlight' : ''}">
+                    <div class="nearby-room-info">
+                        <img src="${avatar}" alt="${room.hostName || 'الهوست'}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+                        <div class="nearby-room-details">
+                            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                                <span class="nearby-room-game">${displayTitle}</span>
+                                ${privacyBadge}
+                            </div>
+                            <span class="nearby-room-host">🎮 ${gInfo.title} • الهوست: <strong>${room.hostName || 'اللاعب'}</strong> • رمز: <strong>${room.code}</strong></span>
+                        </div>
+                    </div>
+                    <button class="btn-nearby-join" onclick="${joinAction}">انضم ⚡</button>
+                </div>
+            `;
+        }
+
+        window.renderAllRoomsGrid = function() {
+            const gridEl = document.getElementById('allRoomsGridContainer');
+            if (!gridEl) return;
+
+            const searchVal = (document.getElementById('allRoomsSearchInput')?.value || '').trim().toLowerCase();
+
+            let filtered = getVisibleRooms().filter(room => {
+                if (currentModalGameFilter === 'friends') {
+                    if (!window.isFriend || !window.isFriend(room.hostUid, room.hostName)) return false;
+                } else if (currentModalGameFilter !== 'all') {
+                    if (room.gameType !== currentModalGameFilter && !(currentModalGameFilter === 'gasos' && room.gameType === 'spy')) return false;
                 }
 
-                listEl.style.display = 'block';
-                let html = '<div class="nearby-rooms-title"><span class="nearby-pulse"></span> غرف متاحة الحين (اضغط للدخول المباشر)</div>';
+                if (searchVal) {
+                    const matchName = (room.hostName || '').toLowerCase().includes(searchVal);
+                    const matchTitle = (room.roomTitle || '').toLowerCase().includes(searchVal);
+                    const matchCode = (room.code || '').includes(searchVal);
+                    const matchGame = (room.gameName || '').toLowerCase().includes(searchVal);
+                    if (!matchName && !matchTitle && !matchCode && !matchGame) return false;
+                }
+                return true;
+            });
 
-                const gameMap = {
-                    'scattergories': { title: '🧠 إنسان حيوان جماد', page: null },
-                    'country': { title: '🌍 خمّن الدولة', page: 'country.html' },
-                    'klmat': { title: '📝 الكلمات المبعثرة', page: 'klmat.html' },
-                    'football': { title: '⚽ معلومات كروية', page: 'football.html' },
-                    'mthl': { title: '📜 أكمل الشطر', page: 'mthl.html' },
-                    '3thr': { title: '🎭 فن الأعذار', page: '3thr.html' },
-                    'gasos': { title: '🕵️ مين الجاسوس', page: 'gasos.html' },
-                    'spy': { title: '🕵️ مين الجاسوس', page: 'gasos.html' },
-                    'timer': { title: '⚡ تحدي السرعة', page: 'timer.html' },
-                    'draw': { title: '🎨 ارسم وتخمّن', page: 'draw.html' }
-                };
+            if (filtered.length === 0) {
+                gridEl.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 2.5rem 1rem; color: #94A3B8; font-weight: 800;">
+                        <div style="font-size: 2.5rem; margin-bottom: 8px;">🔍</div>
+                        لا توجد غرف مطابقة لبحثك في هذا القسم!<br>جرّب تغيير التصنيف أو أنشئ غرفة جديدة بنفسك لتحدي الجميع.
+                    </div>
+                `;
+                return;
+            }
 
-                snapshot.forEach(child => {
-                    const room = child.val();
-                    if (!room || !room.code) return;
-                    const gInfo = gameMap[room.gameType] || { title: '🎮 ' + (room.gameName || 'لعبة جماعية'), page: null };
-                    const avatar = room.hostAvatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
-                    const targetPage = gInfo.page;
+            gridEl.innerHTML = filtered.map(room => buildRoomCardHtml(room)).join('');
+        };
 
-                    let joinAction = '';
-                    if (targetPage) {
-                        joinAction = `window.location.href='${targetPage}?join=${room.code}';`;
-                    } else {
-                        joinAction = `document.getElementById('homeQuickRoomCode').value='${room.code}'; window.homeJoinAnyRoom();`;
-                    }
+        // اكتشاف الغرف المباشرة وحفظها محلياً
+        window.initHomeAllRoomsDiscovery = function() {
+            db.ref('activeRooms').on('value', (snapshot) => {
+                cachedActiveRooms = [];
+                if (snapshot.exists()) {
+                    snapshot.forEach(child => {
+                        const room = child.val();
+                        if (room && room.code) cachedActiveRooms.push(room);
+                    });
+                }
+                renderHomeRoomsList();
+                renderAllRoomsGrid();
+            });
 
-                    html += `
-                        <div class="nearby-room-card">
-                            <div class="nearby-room-info">
-                                <img src="${avatar}" alt="${room.hostName || 'الهوست'}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
-                                <div class="nearby-room-details">
-                                    <span class="nearby-room-game">${gInfo.title}</span>
-                                    <span class="nearby-room-host">🎮 الهوست: ${room.hostName || 'اللاعب'} • رمز الغرفة: <strong>${room.code}</strong></span>
-                                </div>
-                            </div>
-                            <button class="btn-nearby-join" onclick="${joinAction}">انضم ⚡</button>
-                        </div>
-                    `;
-                });
-
-                listEl.innerHTML = html;
+            window.addEventListener('fikrh:friends_updated', () => {
+                renderHomeRoomsList();
+                renderAllRoomsGrid();
             });
         };
 
         // تشغيل اكتشاف الغرف عند تحميل الصفحة
         window.initHomeAllRoomsDiscovery();
 
-
 </script>
+
+    <!-- صفحة كل الغرف المتاحة -->
+    <div id="allRoomsFullPage" class="all-rooms-full-page" style="display:none;">
+        <section class="all-rooms-page-inner">
+            <div class="all-rooms-header">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:1.6rem;">🎮</span>
+                    <div>
+                        <div style="font-weight:900; font-size:1.15rem; color:var(--text-main);">كل الغرف المتاحة</div>
+                        <div style="font-size:0.75rem; color:#64748B; font-weight:700;">انضم لأي غرفة ظاهرة لك، أو صفّ حسب الأصدقاء واللعبة</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="all-rooms-tabs">
+                <button class="room-filter-tab active" onclick="filterAllRoomsModal('all', this)">🌟 الكل</button>
+                <button class="room-filter-tab" onclick="filterAllRoomsModal('friends', this)">👥 غرف الأصدقاء</button>
+                <button class="room-filter-tab" onclick="filterAllRoomsModal('scattergories', this)">🧠 إنسان حيوان</button>
+                <button class="room-filter-tab" onclick="filterAllRoomsModal('country', this)">🌍 خمن الدولة</button>
+                <button class="room-filter-tab" onclick="filterAllRoomsModal('draw', this)">🎨 ارسم وتخمن</button>
+                <button class="room-filter-tab" onclick="filterAllRoomsModal('gasos', this)">🕵️ مين الجاسوس</button>
+                <button class="room-filter-tab" onclick="filterAllRoomsModal('football', this)">⚽ كروية</button>
+                <button class="room-filter-tab" onclick="filterAllRoomsModal('klmat', this)">📝 كلمات</button>
+                <button class="room-filter-tab" onclick="filterAllRoomsModal('mthl', this)">📜 أمثال</button>
+                <button class="room-filter-tab" onclick="filterAllRoomsModal('3thr', this)">🎭 أعذار</button>
+                <button class="room-filter-tab" onclick="filterAllRoomsModal('timer', this)">⚡ سرعة</button>
+            </div>
+
+            <div class="all-rooms-search-bar">
+                <input type="text" id="allRoomsSearchInput" placeholder="ابحث باسم الغرفة، اسم الهوست، أو رمز الغرفة... 🔍" oninput="renderAllRoomsGrid()">
+            </div>
+
+            <div id="allRoomsGridContainer" class="all-rooms-grid"></div>
+        </section>
+    </div>
+
 </body>
 </html>

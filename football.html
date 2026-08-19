@@ -487,38 +487,39 @@
             }
         }
 
-        // قاعدة بيانات الأسئلة المصنفة حسب المستويات (سهل، وسط، صعب) مع إجابة واحدة دقيقة
+        // قاعدة بيانات الأسئلة المصنفة حسب المستويات (سهل، وسط، صعب) مع إجابة دقيقة
         const footballQuestionsDB = [
             // أسئلة سهلة
-            { q: "اذكر نادي إسباني يحظى بشعبية جارفة ويلقب بالملكي[cite: 11]", answer: "ريال مدريد", category: "leagues", diff: "easy" },
-            { q: "اذكر لاعباً أرجنتينيًا أسطورياً فاز بكأس العالم 2022[cite: 11]", answer: "ليونيل ميسي", category: "players", diff: "easy" },
-            { q: "اذكر دولة استضافت مونديال كأس العالم 2022[cite: 11]", answer: "قطر", category: "history", diff: "easy" },
-            { q: "اذكر نادي إنجليزي يلقب بالشياطين الحمر[cite: 11]", answer: "مانشستر يونايتد", category: "leagues", diff: "easy" },
-            { q: "اذكر لاعباً برتغالياً شهيراً يرتدي رقم 7 ويلقب بالدون[cite: 11]", answer: "كريستيانو رونالدو", category: "players", diff: "easy" },
-            { q: "اذكر دولة فازت بأكبر عدد من بطولات كأس العالم تاريخياً[cite: 11]", answer: "البرازيل", category: "history", diff: "easy" },
-            { q: "اذكر نادي سعودي عريق يلقب بالزعيم[cite: 11]", answer: "الهلال", category: "leagues", diff: "easy" },
-            { q: "اذكر ملعب نادي برشلونة الشهير[cite: 11]", answer: "كامب نو", category: "leagues", diff: "easy" },
+            { q: "ما هو النادي الإسباني الملقب بنادي القرن والملكي وأكثر من حقق دوري أبطال أوروبا؟", answer: "ريال مدريد", aliases: ["ريال", "الريال", "الملكي"], category: "leagues", diff: "easy" },
+            { q: "من هو اللاعب الأرجنتيني الأسطوري الملقب بالبرغوث وقاد بلاده للفوز بكأس العالم 2022؟", answer: "ليونيل ميسي", aliases: ["ميسي", "ليو ميسي"], category: "players", diff: "easy" },
+            { q: "ما هي الدولة العربية التي استضافت مونديال كأس العالم 2022؟", answer: "قطر", aliases: ["دولة قطر"], category: "history", diff: "easy" },
+            { q: "ما هو النادي الإنجليزي العريق الملقب بالشياطين الحمر وملعبه أولد ترافورد؟", answer: "مانشستر يونايتد", aliases: ["يونايتد", "مان يونايتد"], category: "leagues", diff: "easy" },
+            { q: "من هو اللاعب البرتغالي الشهير الملقب بالدون وصاحب الرقم 7 التاريخي؟", answer: "كريستيانو رونالدو", aliases: ["رونالدو", "كريستيانو", "الدون"], category: "players", diff: "easy" },
+            { q: "ما هي الدولة التي فازت بأكبر عدد من كؤوس العالم (5 مرات)؟", answer: "البرازيل", aliases: ["السامبا"], category: "history", diff: "easy" },
+            { q: "ما هو النادي السعودي الملقب بالزعيم والأكثر تتويجاً بدوري أبطال آسيا؟", answer: "الهلال", aliases: ["الهلال السعودي", "الزعيم"], category: "leagues", diff: "easy" },
+            { q: "ما هو النادي السعودي الملقب بالعالمي وفارس نجد؟", answer: "النصر", aliases: ["النصر السعودي", "العالمي"], category: "leagues", diff: "easy" },
+            { q: "ما هو ملعب نادي برشلونة الإسباني الشهير؟", answer: "كامب نو", aliases: ["سبوتيفاي كامب نو"], category: "leagues", diff: "easy" },
+            { q: "ما هو النادي المصري الملقب بنادي القرن الأفريقي؟", answer: "الأهلي", aliases: ["الاهلي المصري", "المارد الاحمر"], category: "leagues", diff: "easy" },
 
             // أسئلة متوسطة
-            { q: "اذكر خطة لعب شهيرة تتكون من ثلاثة أرقام (دفاع وسط هجوم)[cite: 11]", answer: "4-3-3", category: "tactics", diff: "medium" },
-            { q: "اذكر نادياً إيطالياً يلقب بالسيدة العجوز[cite: 11]", answer: "يوفنتوس", category: "leagues", diff: "medium" },
-            { q: "اذكر حارس مرمى ألماني أسطوري اشتهر بمهارته الكبيرة بالقدمين وخروج المرمى[cite: 11]", answer: "مانويل نوير", category: "players", diff: "medium" },
-            { q: "اذكر البلد الذي أقيمت فيه أول بطولة كأس عالم عام 1930[cite: 11]", answer: "أوروغواي", category: "history", diff: "medium" },
-            { q: "اذكر نادي فرنسي يعتبر الأقوى محلياً في العهد الحديث[cite: 11]", answer: "باريس سان جيرمان", category: "leagues", diff: "medium" },
-            { q: "اذكر لاعباً برازيلياً أسطورياً لقب بالجوهرة السوداء وفاز بثلاثة كؤوس عالم[cite: 11]", answer: "بيليه", category: "players", diff: "medium" },
-            { q: "اذكر نادياً ألمانيًا يسيطر على الدوري المحلي بوضوح تام[cite: 11]", answer: "بايرن ميونخ", category: "leagues", diff: "medium" },
-            { q: "اذكر المنتخب الذي فاز بكأس العالم 2014 في البرازيل[cite: 11]", answer: "ألمانيا", category: "history", diff: "medium" },
-            { q: "اذكر طريقة حسم مباريات كرة القدم في الأدوار الإقصائية عند تعادل الفريقين[cite: 11]", answer: "ركلات الترجيح", category: "tactics", diff: "medium" },
+            { q: "ما هو النادي الإيطالي الملقب بالسيدة العجوز (البيانكونيري)؟", answer: "يوفنتوس", aliases: ["اليوفي"], category: "leagues", diff: "medium" },
+            { q: "من هو الحارس الألماني الأسطوري لبايرن ميونخ المشهور بالخروج من المرمى؟", answer: "مانويل نوير", aliases: ["نوير"], category: "players", diff: "medium" },
+            { q: "ما هي الدولة التي أقيمت على أراضيها أول بطولة كأس عالم في التاريخ عام 1930؟", answer: "أوروغواي", aliases: ["الاوروجواي", "اورجواي"], category: "history", diff: "medium" },
+            { q: "من هو الهداف التاريخي لبطولات كأس العالم بإجمالي 16 هدفاً؟", answer: "ميروسلاف كلوزه", aliases: ["كلوزه"], category: "history", diff: "medium" },
+            { q: "من هو النجم الفرنسي الشاب هداف كأس العالم 2022 وصاحب الهاتريك في النهائي؟", answer: "كيليان مبابي", aliases: ["مبابي"], category: "players", diff: "medium" },
+            { q: "ما هو النادي الألماني الأكثر هيمنة وتتويجاً بالدوري الألماني؟", answer: "بايرن ميونخ", aliases: ["البايرن", "ميونخ"], category: "leagues", diff: "medium" },
+            { q: "من هو المنتخب الفائز بكأس العالم 2018 التي أقيمت في روسيا؟", answer: "فرنسا", aliases: ["الديوك"], category: "history", diff: "medium" },
+            { q: "من هو النجم المصري الملقب بفخر العرب ونجم ليفربول الإنجليزي؟", answer: "محمد صلاح", aliases: ["صلاح", "مو صلاح"], category: "players", diff: "medium" },
+            { q: "ما هي طريقة حسم المباريات الإقصائية عند انتهاء الوقتين الأصلي والإضافي بالتعادل؟", answer: "ركلات الترجيح", aliases: ["ضربات الجزاء", "بلنتيات"], category: "tactics", diff: "medium" },
 
             // أسئلة صعبة
-            { q: "اذكر الفريق الوحيد الذي فاز بـ 3 ألقاب متتالية في دوري أبطال أوروبا بنظامها الحديث[cite: 11]", answer: "ريال مدريد", category: "leagues", diff: "hard" },
-            { q: "اذكر المنتخب الذي فاز بأول نسختين متتاليتين لكأس العالم عامي 1934 و 1938[cite: 11]", answer: "إيطاليا", category: "history", diff: "hard" },
-            { q: "اذكر المدرب الذي ابتكر خطة (التيكي تاكا) وأحدث ثورة مع برشلونة وإسبانيا[cite: 11]", answer: "بيب جوارديولا", category: "tactics", diff: "hard" },
-            { q: "اذكر اللاعب الذي سجل أسرع هدف في تاريخ نهائيات كأس العالم (سجله بعد 11 ثانية عام 2002)[cite: 11]", answer: "هاكان شوكور", category: "history", diff: "hard" },
-            { q: "اذكر النادي الإنجليزي الوحيد الذي حقق الدوري بدون أي هزيمة طوال الموسم (لازم اللاحقة الذهبية)[cite: 11]", answer: "آرسنال", category: "leagues", diff: "hard" },
-            { q: "اذكر اللاعب الهاتريك الوحيد الذي سجل في نهائي كأس العالم للرجال (عام 1966)[cite: 11]", answer: "جيف هيرست", category: "history", diff: "hard" },
-            { q: "اذكر النادي اللاتيني الذي فاز ببطولة كوبا ليبرتادوريس أطول سلسلة تاريخية مرعبة[cite: 11]", answer: "إنديبندينتي", category: "history", diff: "hard" },
-            { q: "اذكر خطة الدفاع المرتد التكتيكية المعقدة التي عُرفت بـ (الكيناتشيو) الإيطالية[cite: 11]", answer: "كتيناتشيو", category: "tactics", diff: "hard" }
+            { q: "ما هو النادي الإنجليزي الوحيد الذي حقق لقب الدوري الذهبي دون أي خسارة (موسم 2003-2004)؟", answer: "آرسنال", aliases: ["ارسنال", "الجانرز"], category: "leagues", diff: "hard" },
+            { q: "من هو المدرب الإسباني الذي قاد برشلونة للسداسية التاريخية ومانشستر سيتي للثلاثية؟", answer: "بيب جوارديولا", aliases: ["جوارديولا", "بيب"], category: "tactics", diff: "hard" },
+            { q: "من هو صاحب أسرع هدف في تاريخ نهائيات كأس العالم (سجله بعد 11 ثانية ضد كوريا 2002)؟", answer: "هاكان شوكور", aliases: ["هاكان"], category: "history", diff: "hard" },
+            { q: "ما هو النادي الفائز بلقب دوري أبطال أوروبا 3 مرات متتالية (2016-2018)؟", answer: "ريال مدريد", aliases: ["ريال", "الريال"], category: "leagues", diff: "hard" },
+            { q: "ما هو النادي الإيطالي الذي فاز بـ 7 ألقاب دوري أبطال أوروبا ويلقب بالروسونيري؟", answer: "ميلان", aliases: ["اي سي ميلان", "الاي سي"], category: "leagues", diff: "hard" },
+            { q: "من هو النجم الكرواتي الفائز بجائزة الكرة الذهبية 2018 وصانع ألعاب ريال مدريد؟", answer: "لوكا مودريتش", aliases: ["مودريتش", "لوكا"], category: "players", diff: "hard" },
+            { q: "ما هو التكتيك الدفاعي الإيطالي الشهير بالانضباط الصارم والمترس الدفاعي؟", answer: "كاتيناتشيو", aliases: ["كتيناتشو", "الكاتيناتشيو"], category: "tactics", diff: "hard" }
         ];
 
         let isHost = false;
@@ -592,7 +593,8 @@
             currentRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
             document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
             const pAvatar = (window.currentUserAccount && window.currentUserAccount.avatar) ? window.currentUserAccount.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
-            if(window.broadcastRoom) window.broadcastRoom('football', currentRoomCode, 'معلومات كروية', playerName, pAvatar);
+            const roomOpts = window.getRoomCreateOptions ? window.getRoomCreateOptions() : { roomTitle: '', accessType: 'public' };
+            if(window.broadcastRoom) window.broadcastRoom('football', currentRoomCode, 'معلومات كروية', playerName, pAvatar, roomOpts.roomTitle, roomOpts.accessType);
 
             roomRef = db.ref('football_rooms/' + currentRoomCode);
             roomRef.set({
@@ -799,7 +801,6 @@
             if(!answerText) return showToast('اكتب إجابتك الكروية أولاً يا كابتن! ⚠️');
 
             document.getElementById('submitAnswerBtn').disabled = true;
-            showToast('صح عليك⚽');
 
             roomRef.get().then((snap) => {
                 let data = snap.val();
@@ -810,18 +811,23 @@
 
                 let qIndex = data.questionIndex;
                 let qObj = gameQuestions[qIndex];
+                if (!qObj) return;
+                
                 let expectedAnswer = qObj.answer;
-
                 let cleanPlayer = normalizeArabic(answerText);
                 let cleanExpected = normalizeArabic(expectedAnswer);
 
                 let isCorrect = false;
 
-                // التحقق التام أو الجزئي (مثل كتابة الاسم الأخير وحده مثل "نوير" بدلاً من "مانويل نوير")[cite: 11]
+                // التحقق التام أو الجزئي
                 if (cleanExpected === cleanPlayer || cleanExpected.includes(cleanPlayer) || cleanPlayer.includes(cleanExpected)) {
                     isCorrect = true;
+                } else if (qObj.aliases && qObj.aliases.some(a => {
+                    let cleanA = normalizeArabic(a);
+                    return cleanA === cleanPlayer || cleanPlayer.includes(cleanA) || cleanA.includes(cleanPlayer);
+                })) {
+                    isCorrect = true;
                 } else {
-                    // التحقق بالكلمات المفردة (لو كتب اسم واحد من الإجابة المركبة يكفي)[cite: 11]
                     let expectedWords = cleanExpected.split(/\s+/);
                     let playerWords = cleanPlayer.split(/\s+/);
                     for (let pw of playerWords) {
@@ -833,6 +839,7 @@
                 }
 
                 if(isCorrect) {
+                    showToast('كفووو! هدف صحيح ⚽🎯');
                     let currentScore = (data.players && data.players[playerName] && data.players[playerName].score) || 0;
                     let updates = {
                         state: 'results',
@@ -844,7 +851,7 @@
                     document.getElementById('playerAnswerInput').disabled = true;
                 } else {
                     document.getElementById('submitAnswerBtn').disabled = false;
-                    showToast('❌ تسلل أو إجابة خاطئة، جرب مجدداً!');
+                    showToast('❌ تسلل أو إجابة غير دقيقة، حاول ثانية!');
                 }
             });
         }

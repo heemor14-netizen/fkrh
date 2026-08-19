@@ -976,3 +976,348 @@ header {
         font-size: 0.82rem !important;
     }
 }
+
+/* ====================================================
+   نظام الأصدقاء وخصائص الغرف المتقدمة (Friends & Rooms CSS)
+   ==================================================== */
+.btn-auth-friends {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: 1.5px solid rgba(255, 94, 54, 0.3) !important;
+    color: var(--auth-dark) !important;
+    padding: 0.45rem 1rem !important;
+    border-radius: 50px !important;
+    font-size: 0.84rem !important;
+    font-weight: 800 !important;
+    font-family: inherit !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    transition: all 0.25s ease !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03) !important;
+}
+
+.btn-auth-friends:hover {
+    background: #FFF5F1 !important;
+    border-color: var(--auth-orange-main) !important;
+    color: var(--auth-orange-main) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 14px var(--auth-orange-glow) !important;
+}
+
+/* خيارات نوع الغرفة (عامة / أصدقاء فقط) */
+.room-privacy-group {
+    margin-bottom: 1.1rem;
+}
+.room-privacy-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-top: 0.35rem;
+}
+.privacy-card-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #F8FAFC;
+    border: 2px solid #E2E8F0;
+    padding: 0.65rem 0.8rem;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 800;
+    font-size: 0.86rem;
+    transition: all 0.2s ease;
+}
+.privacy-card-label input[type="radio"] {
+    accent-color: var(--auth-orange-main);
+    width: 17px;
+    height: 17px;
+}
+.privacy-card-label:hover {
+    border-color: var(--auth-orange-main);
+    background: #FFF5F1;
+}
+.privacy-card-label:has(input:checked) {
+    border-color: var(--auth-orange-main);
+    background: #FFF0EB;
+    box-shadow: 0 0 0 3px rgba(255, 94, 54, 0.12);
+}
+
+.friends-modal-card {
+    max-width: 440px !important;
+    text-align: right !important;
+}
+.friends-modal-card h2,
+.friends-modal-card .auth-subtitle {
+    text-align: center;
+}
+.my-friend-share-box {
+    background: #FFF5F1;
+    border: 1.5px dashed var(--auth-orange-main);
+    border-radius: 14px;
+    padding: 0.7rem 0.9rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+.my-friend-share-label {
+    font-size: 0.75rem;
+    color: #64748B;
+    font-weight: 700;
+}
+.my-friend-share-name {
+    font-size: 1rem;
+    font-weight: 900;
+    color: var(--auth-orange-main);
+}
+.friends-list-heading {
+    font-weight: 800;
+    font-size: 0.86rem;
+    color: #1E293B;
+    margin-top: 0.4rem;
+    text-align: right;
+}
+
+.friend-room-highlight {
+    border-color: #60A5FA !important;
+    background: #F8FBFF !important;
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.12) !important;
+}
+
+.btn-view-more-rooms {
+    width: 100%;
+    border: 1.5px dashed rgba(255, 94, 54, 0.4);
+    background: #FFF8F5;
+    color: var(--auth-orange-main);
+    border-radius: 14px;
+    padding: 0.7rem 1rem;
+    font-weight: 800;
+    font-family: inherit;
+    cursor: pointer;
+    font-size: 0.88rem;
+}
+.btn-view-more-rooms:hover {
+    background: #FFF0EB;
+    border-style: solid;
+}
+
+.all-rooms-full-page {
+    display: none;
+    min-height: calc(100vh - 80px);
+}
+.all-rooms-page-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0.4rem 4% 3rem;
+}
+.all-rooms-page-inner .all-rooms-header {
+    background: transparent;
+    border-bottom: none;
+    padding: 0.4rem 0 0.8rem;
+}
+.all-rooms-page-inner .all-rooms-tabs {
+    background: #FFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 0.7rem 0.8rem;
+}
+.all-rooms-page-inner .all-rooms-search-bar {
+    padding: 0.9rem 0;
+    border-bottom: none;
+}
+.all-rooms-page-inner .all-rooms-grid {
+    max-height: none;
+    padding: 0;
+    grid-template-columns: 1fr 1fr;
+}
+
+/* بطاقة الصديق في قائمة الأصدقاء */
+.friends-list-container {
+    max-height: 280px;
+    overflow-y: auto;
+    padding-right: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+}
+.friend-item-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #F8FAFC;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 14px;
+    padding: 0.6rem 0.8rem;
+    transition: all 0.2s ease;
+}
+.friend-item-card:hover {
+    background: #FFF;
+    border-color: var(--auth-orange-main);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 94, 54, 0.08);
+}
+.friend-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.friend-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--auth-orange-main);
+}
+.friend-name {
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: var(--auth-dark);
+}
+.friend-status {
+    font-size: 0.72rem;
+    color: #64748B;
+    font-weight: 700;
+}
+.btn-friend-action {
+    background: #FEE2E2;
+    color: #DC2626;
+    border: none;
+    border-radius: 8px;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.btn-friend-action:hover {
+    background: #FCA5A5;
+    color: #991B1B;
+}
+
+/* شارات نوع الغرفة */
+.room-type-badge {
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+.room-type-public {
+    background: #ECFDF5;
+    color: #059669;
+    border: 1px solid #A7F3D0;
+}
+.room-type-friends {
+    background: #EFF6FF;
+    color: #2563EB;
+    border: 1px solid #BFDBFE;
+}
+
+/* مودال كل الغرف المتاحة (Full-Screen Luxury Modal) */
+.all-rooms-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+.all-rooms-modal-content {
+    background: #FFFFFF;
+    border-radius: 24px;
+    max-width: 720px;
+    width: 100%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    overflow: hidden;
+    animation: modalPopIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes modalPopIn {
+    0% { transform: scale(0.92); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+.all-rooms-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 1.4rem;
+    border-bottom: 1px solid #E2E8F0;
+    background: #FAFAFA;
+}
+.all-rooms-tabs {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.8rem 1.4rem;
+    background: #F1F5F9;
+    border-bottom: 1px solid #E2E8F0;
+    overflow-x: auto;
+}
+.room-filter-tab {
+    background: #FFFFFF;
+    border: 1.5px solid #E2E8F0;
+    padding: 0.4rem 0.9rem;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #475569;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+.room-filter-tab:hover {
+    border-color: var(--auth-orange-main);
+    color: var(--auth-orange-main);
+}
+.room-filter-tab.active {
+    background: var(--auth-orange-grad);
+    color: #FFF;
+    border-color: transparent;
+    box-shadow: 0 4px 10px var(--auth-orange-glow);
+}
+.all-rooms-search-bar {
+    padding: 0.8rem 1.4rem;
+    border-bottom: 1px solid #E2E8F0;
+}
+.all-rooms-search-bar input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    border: 2px solid #E2E8F0;
+    font-size: 0.9rem;
+    font-weight: 700;
+    outline: none;
+    font-family: inherit;
+}
+.all-rooms-search-bar input:focus {
+    border-color: var(--auth-orange-main);
+    box-shadow: 0 0 0 3px rgba(255, 94, 54, 0.15);
+}
+.all-rooms-grid {
+    padding: 1.2rem 1.4rem;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    max-height: 50vh;
+}
+@media (max-width: 650px) {
+    .all-rooms-grid {
+        grid-template-columns: 1fr;
+    }
+}
+

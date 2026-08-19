@@ -487,33 +487,75 @@
         }
 
         const wordsDB = [
-            { word: "برج إيفل", category: "places" },
+            // أماكن ومواقع شهيرة وسياحية
             { word: "المسجد الحرام", category: "places" },
+            { word: "المسجد النبوي", category: "places" },
+            { word: "برج إيفل", category: "places" },
+            { word: "برج خليفة", category: "places" },
+            { word: "برج المملكة", category: "places" },
             { word: "مطار الملك خالد", category: "places" },
-            { word: "متحف اللوفر", category: "places" },
-            { word: "الأهرامات", category: "places" },
+            { word: "بوليفارد الرياض", category: "places" },
             { word: "سوق الديرة", category: "places" },
+            { word: "العلا ومدائن صالح", category: "places" },
+            { word: "شاطئ نصف القمر", category: "places" },
+            { word: "الأهرامات", category: "places" },
+            { word: "متحف اللوفر", category: "places" },
+            { word: "مدينة الملاهي", category: "places" },
+            { word: "محطة القطار", category: "places" },
+            { word: "سفينة كروز سياحية", category: "places" },
+            { word: "مستشفى الطوارئ", category: "places" },
+            { word: "مركز الشرطة", category: "places" },
+            { word: "قاعة السينما", category: "places" },
+            { word: "فندق 5 نجوم", category: "places" },
+            { word: "مخيم في الثمامة", category: "places" },
+            { word: "ملعب كرة قدم", category: "places" },
+            { word: "طائرة في الجو", category: "places" },
+            { word: "غواصة في المحيط", category: "places" },
 
-            { word: "طبيب", category: "jobs" },
-            { word: "مهندس", category: "jobs" },
-            { word: "طيار", category: "jobs" },
-            { word: "معلم", category: "jobs" },
-            { word: "شرطي", category: "jobs" },
-            { word: "رسام", category: "jobs" },
+            // وظائف ومهن
+            { word: "طبيب جراح", category: "jobs" },
+            { word: "مهندس معماري", category: "jobs" },
+            { word: "كابتن طيار", category: "jobs" },
+            { word: "معلم مدرسة", category: "jobs" },
+            { word: "رجل إطفاء", category: "jobs" },
+            { word: "شرطي مرور", category: "jobs" },
+            { word: "طاهٍ في مطعم فاخر", category: "jobs" },
+            { word: "رائد فضاء", category: "jobs" },
+            { word: "مبرمج ذكاء اصطناعي", category: "jobs" },
+            { word: "حارس مرمى", category: "jobs" },
+            { word: "محامي دفاع", category: "jobs" },
+            { word: "صحفي تحقيقات", category: "jobs" },
+            { word: "غواص أعماق", category: "jobs" },
+            { word: "مقدم برامج تلفزيونية", category: "jobs" },
 
-            { word: "كبسة", category: "foods" },
-            { word: "منسف", category: "foods" },
-            { word: "برجر", category: "foods" },
-            { word: "شاورما", category: "foods" },
-            { word: "بيتزا", category: "foods" },
-            { word: "قهوة عربية", category: "foods" },
+            // أطعمة ومشروبات
+            { word: "كبسة حاشي", category: "foods" },
+            { word: "منسف أردني", category: "foods" },
+            { word: "برجر دبل تشيز", category: "foods" },
+            { word: "شاورما صاروخ", category: "foods" },
+            { word: "بيتزا إيطالية", category: "foods" },
+            { word: "قهوة سعودية مع تمر", category: "foods" },
+            { word: "سوشي ياباني", category: "foods" },
+            { word: "مندي لحم", category: "foods" },
+            { word: "كنافة نابلسية", category: "foods" },
+            { word: "وافل وشوكولاتة", category: "foods" },
+            { word: "آيس كريم فراولة", category: "foods" },
+            { word: "مطبق مالح", category: "foods" },
+            { word: "فلافل حارة", category: "foods" },
 
-            { word: "أسد", category: "animals" },
-            { word: "صقر", category: "animals" },
-            { word: "فهد", category: "animals" },
-            { word: "جمل", category: "animals" },
-            { word: "دولفين", category: "animals" },
-            { word: "بطريق", category: "animals" }
+            // حيوانات وكائنات
+            { word: "أسد الغابة", category: "animals" },
+            { word: "صقر جارح", category: "animals" },
+            { word: "فهد صياد", category: "animals" },
+            { word: "جمل أصيل", category: "animals" },
+            { word: "حوت أزرق", category: "animals" },
+            { word: "دولفين ذكي", category: "animals" },
+            { word: "بطريق قطبي", category: "animals" },
+            { word: "دب باندا", category: "animals" },
+            { word: "ذئب بري", category: "animals" },
+            { word: "حصان عربي أصيل", category: "animals" },
+            { word: "كنغر أسترالي", category: "animals" },
+            { word: "طاووس ملون", category: "animals" }
         ];
 
         let isHost = false;
@@ -575,7 +617,8 @@
             currentRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
             document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
             const pAvatar = (window.currentUserAccount && window.currentUserAccount.avatar) ? window.currentUserAccount.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
-            if(window.broadcastRoom) window.broadcastRoom('gasos', currentRoomCode, 'مين الجاسوس', playerName, pAvatar);
+            const roomOpts = window.getRoomCreateOptions ? window.getRoomCreateOptions() : { roomTitle: '', accessType: 'public' };
+            if(window.broadcastRoom) window.broadcastRoom('gasos', currentRoomCode, 'مين الجاسوس', playerName, pAvatar, roomOpts.roomTitle, roomOpts.accessType);
 
             roomRef = db.ref('spy_rooms/' + currentRoomCode);
             roomRef.set({

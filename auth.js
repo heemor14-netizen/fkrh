@@ -134,9 +134,12 @@
         }
         if (!area) return;
 
+        const friendsBtn = `<button type="button" class="btn-auth-friends" onclick="window.openFriendsModal()" title="قائمة أصدقائي">👥 أصدقائي</button>`;
+
         if (window.currentUserAccount && window.currentUserAccount.name) {
             const avatarUrl = window.currentUserAccount.avatar || DEFAULT_AVATAR;
             area.innerHTML = `
+                ${friendsBtn}
                 <div class="user-profile-badge" onclick="window.openAuthModal('profile')" title="حسابي الشخصي">
                     <img src="${avatarUrl}" class="user-avatar-sm" alt="صورة الحساب" onerror="this.src='${DEFAULT_AVATAR}'">
                     <span class="user-name-sm">${window.currentUserAccount.name}</span>
@@ -144,6 +147,7 @@
             `;
         } else {
             area.innerHTML = `
+                ${friendsBtn}
                 <button type="button" class="btn-auth-nav btn-auth-login" onclick="window.openAuthModal('login')">دخول</button>
                 <button type="button" class="btn-auth-nav btn-auth-register" onclick="window.openAuthModal('register')">حساب جديد</button>
             `;
@@ -330,6 +334,7 @@
                 window.currentUserAccount = { uid: authUid, name: uInput, avatar: DEFAULT_AVATAR };
                 saveAccountToStorage(window.currentUserAccount);
                 updateHeaderAuthUI();
+                loadCloudFriends();
                 window.closeAuthModal();
                 showToast('أهلاً بك! 🎉', `تم إنشاء حسابك بنجاح يا ${uInput}!`);
 
@@ -388,6 +393,7 @@
                     window.currentUserAccount = loggedInAccount;
                     saveAccountToStorage(window.currentUserAccount);
                     updateHeaderAuthUI();
+                    loadCloudFriends();
                     window.closeAuthModal();
                     showToast('أهلاً بعودتك! 🔥', `تم تسجيل دخولك بنجاح يا ${loggedInAccount.name}!`);
                 } else {
@@ -668,28 +674,333 @@
                 const avatar = (profile && profile.avatar) || user.photoURL || DEFAULT_AVATAR;
                 window.currentUserAccount = { uid: user.uid, name: name, avatar: avatar };
                 saveAccountToStorage(window.currentUserAccount);
+                loadCloudFriends();
             }
             updateHeaderAuthUI();
         });
     }
 
+    // ==================== نظام الأصدقاء الموحد (Friends System) ====================
+    function getStoredFriends() {
+        try {
+            const raw = localStorage.getItem('fikrh_friends_list');
+            return raw ? JSON.parse(raw) : [];
+        } catch(e) {
+            return [];
+        }
+    }
+
+    function saveStoredFriends(list) {
+        try {
+            localStorage.setItem('fikrh_friends_list', JSON.stringify(list || []));
+            window.dispatchEvent(new CustomEvent('fikrh:friends_updated', { detail: list }));
+        } catch(e) {}
+    }
+
+    window.getFriendsList = function() {
+        return getStoredFriends();
+    };
+
+    async function loadCloudFriends() {
+        const { db } = getFirebase();
+        const uid = window.currentUserAccount && window.currentUserAccount.uid;
+        if (!db || !uid) return;
+        try {
+            const snap = await db.ref('user_friends/' + uid).once('value');
+            if (!snap.exists()) return;
+            const remote = snap.val() || {};
+            const remoteList = Object.keys(remote).map(k => remote[k]).filter(f => f && f.name);
+            const local = getStoredFriends();
+            const merged = [...local];
+            remoteList.forEach(rf => {
+                const exists = merged.some(f =>
+                    ((f.name || '').trim().toLowerCase() === (rf.name || '').trim().toLowerCase()) ||
+                    (f.uid && rf.uid && f.uid === rf.uid)
+                );
+                if (!exists) merged.push(rf);
+            });
+            saveStoredFriends(merged);
+        } catch (e) {}
+    }
+
+    window.isFriend = function(hostUid, hostName) {
+        if (!hostName && !hostUid) return false;
+        const list = getStoredFriends();
+        const cleanName = (hostName || '').trim().toLowerCase();
+        return list.some(f => {
+            const fName = (f.name || '').trim().toLowerCase();
+            return (fName && fName === cleanName) || (hostUid && f.uid && f.uid === hostUid);
+        });
+    };
+
+    function isMyOwnRoom(room) {
+        if (!room) return false;
+        const me = window.currentUserAccount || {};
+        const myName = (me.name || '').trim().toLowerCase();
+        const hostName = (room.hostName || '').trim().toLowerCase();
+        if (me.uid && room.hostUid && String(me.uid) === String(room.hostUid)) return true;
+        return !!(myName && hostName && myName === hostName);
+    }
+
+    window.canSeeListedRoom = function(room) {
+        if (!room) return false;
+        if (room.accessType !== 'friends') return true;
+        return isMyOwnRoom(room) || window.isFriend(room.hostUid, room.hostName);
+    };
+
+    window.canJoinListedRoom = function(room) {
+        return window.canSeeListedRoom(room);
+    };
+
+    window.getRoomCreateOptions = function() {
+        const extras = Array.from(document.querySelectorAll('.room-create-extras')).find(box => {
+            return !!(box.offsetWidth || box.offsetHeight || box.getClientRects().length);
+        }) || document.querySelector('.room-create-extras');
+
+        if (!extras) return { roomTitle: '', accessType: 'public' };
+        const title = extras.querySelector('.custom-room-title-input, #customRoomTitleInput');
+        const radio = extras.querySelector('input[type="radio"]:checked');
+        return {
+            roomTitle: title ? (title.value || '').trim() : '',
+            accessType: (radio && radio.value === 'friends') ? 'friends' : 'public'
+        };
+    };
+
+    function injectRoomCreateFields() {
+        const buttons = Array.from(document.querySelectorAll('button'));
+        buttons.forEach((btn, idx) => {
+            const label = (btn.textContent || '').replace(/\s+/g, ' ').trim();
+            if (!label.includes('إنشاء غرفة')) return;
+            const hostCard = btn.closest('.glass-card') || btn.parentElement;
+            if (hostCard && hostCard.querySelector('.room-create-extras')) return;
+
+            const nameGroup = 'roomAccessType_' + idx;
+            const box = document.createElement('div');
+            box.className = 'room-create-extras';
+            box.innerHTML = `
+                <div class="form-group">
+                    <label>اسم الغرفة (اختياري 🏷️)</label>
+                    <input type="text" class="custom-room-title-input" placeholder="مثال: غرفة الأساطير 🔥" maxlength="25">
+                </div>
+                <div class="room-privacy-group">
+                    <label>نوع الغرفة والدخول:</label>
+                    <div class="room-privacy-grid">
+                        <label class="privacy-card-label">
+                            <input type="radio" name="${nameGroup}" value="public" checked> 🌐 للجميع
+                        </label>
+                        <label class="privacy-card-label">
+                            <input type="radio" name="${nameGroup}" value="friends"> 👥 للأصدقاء فقط
+                        </label>
+                    </div>
+                </div>
+            `;
+            btn.parentNode.insertBefore(box, btn);
+        });
+    }
+
+    window.addFriend = async function(nameInput) {
+        const rawName = (nameInput || '').trim();
+        if (!rawName) return showToast('تنبيه ⚠️', 'أدخل اسم المستخدم لإضافته كصديق!');
+
+        const myName = (window.currentUserAccount && window.currentUserAccount.name) ? window.currentUserAccount.name.trim().toLowerCase() : '';
+        if (myName && rawName.toLowerCase() === myName) {
+            return showToast('تنبيه ⚠️', 'لا يمكنك إضافة نفسك يا بطل!');
+        }
+
+        const list = getStoredFriends();
+        if (list.some(f => (f.name || '').trim().toLowerCase() === rawName.toLowerCase())) {
+            return showToast('تنبيه ⚠️', 'هذا الصديق مضاف مسبقاً في قائمتك!');
+        }
+
+        // جلب صورة الصديق من قاعدة البيانات إن وجدت
+        let avatar = DEFAULT_AVATAR;
+        let uid = usernameToSafeKey(rawName);
+        const { db } = getFirebase();
+        if (db) {
+            try {
+                const snap = await db.ref('app_users/' + uid).once('value');
+                if (snap.exists() && snap.val().avatar) {
+                    avatar = snap.val().avatar;
+                }
+            } catch(e) {}
+        }
+
+        const newFriend = {
+            name: rawName,
+            avatar: avatar,
+            uid: uid,
+            addedAt: Date.now()
+        };
+
+        list.push(newFriend);
+        saveStoredFriends(list);
+
+        // حفظ في السحابة إن كان مسجلاً
+        if (db && window.currentUserAccount && window.currentUserAccount.uid) {
+            db.ref('user_friends/' + window.currentUserAccount.uid + '/' + uid).set(newFriend).catch(()=>{});
+        }
+
+        renderFriendsModalList();
+        showToast('تمت الإضافة! 👥', `تمت إضافة (${rawName}) إلى قائمة أصدقائك.`);
+    };
+
+    window.removeFriend = function(friendName) {
+        let list = getStoredFriends();
+        const targetClean = (friendName || '').trim().toLowerCase();
+        const filtered = list.filter(f => (f.name || '').trim().toLowerCase() !== targetClean);
+        saveStoredFriends(filtered);
+
+        const { db } = getFirebase();
+        if (db && window.currentUserAccount && window.currentUserAccount.uid) {
+            const uid = usernameToSafeKey(friendName);
+            db.ref('user_friends/' + window.currentUserAccount.uid + '/' + uid).remove().catch(()=>{});
+        }
+
+        renderFriendsModalList();
+        showToast('تم الحذف 🗑️', `تم حذف (${friendName}) من أصدقائك.`);
+    };
+
+    // إنشاء وبناء نافذة الأصدقاء التفاعلية
+    function ensureFriendsModalExists() {
+        let modal = document.getElementById('fikrhFriendsModal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'fikrhFriendsModal';
+            modal.className = 'auth-modal-overlay';
+            modal.style.display = 'none';
+            modal.innerHTML = `
+                <div class="auth-card-box friends-modal-card">
+                    <button class="auth-modal-close" onclick="window.closeFriendsModal()" title="إغلاق">✕</button>
+                    <div class="auth-icon-badge">👥</div>
+                    <h2>قائمة أصدقائي</h2>
+                    <p class="auth-subtitle">أضف خويك باسم حسابه عشان تلاقي غرفه فوراً في الرئيسية</p>
+
+                    <div class="my-friend-share-box">
+                        <div>
+                            <div class="my-friend-share-label">اسمك المسجل لمشاركته:</div>
+                            <div class="my-friend-share-name" id="myFriendCodeDisplay">...</div>
+                        </div>
+                        <button type="button" class="btn-compact" onclick="copyMyFriendName()">نسخ 📋</button>
+                    </div>
+
+                    <div class="auth-field" style="text-align: right;">
+                        <label class="auth-label" style="display:block; font-weight:800; font-size:0.82rem; margin-bottom:6px;">إضافة صديق جديد ➕</label>
+                        <div style="display: flex; gap: 6px;">
+                            <input type="text" id="addFriendInput" class="auth-input" placeholder="اكتب اسم صديقك هنا..." maxlength="20" style="margin: 0;" onkeydown="if(event.key==='Enter') submitAddFriendAction()">
+                            <button type="button" class="auth-btn-action" onclick="submitAddFriendAction()" style="width:auto; padding: 0.55rem 1rem; white-space: nowrap; border-radius: 14px; font-size: 0.85rem;">إضافة</button>
+                        </div>
+                    </div>
+
+                    <div class="friends-list-heading">أصدقاؤك المضافون (<span id="friendsCountBadge">0</span>)</div>
+                    <div id="friendsListDisplayContainer" class="friends-list-container"></div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) window.closeFriendsModal();
+            });
+        }
+        return modal;
+    }
+
+    function renderFriendsModalList() {
+        const modal = ensureFriendsModalExists();
+        const list = getStoredFriends();
+        const container = document.getElementById('friendsListDisplayContainer');
+        const countBadge = document.getElementById('friendsCountBadge');
+        const myDisplay = document.getElementById('myFriendCodeDisplay');
+
+        if (countBadge) countBadge.innerText = list.length;
+        if (myDisplay) {
+            myDisplay.innerText = (window.currentUserAccount && window.currentUserAccount.name) ? window.currentUserAccount.name : 'ضيف';
+        }
+
+        if (!container) return;
+
+        if (list.length === 0) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 1.5rem 0.5rem; color: #94A3B8; font-weight: 700; font-size: 0.85rem;">
+                    لم تضف أي صديق بعد! 🤝<br>اكتب اسم صديقك في الأعلى لإضافته فوراً وتحديه في الغرف.
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = list.map(f => `
+            <div class="friend-item-card">
+                <div class="friend-info">
+                    <img src="${f.avatar || DEFAULT_AVATAR}" class="friend-avatar" alt="${f.name}" onerror="this.src='${DEFAULT_AVATAR}'">
+                    <div>
+                        <div class="friend-name">${f.name}</div>
+                        <div class="friend-status">صديق في فِكْرَة ⚡</div>
+                    </div>
+                </div>
+                <button type="button" class="btn-friend-action" onclick="window.removeFriend(decodeURIComponent('${encodeURIComponent(f.name || '')}'))" title="حذف من الأصدقاء">حذف ✕</button>
+            </div>
+        `).join('');
+    }
+
+    window.submitAddFriendAction = function() {
+        const input = document.getElementById('addFriendInput');
+        if (!input) return;
+        const val = input.value.trim();
+        if (val) {
+            window.addFriend(val);
+            input.value = '';
+        }
+    };
+
+    window.copyMyFriendName = function() {
+        const name = (window.currentUserAccount && window.currentUserAccount.name) ? window.currentUserAccount.name : 'ضيف';
+        navigator.clipboard.writeText(name);
+        showToast('تم النسخ! 📋', 'تم نسخ اسمك بنجاح.');
+    };
+
+    window.openFriendsModal = function() {
+        const modal = ensureFriendsModalExists();
+        renderFriendsModalList();
+        modal.style.display = 'flex';
+    };
+
+    window.closeFriendsModal = function() {
+        const modal = document.getElementById('fikrhFriendsModal');
+        if (modal) modal.style.display = 'none';
+    };
+
+
     // ==================== نظام بث وإدارة الغرف الموحد لجميع الألعاب ====================
-    window.broadcastRoom = function(gameType, code, gameName, hostName, hostAvatar) {
+    window.broadcastRoom = function(gameType, code, gameName, hostName, hostAvatar, roomTitle, accessType) {
         const { db } = getFirebase();
         if (!db || !code) return;
         const roomKey = gameType + '_' + code;
-        const pAvatar = hostAvatar || (window.currentUserAccount && window.currentUserAccount.avatar) ? window.currentUserAccount.avatar : DEFAULT_AVATAR;
-        const pName = hostName || (window.currentUserAccount && window.currentUserAccount.name) ? window.currentUserAccount.name : 'الهوست';
-        
+        const pAvatar = hostAvatar || ((window.currentUserAccount && window.currentUserAccount.avatar) ? window.currentUserAccount.avatar : DEFAULT_AVATAR);
+        const pName = hostName || ((window.currentUserAccount && window.currentUserAccount.name) ? window.currentUserAccount.name : 'الهوست');
+        const hostUid = (window.currentUserAccount && window.currentUserAccount.uid) ? window.currentUserAccount.uid : usernameToSafeKey(pName);
+        const payload = {
+            gameType: gameType,
+            code: String(code),
+            gameName: gameName || gameType,
+            hostName: pName,
+            hostAvatar: pAvatar,
+            hostUid: hostUid,
+            createdAt: (typeof firebase !== 'undefined' && firebase.database && firebase.database.ServerValue) ? firebase.database.ServerValue.TIMESTAMP : Date.now()
+        };
+
+        // الهوست يمرر العنوان ونوع الدخول (7 وسائط). الضيف يحدّث الحضور فقط بدون تغيير الخصوصية.
+        if (arguments.length >= 7) {
+            const opts = (typeof window.getRoomCreateOptions === 'function') ? window.getRoomCreateOptions() : { roomTitle: '', accessType: 'public' };
+            const titleVal = (roomTitle && String(roomTitle).trim()) ? String(roomTitle).trim() : (opts.roomTitle || gameName || gameType);
+            payload.roomTitle = titleVal;
+            if (accessType === 'friends' || accessType === 'public') {
+                payload.accessType = accessType;
+            } else {
+                payload.accessType = opts.accessType === 'friends' ? 'friends' : 'public';
+            }
+        }
+
         try {
-            db.ref('activeRooms/' + roomKey).set({
-                gameType: gameType,
-                code: String(code),
-                gameName: gameName || gameType,
-                hostName: pName,
-                hostAvatar: pAvatar,
-                createdAt: (typeof firebase !== 'undefined' && firebase.database && firebase.database.ServerValue) ? firebase.database.ServerValue.TIMESTAMP : Date.now()
-            }).catch(() => {});
+            db.ref('activeRooms/' + roomKey).update(payload).catch(() => {});
         } catch(e) {}
     };
 
@@ -706,13 +1017,17 @@
         // متوافق مع الاستدعاءات القديمة في صفحات الألعاب
     };
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-            updateHeaderAuthUI();
-            setupAuthListener();
-        });
-    } else {
+    function bootAuthUi() {
         updateHeaderAuthUI();
         setupAuthListener();
+        injectRoomCreateFields();
+        loadCloudFriends();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', bootAuthUi);
+    } else {
+        bootAuthUi();
     }
 })();
+

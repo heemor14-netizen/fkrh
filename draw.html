@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-   <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="manifest.json">
     <meta name="application-name" content="فكرة">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="فكرة">
     <link rel="apple-touch-icon" href="./images/app-icon.jpeg">
@@ -11,7 +11,7 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>فِكْرَة 💡 | ارسم وخمن</title>
+    <title>فِكْرَة 💡 | ارسم وتخمّن</title>
     <!-- خط تجوال -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="auth.css">
@@ -67,24 +67,24 @@
             100% { transform: translate(30px, 50px) scale(1.1); }
         }
 
-        /* الهيدر النظيف بدون حساب */
+        /* الهيدر الموحد */
         header {
-            background: rgba(255, 255, 255, 0.65);
+            background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             position: sticky;
             top: 0;
             z-index: 100;
             border-bottom: 1px solid rgba(255, 255, 255, 0.8);
-            padding: 1rem 5%;
+            padding: 0.9rem 5%;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
         }
 
         .logo {
-            font-size: 1.7rem;
+            font-size: 1.6rem;
             font-weight: 900;
             background: var(--orange-gradient);
             -webkit-background-clip: text;
@@ -123,33 +123,34 @@
         .btn-back:hover { background: #FFF; border-color: var(--primary-orange); color: var(--primary-orange); }
 
         .btn {
-            padding: 0.55rem 1.2rem; border-radius: 50px; font-weight: 700; cursor: pointer;
-            border: none; transition: all 0.3s; text-decoration: none; font-size: 0.9rem;
+            padding: 0.6rem 1.3rem; border-radius: 50px; font-weight: 800; cursor: pointer;
+            border: none; transition: all 0.3s; text-decoration: none; font-size: 0.95rem;
             display: inline-flex; justify-content: center; align-items: center; gap: 0.4rem;
         }
         .btn-primary { background: var(--orange-gradient); color: white; box-shadow: 0 8px 20px var(--orange-glow); }
-        .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 25px rgba(255, 94, 54, 0.45); }
+        .btn-primary:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 12px 25px rgba(255, 94, 54, 0.45); }
         .btn-secondary { background: #475569; color: white; }
         .btn-danger { background: var(--red-danger); color: white; }
         .btn:disabled { background: #CBD5E1 !important; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.9); border-radius: 20px; padding: 1.4rem 1rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #E2E8F0; margin-bottom: 1rem;
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.92); border-radius: 22px; padding: 1.5rem 1.2rem;
+            box-shadow: 0 12px 35px rgba(255, 94, 54, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.8);
+            border: 1px solid #E2E8F0; margin-bottom: 1rem;
+            backdrop-filter: blur(14px);
         }
 
-        .title { text-align: center; font-weight: 900; font-size: 1.7rem; color: var(--primary-orange); margin-bottom: 0.3rem; }
-        .subtitle { text-align: center; color: #666; margin-bottom: 1.2rem; font-size: 0.88rem; font-weight: 700;}
-        .form-group { margin-bottom: 1rem; }
-        label { display: block; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-main); font-size: 0.9rem; }
+        .title { text-align: center; font-weight: 900; font-size: 1.8rem; color: var(--primary-orange); margin-bottom: 0.2rem; }
+        .subtitle { text-align: center; color: #64748B; margin-bottom: 1.2rem; font-size: 0.9rem; font-weight: 700;}
+        .form-group { margin-bottom: 1.1rem; }
+        label { display: block; font-weight: 800; margin-bottom: 0.45rem; color: var(--text-main); font-size: 0.92rem; }
+        
         input[type="text"], select {
-            width: 100%; padding: 0.8rem 1rem; border-radius: 12px; border: 2px solid #E2E8F0;
+            width: 100%; padding: 0.85rem 1.1rem; border-radius: 14px; border: 2px solid #E2E8F0;
             font-size: 0.95rem; outline: none; transition: all 0.3s ease; background: #FAFAFA; font-weight: 700;
         }
-        input[type="text"]:focus, select:focus { border-color: var(--primary-orange); background: #FFF; box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.15); }
+        input[type="text"]:focus, select:focus { border-color: var(--primary-orange); background: #FFF; box-shadow: 0 0 0 4px rgba(255, 94, 54, 0.15); }
         
-        /* تنسيق خانات اختيار التصنيفات */
         .categories-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -162,11 +163,11 @@
             gap: 0.5rem;
             background: #F8FAFC;
             border: 2px solid #E2E8F0;
-            padding: 0.6rem 0.8rem;
+            padding: 0.65rem 0.8rem;
             border-radius: 12px;
             cursor: pointer;
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.86rem;
             transition: all 0.2s ease;
         }
         .category-checkbox-label input[type="checkbox"] {
@@ -180,19 +181,22 @@
             background: #FFF3EF;
         }
 
-        .header-status { display: flex; justify-content: space-between; align-items: center; background: #F8FAFC; padding: 0.8rem; border-radius: 14px; margin-bottom: 1.2rem; border: 1px solid #E2E8F0; }
-        .timer-display { font-size: 1.5rem; font-weight: 900; color: var(--text-main); }
-        .player-chip { display: flex; justify-content: space-between; align-items: center; background: #F1F5F9; padding: 0.5rem 0.8rem; border-radius: 10px; margin-bottom: 0.4rem; font-weight: 800; font-size: 0.88rem; }
+        .header-status { display: flex; justify-content: space-between; align-items: center; background: #F8FAFC; padding: 0.8rem 1rem; border-radius: 14px; margin-bottom: 1.2rem; border: 1px solid #E2E8F0; }
+        .timer-display { font-size: 1.6rem; font-weight: 900; color: var(--text-main); }
+        .player-chip { display: flex; justify-content: space-between; align-items: center; background: #FFFFFF; padding: 0.6rem 0.9rem; border-radius: 12px; margin-bottom: 0.45rem; font-weight: 800; font-size: 0.88rem; border: 1px solid #E2E8F0; }
+        .player-chip-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-orange); margin-left: 0.4rem; }
         
-        /* لوحة الرسم وتنسيقاتها */
+        /* لوحة الرسم وتنسيقاتها المتطورة */
         .drawing-board-container {
             position: relative;
             background: #FFFFFF;
-            border: 2px solid #E2E8F0;
-            border-radius: 16px;
+            border: 2.5px solid rgba(255, 94, 54, 0.25);
+            border-radius: 18px;
             overflow: hidden;
             margin-bottom: 1rem;
-            box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+            user-select: none;
+            -webkit-user-select: none;
         }
         canvas {
             display: block;
@@ -200,52 +204,57 @@
             cursor: crosshair;
             background: #FFFFFF;
             width: 100%;
-            height: 350px;
+            height: 360px;
         }
 
         .toolbar {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 0.6rem;
             justify-content: space-between;
             align-items: center;
             background: #F8FAFC;
-            padding: 0.6rem;
-            border-radius: 12px;
-            border: 1px solid #E2E8F0;
+            padding: 0.8rem;
+            border-radius: 14px;
+            border: 1.5px solid #E2E8F0;
             margin-bottom: 1rem;
         }
 
         .color-picker-wrapper {
             display: flex;
-            gap: 0.3rem;
+            gap: 0.45rem;
             align-items: center;
+            flex-wrap: wrap;
         }
         .color-btn {
             width: 28px;
             height: 28px;
             border-radius: 50%;
-            border: 2px solid #fff;
             cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-            transition: transform 0.2s;
+            border: 2.5px solid #FFFFFF;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
         .color-btn:hover { transform: scale(1.15); }
-        .color-btn.active { border-color: var(--text-main); transform: scale(1.15); }
+        .color-btn.active {
+            transform: scale(1.22);
+            box-shadow: 0 0 0 3px var(--primary-orange);
+        }
 
         .brush-sizes {
             display: flex;
-            gap: 0.3rem;
-            align-items: center;
+            gap: 0.35rem;
         }
         .size-btn {
-            background: #FFF;
-            border: 1px solid #CBD5E1;
+            background: #FFFFFF;
+            border: 1.5px solid #E2E8F0;
             border-radius: 8px;
-            padding: 0.2rem 0.5rem;
-            font-size: 0.75rem;
-            font-weight: 700;
+            padding: 0.35rem 0.65rem;
+            font-size: 0.78rem;
+            font-weight: 800;
             cursor: pointer;
+            color: #475569;
+            transition: all 0.2s;
         }
         .size-btn.active {
             background: var(--primary-orange);
@@ -259,7 +268,6 @@
         .podium-2 { height: 75%; background: linear-gradient(180deg, #C0C0C0, #A8A8A8); }
         .podium-3 { height: 55%; background: linear-gradient(180deg, #CD7F32, #B36B25); }
         
-        /* التنبيه بتصميم رايق وجميل ينزل من الأسفل ثم يعود للأعلى */
         .toast { 
             position: fixed; 
             bottom: -100px; 
@@ -278,9 +286,7 @@
             text-align: center;
             max-width: 90%;
         }
-        .toast.show {
-            bottom: 30px;
-        }
+        .toast.show { bottom: 30px; }
 
         @keyframes pulse-timer {
             0% { transform: scale(0.8); opacity: 0.5; }
@@ -296,7 +302,7 @@
     <div class="ambient-orb orb-2"></div>
     <div class="toast" id="toastMessage">تنبيه!</div>
 
-    <!-- الهيدر النظيف -->
+    <!-- الهيدر -->
     <header>
         <div class="logo" onclick="goBackStep()">
             <span>💡</span> فِكْرَة
@@ -309,15 +315,15 @@
 
     <!-- زر الرجوع للخلف -->
     <div class="back-btn-container">
-        <button class="btn-back" onclick="goBackStep()">⬅️ رجوع للخلف</button>
+        <button class="btn-back" onclick="goBackStep()">⬅️ رجوع للرئيسية</button>
     </div>
 
     <div id="gameContainerView" style="max-width: 600px; margin: 1rem auto; padding: 0 0.8rem;">
         
-        <!-- واجهة اختيار الغرفة وإعداداتها -->
+        <!-- واجهة اختيار الغرفة -->
         <div id="roomSelectionView" class="glass-card">
-            <h1 class="title">🎨 ارسم وخمن</h1>
-            <p class="subtitle">تناوبوا على الرسم والتخمين، وجمع أكبر عدد من النقاط!</p>
+            <h1 class="title">🎨 ارسم وتخمّن</h1>
+            <p class="subtitle">أحد اللاعبين يرسم والباقي يخمن الكلمة بسرعة للحصول على النقاط!</p>
 
             <div class="form-group">
                 <label>اسمك في اللعبة</label>
@@ -326,52 +332,52 @@
 
             <!-- تصنيفات الكلمات بالـ Checkboxes -->
             <div class="form-group">
-                <label>تصنيفات الكلمات:</label>
+                <label>تصنيفات الكلمات المطلوبة:</label>
                 <div class="categories-grid">
                     <label class="category-checkbox-label">
-                        <input type="checkbox" id="catObjects" value="objects" checked> 
-                        🧸 أديان وأشياء
-                    </label>
-                    <label class="category-checkbox-label">
                         <input type="checkbox" id="catAnimals" value="animals" checked> 
-                        🦁 حيوانات وطبيعة
+                        🐱 حيوانات وطيور
                     </label>
                     <label class="category-checkbox-label">
                         <input type="checkbox" id="catFoods" value="foods" checked> 
-                        🍔 أطعمة ومشروبات
+                        🍕 أطعمة ومشروبات
+                    </label>
+                    <label class="category-checkbox-label">
+                        <input type="checkbox" id="catThings" value="things" checked> 
+                        🚗 أدوات وأجهزة
                     </label>
                     <label class="category-checkbox-label">
                         <input type="checkbox" id="catPlaces" value="places" checked> 
-                        🏙️ أماكن ومعالم
+                        🏰 أماكن ومهن
                     </label>
                 </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1rem;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1.2rem;">
                 <div>
-                    <label>عدد الجولات</label>
+                    <label>عدد الجولات 🏁</label>
                     <select id="roundsSelect">
                         <option value="3">3 جولات (سريع ⚡)</option>
-                        <option value="5" selected>5 جولات</option>
-                        <option value="10">10 جولات (تحدي 💀)</option>
+                        <option value="5" selected>5 جولات (متوازن ⚖️)</option>
+                        <option value="8">8 جولات (حماس 🔥)</option>
                     </select>
                 </div>
                 <div>
-                    <label>وقت الجولة</label>
+                    <label>وقت الرسم ⏱️</label>
                     <select id="timeSelect">
-                        <option value="45">45 ثانية</option>
-                        <option value="60" selected>60 ثانية</option>
-                        <option value="90">90 ثانية</option>
+                        <option value="45">45 ثانية (سريع)</option>
+                        <option value="60" selected>60 ثانية (مثالي 🎨)</option>
+                        <option value="90">90 ثانية (للفنانين 🧑‍🎨)</option>
                     </select>
                 </div>
             </div>
 
             <button onclick="hostCreateRoom()" class="btn btn-primary" style="width: 100%;">إنشاء غرفة رسم 🚀</button>
             
-            <div style="margin: 1rem 0; text-align: center; font-weight: 700; color: #888; font-size: 0.85rem;">أو</div>
+            <div style="margin: 1.2rem 0; text-align: center; font-weight: 800; color: #94A3B8; font-size: 0.85rem;">— أو انضم لغرفة خويك —</div>
 
             <div class="form-group">
-                <input type="text" id="roomCodeInput" placeholder="أدخل رمز الغرفة" maxlength="6" style="text-align: center; letter-spacing: 2px; font-weight: 900;">
+                <input type="text" id="roomCodeInput" placeholder="أدخل رمز الغرفة (مثال: 7821)" maxlength="6" style="text-align: center; letter-spacing: 2px; font-weight: 900;">
             </div>
             <button onclick="guestJoinRoom()" class="btn btn-primary" style="width: 100%;">انضمام لغرفة 🔗</button>
         </div>
@@ -379,39 +385,39 @@
         <!-- لوبي الانتظار -->
         <div id="lobbyView" class="glass-card" style="display: none; text-align: center;">
             <h2 style="margin-bottom: 0.3rem; font-size: 1.3rem;">غرفة الانتظار 🎨</h2>
-            <p style="color: #666; font-size: 0.85rem;">اضغط على مفتاح الغرفة لنسخه ومشاركته مع أصدقائك:</p>
-            <div id="displayRoomCode" onclick="copyRoomCode()" style="font-size: 2rem; font-weight: 900; color: var(--primary-orange); background: #FFF3EF; padding: 0.6rem; border-radius: 12px; border: 2px dashed var(--primary-orange); margin: 0.8rem 0; letter-spacing: 3px; cursor: pointer; transition: 0.2s;" title="اضغط للنسخ">
+            <p style="color: #666; font-size: 0.85rem;">شارك هذا الرمز مع أصدقائك:</p>
+            <div id="displayRoomCode" onclick="copyRoomCode()" style="font-size: 2.2rem; font-weight: 900; color: var(--primary-orange); background: #FFF3EF; padding: 0.7rem; border-radius: 14px; border: 2px dashed var(--primary-orange); margin: 0.8rem 0; letter-spacing: 4px; cursor: pointer;" title="اضغط للنسخ">
                 0000 📋
             </div>
 
             <div style="margin-bottom: 0.8rem; text-align: right;">
                 <label>إعدادات الغرفة الحالية:</label>
-                <div id="roomSettingsSummary" style="background: #F8FAFC; padding: 0.6rem; border-radius: 10px; font-size: 0.85rem; font-weight: 700; color: #475569; margin-bottom: 0.8rem; border: 1px solid #E2E8F0;"></div>
+                <div id="roomSettingsSummary" style="background: #F8FAFC; padding: 0.6rem 0.8rem; border-radius: 12px; font-size: 0.85rem; font-weight: 700; color: #475569; margin-bottom: 0.8rem; border: 1px solid #E2E8F0;"></div>
 
-                <label>اللاعبون المتصلون:</label>
+                <label>الرسامون الجاهزون:</label>
                 <div id="connectedPlayersContainer" style="margin-top: 0.4rem;"></div>
             </div>
 
             <button id="startGameBtn" onclick="hostStartGame()" class="btn btn-primary" style="display: none; margin-top: 1.2rem; width: 100%;">بدء اللعبة 🛫</button>
-            <p id="waitingHostText" style="color: #888; font-weight: 700; display: none; margin-top: 0.8rem; font-size: 0.85rem;">في انتظار الهوست ليحرك اللعبة...</p>
+            <p id="waitingHostText" style="color: #888; font-weight: 700; display: none; margin-top: 0.8rem; font-size: 0.85rem;">في انتظار الهوست لبدء التحدي...</p>
         </div>
 
         <!-- واجهة اللعب (الرسم والتخمين) -->
         <div id="gamePlayView" class="glass-card" style="display: none;">
             <div class="header-status">
                 <div>
-                    <span id="roundDisplay" style="font-size: 0.85rem; font-weight: 800; color: #666;">الجولة 1 من 5</span>
-                    <div id="roleIndicator" style="font-weight: 800; font-size: 1rem; margin-top: 0.1rem; color: var(--primary-orange);">دورك في الرسم!</div>
+                    <span id="roundDisplay" style="font-size: 0.85rem; font-weight: 800; color: #64748B;">الجولة 1 من 5</span>
+                    <div id="roleIndicator" style="font-weight: 900; font-size: 1rem; margin-top: 0.1rem; color: var(--primary-orange);">دورك في الرسم! 🎨</div>
                 </div>
                 <div class="timer-display" id="timer">60s</div>
             </div>
 
-            <!-- عرض الكلمة للرسام فقط، أو تنبيه للخمن -->
-            <div id="drawerWordPrompt" style="background: #FFF3EF; border: 2px dashed var(--primary-orange); border-radius: 14px; padding: 0.8rem; text-align: center; margin-bottom: 1rem; font-weight: 900; font-size: 1.1rem; color: var(--primary-orange);">
-                الكلمة المطلوبة: <span id="targetWordDisplay" style="color: var(--text-main);">...</span>
+            <!-- عرض الكلمة للرسام فقط -->
+            <div id="drawerWordPrompt" style="background: #FFF3EF; border: 2px dashed var(--primary-orange); border-radius: 14px; padding: 0.8rem; text-align: center; margin-bottom: 1rem; font-weight: 900; font-size: 1.15rem; color: var(--primary-orange);">
+                ارسم الكلمة التالية: <span id="targetWordDisplay" style="color: var(--text-main);">...</span>
             </div>
 
-            <!-- لوحة الرسم -->
+            <!-- لوحة الرسم عالية الدقة والانسيابية -->
             <div class="drawing-board-container" id="boardContainer">
                 <canvas id="paintCanvas"></canvas>
             </div>
@@ -419,66 +425,67 @@
             <!-- شريط أدوات الرسم (يظهر للرسام فقط) -->
             <div class="toolbar" id="drawingToolbar">
                 <div class="color-picker-wrapper">
-                    <div class="color-btn active" style="background: #1D2029;" onclick="setDrawColor('#1D2029', this)"></div>
-                    <div class="color-btn" style="background: #FF5E36;" onclick="setDrawColor('#FF5E36', this)"></div>
-                    <div class="color-btn" style="background: #2E7D32;" onclick="setDrawColor('#2E7D32', this)"></div>
-                    <div class="color-btn" style="background: #1976D2;" onclick="setDrawColor('#1976D2', this)"></div>
-                    <div class="color-btn" style="background: #D32F2F;" onclick="setDrawColor('#D32F2F', this)"></div>
-                    <div class="color-btn" style="background: #FFFFFF; border: 2px solid #CBD5E1;" onclick="setDrawColor('#FFFFFF', this)"></div>
+                    <div class="color-btn active" style="background: #1D2029;" onclick="setDrawColor('#1D2029', this)" title="أسود"></div>
+                    <div class="color-btn" style="background: #FF5E36;" onclick="setDrawColor('#FF5E36', this)" title="برتقالي"></div>
+                    <div class="color-btn" style="background: #2E7D32;" onclick="setDrawColor('#2E7D32', this)" title="أخضر"></div>
+                    <div class="color-btn" style="background: #1976D2;" onclick="setDrawColor('#1976D2', this)" title="أزرق"></div>
+                    <div class="color-btn" style="background: #D32F2F;" onclick="setDrawColor('#D32F2F', this)" title="أحمر"></div>
+                    <div class="color-btn" style="background: #FBC02D;" onclick="setDrawColor('#FBC02D', this)" title="أصفر"></div>
+                    <div class="color-btn" style="background: #8E24AA;" onclick="setDrawColor('#8E24AA', this)" title="بنفسجي"></div>
+                    <div class="color-btn" style="background: #FFFFFF; border: 2px solid #CBD5E1;" onclick="setDrawColor('#FFFFFF', this)" title="ممحاة"></div>
                 </div>
                 <div class="brush-sizes">
-                    <button class="size-btn active" onclick="setBrushSize(3, this)">رفيع</button>
-                    <button class="size-btn" onclick="setBrushSize(7, this)">وسط</button>
-                    <button class="size-btn" onclick="setBrushSize(14, this)">خميل</button>
+                    <button class="size-btn active" onclick="setBrushSize(4, this)">رفيع</button>
+                    <button class="size-btn" onclick="setBrushSize(8, this)">وسط</button>
+                    <button class="size-btn" onclick="setBrushSize(16, this)">عريض</button>
                 </div>
-                <button class="btn btn-danger" style="padding: 0.3rem 0.8rem; font-size: 0.8rem;" onclick="clearCanvasAction()">مسح الكل 🗑️</button>
+                <button class="btn btn-danger" style="padding: 0.35rem 0.8rem; font-size: 0.8rem;" onclick="clearCanvasAction()">مسح اللوحة 🗑️</button>
             </div>
 
-            <!-- صندوق إدخال التخمين (يظهر للخمنين فقط، أو للكل في وقت التخمين) -->
+            <!-- صندوق إدخال التخمين (يظهر للخمنين فقط) -->
             <div id="guessSection">
                 <div class="form-group">
-                    <input type="text" id="guessInput" placeholder="اكتب تخمينك هنا بسرعة! ✍️" onkeydown="if(event.key === 'Enter') submitGuess()">
+                    <input type="text" id="guessInput" placeholder="اكتب تخمينك هنا واضغط Enter... ✍️" onkeydown="if(event.key === 'Enter') submitGuess()">
                 </div>
                 <button id="submitGuessBtn" onclick="submitGuess()" class="btn btn-primary" style="width: 100%;">إرسال التخمين 🚀</button>
             </div>
 
-            <div id="guessFeedback" style="text-align: center; font-weight: 800; margin-top: 1rem; display: none;"></div>
+            <div id="guessFeedback" style="text-align: center; font-weight: 900; margin-top: 0.8rem; display: none;"></div>
         </div>
 
         <!-- واجهة نتيجة الجولة -->
         <div id="resultsView" class="glass-card" style="display: none; text-align: center;">
-            <h2 id="resultTitle" style="margin-bottom: 0.5rem; font-size: 1.5rem;">انتهت الجولة! ⏱️</h2>
-            <div style="font-size: 1.2rem; font-weight: 900; color: var(--primary-orange); margin-bottom: 1rem;">
+            <h2 id="resultTitle" style="margin-bottom: 0.4rem; font-size: 1.4rem;">انتهت الجولة! ⏱️</h2>
+            <div style="font-size: 1.25rem; font-weight: 900; color: var(--primary-orange); margin-bottom: 0.8rem;">
                 الكلمة كانت: <span id="correctWordDisplay" style="color: var(--text-main);">...</span>
             </div>
 
             <div id="roundWinnerAnnouncement" style="font-size: 1.1rem; font-weight: 900; color: var(--green-success); margin-bottom: 1rem; display: none; background: #E8F5E9; padding: 10px; border-radius: 12px; border: 1px dashed var(--green-success);"></div>
 
-            <div id="roundScoresContainer" style="text-align: right; margin-bottom: 1.5rem;"></div>
+            <div id="roundScoresContainer" style="text-align: right; margin-bottom: 1.2rem;"></div>
 
             <div id="nextRoundTimerContainer" style="display: none; font-size: 1.1rem; font-weight: 900; color: #475569;">
-                الجولة التالية تبدأ بعد<br>
-                <span id="nextRoundTimerDisplay" style="font-size: 3.5rem; color: var(--primary-orange); display: inline-block; margin-top: 10px;">3</span>
+                الجولة التالية تبدأ خلال<br>
+                <span id="nextRoundTimerDisplay" style="font-size: 3.2rem; color: var(--primary-orange); display: inline-block; margin-top: 6px;">3</span>
             </div>
         </div>
 
         <!-- واجهة التتويج النهائي -->
         <div id="winnerView" class="glass-card" style="display: none; text-align: center;">
-            <h1 class="title" style="font-size: 1.5rem;">🎉 أساطير الرسم والتخمين 🎉</h1>
-            <p class="subtitle">شوفوا مين فنان اللعبة الحقيقي! 😂</p>
+            <h1 class="title" style="font-size: 1.6rem;">🎉 أساطير الرسم والتخمين 🎉</h1>
+            <p class="subtitle">شوفوا مين أبدع فنان وخمن صح! 🏆</p>
 
             <div id="podiumDisplay" class="podium-container"></div>
 
-            <button onclick="window.location.reload()" class="btn btn-primary" style="margin-top: 1.2rem; width: 100%;">لعب مرة ثانية 🔄</button>
+            <button onclick="window.location.reload()" class="btn btn-primary" style="margin-top: 1.2rem; width: 100%;">لعب جولة جديدة 🔄</button>
         </div>
 
     </div>
 
-    <!-- Firebase -->
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
     <script src="auth.js"></script>
 
     <script>
@@ -491,102 +498,81 @@
             messagingSenderId: "523229194032",
             appId: "1:523229194032:web:29e3a5ef0ce27d8b3d0af5"
         };
-        if (!firebase.apps || !firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const db = firebase.database();
 
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedUser = localStorage.getItem('currentUser') || 
-                              localStorage.getItem('fikrh_username') || 
-                              localStorage.getItem('username') || 
-                              localStorage.getItem('playerName');
-            if(savedUser) {
-                document.getElementById('playerNameInput').value = savedUser;
-            }
-            initCanvas();
-        });
-
-        let backAttemptTime = 0;
         function goBackStep() {
-            const lobbyView = document.getElementById('lobbyView');
-            const gamePlayView = document.getElementById('gamePlayView');
-            const resultsView = document.getElementById('resultsView');
-            const winnerView = document.getElementById('winnerView');
-
-            if ((lobbyView && lobbyView.style.display === 'block') || 
-                (gamePlayView && gamePlayView.style.display === 'block') || 
-                (resultsView && resultsView.style.display === 'block') || 
-                (winnerView && winnerView.style.display === 'block')) {
-                
-                let now = Date.now();
-                if (now - backAttemptTime > 10000) {
-                    backAttemptTime = now;
-                    showToast('⚠️ اضغط مرة أخرى خلال 10 ثواني لتأكيد الخروج من الغرفة!');
-                    return;
-                }
-
-                if(roomRef && currentRoomCode) {
-                    let pName = document.getElementById('playerNameInput').value.trim();
-                    if(pName) {
-                        roomRef.child('players/' + pName).remove().then(() => {
-                            roomRef.child('players').get().then((snap) => {
-                                if(!snap.exists() || Object.keys(snap.val()).length === 0) {
-                                    roomRef.remove();
-                                }
-                            });
-                        });
-                    }
+            if (document.getElementById('lobbyView').style.display === 'block' || 
+                document.getElementById('gamePlayView').style.display === 'block' || 
+                document.getElementById('resultsView').style.display === 'block' || 
+                document.getElementById('winnerView').style.display === 'block') {
+                if(roomRef && isHost) {
+                    roomRef.remove();
+                    if(window.unbroadcastRoom) window.unbroadcastRoom('draw', currentRoomCode);
                 }
                 switchView('roomSelectionView');
             } else {
-                if (window.history.length > 1) {
-                    window.history.back();
-                } else {
-                    window.location.href = 'index.html';
-                }
+                window.location.href = 'index.html';
             }
         }
 
+        // ==================== بنك الكلمات المتنوع ====================
         const wordsDB = [
-            { word: "ساعة", category: "objects" },
-            { word: "سيارة", category: "objects" },
-            { word: "نظارة", category: "objects" },
-            { word: "مفتاح", category: "objects" },
-            { word: "كمبيوتر", category: "objects" },
-            { word: "طائرة", category: "objects" },
-            { word: "قلم", category: "objects" },
-            { word: "مظلة", category: "objects" },
-            { word: "كرسي", category: "objects" },
-            { word: "هاتف", category: "objects" },
-
+            // حيوانات
+            { word: "قطة", category: "animals" },
             { word: "أسد", category: "animals" },
             { word: "فيل", category: "animals" },
+            { word: "جمل", category: "animals" },
+            { word: "زرافة", category: "animals" },
+            { word: "صقر", category: "animals" },
+            { word: "بطريق", category: "animals" },
+            { word: "سمكة", category: "animals" },
             { word: "قرد", category: "animals" },
             { word: "نمر", category: "animals" },
-            { word: "بطريق", category: "animals" },
-            { word: "تمساح", category: "animals" },
-            { word: "جمل", category: "animals" },
-            { word: "شجرة", category: "animals" },
-            { word: "قمر", category: "animals" },
-            { word: "نجمة", category: "animals" },
+            { word: "أرنب", category: "animals" },
+            { word: "حصان", category: "animals" },
+            { word: "سلحفاة", category: "animals" },
 
+            // أطعمة ومشروبات
             { word: "بيتزا", category: "foods" },
             { word: "برجر", category: "foods" },
-            { word: "تفاحة", category: "foods" },
-            { word: "موزة", category: "foods" },
-            { word: "آيس كريم", category: "foods" },
-            { word: "بطيخ", category: "foods" },
+            { word: "شاورما", category: "foods" },
             { word: "قهوة", category: "foods" },
-            { word: "شوكولاتة", category: "foods" },
-            { word: "تاريخ", category: "foods" },
+            { word: "عصير", category: "foods" },
+            { word: "تفاحة", category: "foods" },
+            { word: "موز", category: "foods" },
+            { word: "بطاطس", category: "foods" },
+            { word: "كيك", category: "foods" },
+            { word: "ايس كريم", category: "foods" },
+            { word: "دونات", category: "foods" },
+            { word: "بطيخ", category: "foods" },
 
-            { word: "هرم", category: "places" },
-            { word: "برج إيفل", category: "places" },
-            { word: "مسجد", category: "places" },
-            { word: "بيت", category: "places" },
-            { word: "بحر", category: "places" },
-            { word: "جبل", category: "places" },
-            { word: "جزيرة", category: "places" },
-            { word: "مكتبة", category: "places" }
+            // أدوات وأجهزة
+            { word: "سيارة", category: "things" },
+            { word: "طيارة", category: "things" },
+            { word: "جوال", category: "things" },
+            { word: "ساعة", category: "things" },
+            { word: "مفتاح", category: "things" },
+            { word: "نظارة", category: "things" },
+            { word: "قلم", category: "things" },
+            { word: "كتاب", category: "things" },
+            { word: "مقص", category: "things" },
+            { word: "تلفزيون", category: "things" },
+            { word: "دراجة", category: "things" },
+            { word: "مظلة", category: "things" },
+
+            // أماكن ومهن
+            { word: "طبيب", category: "places" },
+            { word: "مهندس", category: "places" },
+            { word: "شرطي", category: "places" },
+            { word: "طباخ", category: "places" },
+            { word: "مستشفى", category: "places" },
+            { word: "مدرسة", category: "places" },
+            { word: "حديقة", category: "places" },
+            { word: "شاطئ", category: "places" },
+            { word: "مطار", category: "places" },
+            { word: "مسجد", category: "places" }
         ];
 
         let isHost = false;
@@ -596,19 +582,20 @@
         let totalRounds = 5;
         let roundTime = 60;
         let currentRound = 0;
+        let currentDrawer = "";
         let timerInterval;
         let nextRoundTimerInterval;
         let playersList = [];
         let gameWords = [];
-        let currentDrawer = "";
 
-        // إعدادات اللوحة (Canvas)
+        // متغيرات محرك الرسم عالي النعومة
         let canvas, ctx;
         let isDrawing = false;
         let drawColor = "#1D2029";
-        let brushSize = 3;
-        let lastX = 0;
-        let lastY = 0;
+        let brushSize = 4;
+        let lastX = 0, lastY = 0;
+        let lastSentX = 0, lastSentY = 0;
+        let lastSendTime = 0;
 
         let toastTimeout;
         function showToast(msg) {
@@ -616,27 +603,13 @@
             t.innerText = msg;
             t.classList.add('show');
             clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                t.classList.remove('show');
-            }, 3000);
-        }
-
-        // دالة نسخ رمز الغرفة فوراً عند الضغط
-        function copyRoomCode() {
-            if (!currentRoomCode) return;
-            navigator.clipboard.writeText(currentRoomCode).then(() => {
-                showToast('📋 تم نسخ رمز الغرفة بنجاح: ' + currentRoomCode);
-            }).catch(err => {
-                showToast('❌ تعذر النسخ تلقائياً');
-            });
+            toastTimeout = setTimeout(() => { t.classList.remove('show'); }, 3000);
         }
 
         function switchView(viewId) {
             document.querySelectorAll('#gameContainerView .glass-card').forEach(c => c.style.display = 'none');
-            document.getElementById(viewId).style.display = 'block';
-            if(viewId === 'gamePlayView') {
-                setTimeout(initCanvas, 50); // إعادة تهيئة الكانفاس بوضوح عند ظهوره
-            }
+            const v = document.getElementById(viewId);
+            if(v) v.style.display = 'block';
         }
 
         function normalizeString(str) {
@@ -650,14 +623,21 @@
                 .replace(/\s+/g, '');
         }
 
+        function copyRoomCode() {
+            if(!currentRoomCode) return;
+            navigator.clipboard.writeText(currentRoomCode);
+            showToast('تم نسخ رمز الغرفة! 📋');
+        }
+
+        // ==================== محرك الرسم المتصل والنظام المتجه ====================
         function initCanvas() {
             canvas = document.getElementById('paintCanvas');
             if(!canvas) return;
             ctx = canvas.getContext('2d');
             
-            let rect = canvas.getBoundingClientRect();
-            canvas.width = rect.width || 500;
-            canvas.height = 350;
+            // ضبط دقة اللوحة الداخلية لمقاس قياسي عالي الدقة (800x560) لضمان الاتساق بين كل الشاشات
+            canvas.width = 800;
+            canvas.height = 560;
 
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
@@ -665,80 +645,102 @@
             ctx.lineWidth = brushSize;
         }
 
-        function getMousePos(e) {
-            let rect = canvas.getBoundingClientRect();
-            // دعم دقيق للمس والماوس مع حساب مقاسات الـ CSS والـ Canvas الفعلية
+        function getNormalizedPos(e) {
+            const rect = canvas.getBoundingClientRect();
             let clientX = e.clientX;
             let clientY = e.clientY;
             if (e.touches && e.touches.length > 0) {
                 clientX = e.touches[0].clientX;
                 clientY = e.touches[0].clientY;
             }
-            return {
-                x: (clientX - rect.left) * (canvas.width / rect.width),
-                y: (clientY - rect.top) * (canvas.height / rect.height)
-            };
+            const nx = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+            const ny = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height));
+            return { x: nx, y: ny };
+        }
+
+        function drawLocalStroke(x1, y1, x2, y2, color, size) {
+            if (!ctx || !canvas) return;
+            const px1 = x1 * canvas.width;
+            const py1 = y1 * canvas.height;
+            const px2 = x2 * canvas.width;
+            const py2 = y2 * canvas.height;
+
+            ctx.beginPath();
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.strokeStyle = color;
+            ctx.lineWidth = size * (canvas.width / 500); // تناسب حجم الفرشاة
+            ctx.moveTo(px1, py1);
+            ctx.lineTo(px2, py2);
+            ctx.stroke();
         }
 
         function startDraw(e) {
-            if(playerName !== currentDrawer) return;
+            if (playerName !== currentDrawer) return;
             isDrawing = true;
-            let pos = getMousePos(e);
+            const pos = getNormalizedPos(e);
             lastX = pos.x;
             lastY = pos.y;
+            lastSentX = pos.x;
+            lastSentY = pos.y;
+
+            // رسم فوري لنقطة البداية
+            drawLocalStroke(pos.x, pos.y, pos.x, pos.y, drawColor, brushSize);
+
+            if (roomRef) {
+                roomRef.child('current_draw_line').push({
+                    x1: pos.x, y1: pos.y, x2: pos.x, y2: pos.y, color: drawColor, size: brushSize
+                });
+            }
         }
 
-        let drawThrottle = 0;
         function draw(e) {
-            if(!isDrawing || playerName !== currentDrawer) return;
-            let pos = getMousePos(e);
-            let x = pos.x;
-            let y = pos.y;
+            if (!isDrawing || playerName !== currentDrawer) return;
+            const pos = getNormalizedPos(e);
 
-            // الرسم بحرية تامة وناعمة محلياً
-            ctx.beginPath();
-            ctx.moveTo(lastX, lastY);
-            ctx.lineTo(x, y);
-            ctx.strokeStyle = drawColor;
-            ctx.lineWidth = brushSize;
-            ctx.stroke();
+            // رسم خط متصل فوري محلياً بدون أي تقطيع
+            drawLocalStroke(lastX, lastY, pos.x, pos.y, drawColor, brushSize);
+            lastX = pos.x;
+            lastY = pos.y;
 
-            let prevX = lastX;
-            let prevY = lastY;
-            lastX = x;
-            lastY = y;
-
-            // بث الخط المباشر للخصوم
-            let now = Date.now();
-            if(now - drawThrottle > 15) {
-                drawThrottle = now;
-                if(roomRef) {
+            // بث الخط المتصل للخصوم بشكل مستمر
+            const now = Date.now();
+            if (now - lastSendTime > 15 || Math.hypot(pos.x - lastSentX, pos.y - lastSentY) > 0.006) {
+                lastSendTime = now;
+                if (roomRef) {
                     roomRef.child('current_draw_line').push({
-                        x1: prevX, y1: prevY, x2: x, y2: y, color: drawColor, size: brushSize
+                        x1: lastSentX, y1: lastSentY, x2: pos.x, y2: pos.y, color: drawColor, size: brushSize
                     });
                 }
+                lastSentX = pos.x;
+                lastSentY = pos.y;
             }
         }
 
-        function stopDraw() {
+        function stopDraw(e) {
             if (!isDrawing) return;
             isDrawing = false;
+            if (lastSentX !== lastX || lastSentY !== lastY) {
+                if (roomRef) {
+                    roomRef.child('current_draw_line').push({
+                        x1: lastSentX, y1: lastSentY, x2: lastX, y2: lastY, color: drawColor, size: brushSize
+                    });
+                }
+                lastSentX = lastX;
+                lastSentY = lastY;
+            }
         }
 
-        // ربط أحداث الماوس واللمس بدقة
-        document.addEventListener('DOMContentLoaded', () => {
-            const c = document.getElementById('paintCanvas');
-            if(c) {
-                c.addEventListener('mousedown', startDraw);
-                c.addEventListener('mousemove', draw);
-                c.addEventListener('mouseup', stopDraw);
-                c.addEventListener('mouseleave', stopDraw);
-
-                c.addEventListener('touchstart', (e) => { e.preventDefault(); startDraw(e); }, { passive: false });
-                c.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e); }, { passive: false });
-                c.addEventListener('touchend', (e) => { e.preventDefault(); stopDraw(); }, { passive: false });
+        function clearCanvasAction() {
+            if (playerName !== currentDrawer) return;
+            if (ctx && canvas) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
             }
-        });
+            if (roomRef) {
+                roomRef.child('clear_board').set(Date.now());
+                roomRef.child('current_draw_line').remove();
+            }
+        }
 
         function setDrawColor(color, btnEl) {
             drawColor = color;
@@ -752,33 +754,42 @@
             if(btnEl) btnEl.classList.add('active');
         }
 
-        function clearCanvasAction() {
-            if(playerName !== currentDrawer) return;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            if(roomRef) {
-                roomRef.child('clear_board').set(Date.now());
-            }
-        }
+        // ربط أحداث الرسم بالماوس واللمس بدقة وانسيابية
+        document.addEventListener('DOMContentLoaded', () => {
+            const c = document.getElementById('paintCanvas');
+            if(c) {
+                c.addEventListener('mousedown', startDraw);
+                c.addEventListener('mousemove', draw);
+                c.addEventListener('mouseup', stopDraw);
+                c.addEventListener('mouseleave', stopDraw);
 
+                c.addEventListener('touchstart', (e) => { e.preventDefault(); startDraw(e); }, { passive: false });
+                c.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e); }, { passive: false });
+                c.addEventListener('touchend', (e) => { e.preventDefault(); stopDraw(e); }, { passive: false });
+            }
+        });
+
+        // ==================== دوال إنشاء الغرفة والانضمام ====================
         function hostCreateRoom() {
-            playerName = document.getElementById('playerNameInput').value.trim() || "الهوست";
+            playerName = document.getElementById('playerNameInput').value.trim() || 
+                (window.currentUserAccount ? window.currentUserAccount.name : "الرسّام الهوست");
+            
             totalRounds = parseInt(document.getElementById('roundsSelect').value);
             roundTime = parseInt(document.getElementById('timeSelect').value);
-            isHost = true;
-
+            
             let selectedCategories = [];
-            if(document.getElementById('catObjects').checked) selectedCategories.push('objects');
             if(document.getElementById('catAnimals').checked) selectedCategories.push('animals');
             if(document.getElementById('catFoods').checked) selectedCategories.push('foods');
+            if(document.getElementById('catThings').checked) selectedCategories.push('things');
             if(document.getElementById('catPlaces').checked) selectedCategories.push('places');
 
             if(selectedCategories.length === 0) {
-                return showToast('اختر تصنيف واحد على الأقل يا فنان! ⚠️');
+                return showToast('اختر تصنيف كلمات واحد على الأقل! ⚠️');
             }
 
             let filteredWords = wordsDB.filter(w => selectedCategories.includes(w.category));
             if(filteredWords.length < totalRounds) {
-                return showToast(`عدد الكلمات المتاحة (${filteredWords.length}) أقل من عدد الجولات (${totalRounds})!`);
+                filteredWords = [...wordsDB];
             }
 
             let shuffled = [...filteredWords].sort(() => 0.5 - Math.random());
@@ -786,15 +797,18 @@
 
             currentRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
             document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
+            isHost = true;
+
             const pAvatar = (window.currentUserAccount && window.currentUserAccount.avatar) ? window.currentUserAccount.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
-            if(window.broadcastRoom) window.broadcastRoom('draw', currentRoomCode, 'ارسم وخمّن', playerName, pAvatar);
+            const roomOpts = window.getRoomCreateOptions ? window.getRoomCreateOptions() : { roomTitle: '', accessType: 'public' };
+            if(window.broadcastRoom) window.broadcastRoom('draw', currentRoomCode, 'ارسم وتخمّن', playerName, pAvatar, roomOpts.roomTitle, roomOpts.accessType);
 
             roomRef = db.ref('draw_rooms/' + currentRoomCode);
             roomRef.set({
                 host: playerName,
                 state: 'lobby',
                 settings: { totalRounds, roundTime, words: gameWords },
-                players: { [playerName]: { score: 0 } }
+                players: { [playerName]: { score: 0, avatar: pAvatar, joined: true } }
             }).then(() => {
                 listenToFirebase();
                 switchView('lobbyView');
@@ -804,9 +818,10 @@
         }
 
         function guestJoinRoom() {
-            playerName = document.getElementById('playerNameInput').value.trim() || "الضيف";
+            playerName = document.getElementById('playerNameInput').value.trim() || 
+                (window.currentUserAccount ? window.currentUserAccount.name : "الضيف الرسّام");
             const code = document.getElementById('roomCodeInput').value.trim();
-            if(!code) return showToast('أدخل رمز الغرفة يا كابتن!');
+            if(!code) return showToast('أدخل رمز الغرفة يا بطل!');
 
             isHost = false;
             currentRoomCode = code;
@@ -817,7 +832,6 @@
                     const pAvatar = (window.currentUserAccount && window.currentUserAccount.avatar) ? window.currentUserAccount.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
                     roomRef.child('players/' + playerName).set({ score: 0, avatar: pAvatar, joined: true });
                     document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
-            if(window.broadcastRoom) window.broadcastRoom('draw', currentRoomCode, 'ارسم وخمّن', playerName, pAvatar);
                     listenToFirebase();
                     switchView('lobbyView');
                     document.getElementById('startGameBtn').style.display = 'none';
@@ -831,10 +845,9 @@
         function listenToFirebase() {
             roomRef.on('value', (snapshot) => {
                 const data = snapshot.val();
-                
                 if(!data || !data.players || Object.keys(data.players).length === 0) {
                     if(document.getElementById('roomSelectionView').style.display !== 'block') {
-                        showToast('انتهت الغرفة لخروج كل اللاعبين! 🚪');
+                        showToast('انتهت الغرفة أو غادر الجميع! 🚪');
                         clearInterval(timerInterval);
                         clearInterval(nextRoundTimerInterval);
                         switchView('roomSelectionView');
@@ -867,16 +880,11 @@
                 }
             });
 
-            // استقبال الرسم الانسيابي للخصوم
+            // استقبال الرسم الانسيابي المتصل للخصوم
             roomRef.child('current_draw_line').on('child_added', (snap) => {
-                let line = snap.val();
-                if(line && playerName !== currentDrawer && ctx) {
-                    ctx.beginPath();
-                    ctx.moveTo(line.x1, line.y1);
-                    ctx.lineTo(line.x2, line.y2);
-                    ctx.strokeStyle = line.color;
-                    ctx.lineWidth = line.size;
-                    ctx.stroke();
+                const line = snap.val();
+                if(line && playerName !== currentDrawer && ctx && canvas) {
+                    drawLocalStroke(line.x1, line.y1, line.x2, line.y2, line.color, line.size);
                 }
             });
 
@@ -889,18 +897,20 @@
 
         function updatePlayersUI(playersObj) {
             const container = document.getElementById('connectedPlayersContainer');
-            if (!container) return;
             container.innerHTML = '';
             for(let p in playersObj) {
-                const pData = playersObj[p] || {};
-                const pScore = (typeof pData.score === 'number') ? pData.score : (pData.score || 0);
-                const pAvatar = pData.avatar || ((p === playerName && window.currentUserAccount) ? window.currentUserAccount.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png');
+                const pData = playersObj[p];
+                const pScore = pData.score || 0;
                 const isMe = (p === playerName);
+                const pAvatar = pData.avatar || ((p === playerName && window.currentUserAccount) ? window.currentUserAccount.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png');
+                
                 container.innerHTML += `
                     <div class="player-chip">
-                        <img src="${pAvatar}" class="player-chip-avatar" alt="${p}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
-                        <span class="player-chip-name">${p}${isMe ? ' (أنت)' : ''}</span>
-                        <span class="player-chip-score">${pScore} نقطة</span>
+                        <div style="display:flex; align-items:center;">
+                            <img src="${pAvatar}" class="player-chip-avatar" alt="${p}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+                            <span>${p}${isMe ? ' (أنت)' : ''}</span>
+                        </div>
+                        <span style="color: var(--primary-orange); font-weight: 900;">${pScore} نقطة</span>
                     </div>
                 `;
             }
@@ -919,7 +929,7 @@
                 roomRef.update({ state: 'finished' });
             } else {
                 let drawerIndex = (nextRound - 1) % playersList.length;
-                let assignedDrawer = playersList[drawerIndex];
+                let nextDrawer = playersList[drawerIndex];
 
                 roomRef.child('round_guesses').remove();
                 roomRef.child('roundWinner').remove();
@@ -927,7 +937,7 @@
                 roomRef.update({
                     state: 'playing',
                     currentRound: nextRound,
-                    currentDrawer: assignedDrawer,
+                    currentDrawer: nextDrawer,
                     roundStartTime: Date.now()
                 });
             }
@@ -937,20 +947,21 @@
             clearInterval(timerInterval);
             clearInterval(nextRoundTimerInterval);
 
-            if(ctx && canvas) {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-            }
+            initCanvas();
+            if (ctx && canvas) ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             let currentW = gameWords[roundNum - 1];
+            if (!currentW) return;
+
             document.getElementById('roundDisplay').innerText = `الجولة ${roundNum} من ${totalRounds}`;
-            
+
             let roleIndicator = document.getElementById('roleIndicator');
             let drawerPrompt = document.getElementById('drawerWordPrompt');
             let toolbar = document.getElementById('drawingToolbar');
             let guessSection = document.getElementById('guessSection');
 
             if (playerName === drawerName) {
-                roleIndicator.innerText = "دورك في الرسم! 🎨";
+                roleIndicator.innerText = "دورك في الرسم الآن! 🎨";
                 drawerPrompt.style.display = 'block';
                 document.getElementById('targetWordDisplay').innerText = currentW.word;
                 toolbar.style.display = 'flex';
@@ -963,6 +974,7 @@
                 document.getElementById('guessInput').disabled = false;
                 document.getElementById('submitGuessBtn').disabled = false;
                 document.getElementById('guessInput').value = '';
+                document.getElementById('guessInput').focus();
             }
 
             let feedbackEl = document.getElementById('guessFeedback');
@@ -1022,7 +1034,7 @@
                 feedbackEl.style.color = "var(--green-success)";
                 confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
             } else {
-                feedbackEl.innerText = `قريب منها أو خطأ! ❌ "${input}"`;
+                feedbackEl.innerText = `تخمين قريب أو غير دقيق! ❌ "${input}"`;
                 feedbackEl.style.color = "var(--red-danger)";
                 document.getElementById('guessInput').value = '';
                 document.getElementById('guessInput').focus();
@@ -1055,17 +1067,19 @@
             container.innerHTML = '';
 
             for(let p in data.players) {
-                let status = p === data.currentDrawer ? "الرسام 🧑‍🎨" : "لم يخمنها ⏳";
+                let status = "لم يخمن ⏳";
                 let color = "#888";
                 if(p === data.currentDrawer) {
+                    status = "الرسام 🎨";
                     color = "var(--primary-orange)";
                 } else if(guesses[p] && guesses[p].correct) {
-                    status = "خمنها صح ✅ (+100)";
+                    status = "خمن صح ✅ (+100)";
                     color = "var(--green-success)";
                 }
+
                 container.innerHTML += `
                     <div class="player-chip">
-                        <span>👤 ${p} (المجموع: ${data.players[p].score})</span>
+                        <span>👤 ${p} (المجموع: ${data.players[p].score || 0})</span>
                         <span style="color: ${color}; font-weight: 900;">${status}</span>
                     </div>
                 `;
@@ -1073,19 +1087,15 @@
 
             switchView('resultsView');
 
-            let countdown = 3;
+            let countdown = 4;
             let displayElement = document.getElementById('nextRoundTimerDisplay');
             document.getElementById('nextRoundTimerContainer').style.display = 'block';
             
             displayElement.innerText = countdown;
-            displayElement.classList.remove('timer-pop');
-            void displayElement.offsetWidth; 
-            displayElement.classList.add('timer-pop');
 
             nextRoundTimerInterval = setInterval(() => {
                 countdown--;
                 displayElement.innerText = countdown;
-                
                 displayElement.classList.remove('timer-pop');
                 void displayElement.offsetWidth; 
                 displayElement.classList.add('timer-pop');
@@ -1103,23 +1113,21 @@
             clearInterval(timerInterval);
             clearInterval(nextRoundTimerInterval);
 
-            showToast('🏁 انتهت اللعبة بنجاح، إليكم منصة التتويج! 🎉');
+            showToast('🏁 انتهت اللعبة بنجاح، مبروك للأبطال الفنانين! 🎉');
 
-            let sorted = Object.entries(playersObj).sort((a, b) => b[1].score - a[1].score);
+            let sorted = Object.entries(playersObj).sort((a, b) => (b[1].score || 0) - (a[1].score || 0));
             let podiumHTML = '';
             
             if(sorted.length > 0) {
-                podiumHTML += `<div class="podium-step podium-2" style="order: 1;"><div style="font-size:1.5rem">🥈</div><div>${sorted[1] ? sorted[1][0] : '-'}</div><div>${sorted[1] ? sorted[1][1].score : ''}</div></div>`;
-                podiumHTML += `<div class="podium-step podium-1" style="order: 2; z-index:2; box-shadow: 0 -10px 20px rgba(255,215,0,0.5);"><div style="font-size:2rem; position:absolute; top:-35px;">👑</div><div>${sorted[0][0]}</div><div>${sorted[0][1].score}</div></div>`;
-                podiumHTML += `<div class="podium-step podium-3" style="order: 3;"><div style="font-size:1.5rem">🥉</div><div>${sorted[2] ? sorted[2][0] : '-'}</div><div>${sorted[2] ? sorted[2][1].score : ''}</div></div>`;
+                podiumHTML += `<div class="podium-step podium-2" style="order: 1;"><div style="font-size:1.5rem">🥈</div><div>${sorted[1] ? sorted[1][0] : '-'}</div><div>${sorted[1] ? (sorted[1][1].score || 0) : ''}</div></div>`;
+                podiumHTML += `<div class="podium-step podium-1" style="order: 2; z-index:2; box-shadow: 0 -10px 20px rgba(255,215,0,0.5);"><div style="font-size:2rem; position:absolute; top:-35px;">👑</div><div>${sorted[0][0]}</div><div>${sorted[0][1].score || 0}</div></div>`;
+                podiumHTML += `<div class="podium-step podium-3" style="order: 3;"><div style="font-size:1.5rem">🥉</div><div>${sorted[2] ? sorted[2][0] : '-'}</div><div>${sorted[2] ? (sorted[2][1].score || 0) : ''}</div></div>`;
             }
             
             document.getElementById('podiumDisplay').innerHTML = podiumHTML;
             confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
             switchView('winnerView');
         }
-    
-        if (window.initRoomDiscovery) window.initRoomDiscovery('draw', (code) => { if (typeof guestJoinRoom === 'function') guestJoinRoom(); });
 
         // الانضمام التلقائي عند فتح الرابط المباشر
         const urlParams = new URLSearchParams(window.location.search);
