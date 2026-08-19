@@ -401,34 +401,198 @@
         }
     };
 
-    // رفع وتعديل صورة الحساب الشخصي
+    
+    // ====================================================
+    // محرر وتعديل وقص الصورة الشخصية التفاعلي (Interactive Cropper)
+    // ====================================================
+    let cropImg = new Image();
+    let cropScale = 1.0;
+    let cropBaseScale = 1.0;
+    let cropOffsetX = 0;
+    let cropOffsetY = 0;
+    let cropRotation = 0;
+    let isDraggingCrop = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+
+    function ensureCropperModalExists() {
+        let modal = document.getElementById('avatarCropperModal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.className = 'avatar-cropper-overlay';
+            modal.id = 'avatarCropperModal';
+            modal.innerHTML = `
+                <div class="avatar-cropper-card">
+                    <h3>تعديل وقص الصورة الشخصية ✂️</h3>
+                    <p class="auth-subtitle">اسحب الصورة لضبط مكانها واستخدم شريط التكبير لتناسب الإطار الدائري</p>
+                    
+                    <div class="crop-viewport-wrap" id="cropViewport">
+                        <canvas id="cropCanvas" width="240" height="240"></canvas>
+                    </div>
+
+                    <div class="crop-controls">
+                        <span>🔍</span>
+                        <input type="range" id="cropZoomSlider" min="0.5" max="3" step="0.02" value="1" oninput="window.handleCropZoom(this.value)">
+                        <button type="button" class="btn-crop-rotate" onclick="window.rotateCropImage()" title="تدوير 90 درجة">🔄</button>
+                    </div>
+
+                    <div class="crop-actions">
+                        <button type="button" class="auth-btn-action" onclick="window.applyCroppedAvatar()">تأكيد واعتماد الصورة ✨</button>
+                        <button type="button" class="auth-btn-danger" onclick="window.cancelCropAvatar()" style="background:#F1F5F9; color:#64748B; border-color:#E2E8F0; margin-top:0;">إلغاء</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            setupCropperEvents();
+        }
+        return modal;
+    }
+
+    function setupCropperEvents() {
+        const viewport = document.getElementById('cropViewport');
+        if (!viewport) return;
+
+        // Mouse Events
+        viewport.addEventListener('mousedown', (e) => {
+            isDraggingCrop = true;
+            dragStartX = e.clientX - cropOffsetX;
+            dragStartY = e.clientY - cropOffsetY;
+        });
+        window.addEventListener('mousemove', (e) => {
+            if (!isDraggingCrop) return;
+            cropOffsetX = e.clientX - dragStartX;
+            cropOffsetY = e.clientY - dragStartY;
+            redrawCropCanvas();
+        });
+        window.addEventListener('mouseup', () => { isDraggingCrop = false; });
+
+        // Touch Events
+        viewport.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+                isDraggingCrop = true;
+                dragStartX = e.touches[0].clientX - cropOffsetX;
+                dragStartY = e.touches[0].clientY - cropOffsetY;
+            }
+        }, { passive: true });
+        window.addEventListener('touchmove', (e) => {
+            if (!isDraggingCrop || e.touches.length !== 1) return;
+            cropOffsetX = e.touches[0].clientX - dragStartX;
+            cropOffsetY = e.touches[0].clientY - dragStartY;
+            redrawCropCanvas();
+        }, { passive: true });
+        window.addEventListener('touchend', () => { isDraggingCrop = false; });
+
+        // Mouse Wheel Zoom
+        viewport.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const slider = document.getElementById('cropZoomSlider');
+            if (slider) {
+                let val = parseFloat(slider.value) - (e.deltaY * 0.002);
+                val = Math.max(0.5, Math.min(3, val));
+                slider.value = val;
+                window.handleCropZoom(val);
+            }
+        }, { passive: false });
+    }
+
+    function redrawCropCanvas() {
+        const canvas = document.getElementById('cropCanvas');
+        if (!canvas || !cropImg.complete) return;
+        const ctx = canvas.getContext('2d');
+        const cw = canvas.width;
+        const ch = canvas.height;
+
+        ctx.clearRect(0, 0, cw, ch);
+        ctx.save();
+        ctx.translate(cw / 2, ch / 2);
+        ctx.rotate((cropRotation * Math.PI) / 180);
+        ctx.scale(cropScale * cropBaseScale, cropScale * cropBaseScale);
+
+        const iw = cropImg.width;
+        const ih = cropImg.height;
+        ctx.drawImage(cropImg, (-iw / 2) + (cropOffsetX / (cropScale * cropBaseScale)), (-ih / 2) + (cropOffsetY / (cropScale * cropBaseScale)));
+        ctx.restore();
+    }
+
+    window.handleCropZoom = function(val) {
+        cropScale = parseFloat(val);
+        redrawCropCanvas();
+    };
+
+    window.rotateCropImage = function() {
+        cropRotation = (cropRotation + 90) % 360;
+        redrawCropCanvas();
+    };
+
+    window.cancelCropAvatar = function() {
+        const modal = document.getElementById('avatarCropperModal');
+        if (modal) modal.style.display = 'none';
+    };
+
+    window.applyCroppedAvatar = function() {
+        const sourceCanvas = document.getElementById('cropCanvas');
+        if (!sourceCanvas) return;
+
+        // إنشاء كانفاس للتصدير النهائي بجودة وحجم مناسبين (200x200)
+        const exportCanvas = document.createElement('canvas');
+        exportCanvas.width = 200;
+        exportCanvas.height = 200;
+        const ctx = exportCanvas.getContext('2d');
+
+        // رسم محتوى الكانفاس المعروض
+        ctx.drawImage(sourceCanvas, 0, 0, 200, 200);
+
+        const finalDataUrl = exportCanvas.toDataURL('image/jpeg', 0.88);
+        if (window.currentUserAccount) {
+            window.currentUserAccount.avatar = finalDataUrl;
+            saveAccountToStorage(window.currentUserAccount);
+            const preview = document.getElementById('modalAvatarPreview');
+            if (preview) preview.src = finalDataUrl;
+            updateHeaderAuthUI();
+            
+            // مزامنة الصورة في قاعدة البيانات إن أمكن
+            const { db } = getFirebase();
+            if (db && window.currentUserAccount.uid) {
+                const safeKey = usernameToSafeKey(window.currentUserAccount.name);
+                db.ref('app_users/' + safeKey).update({ avatar: finalDataUrl }).catch(()=>{});
+                db.ref('users/' + window.currentUserAccount.uid).update({ avatar: finalDataUrl }).catch(()=>{});
+            }
+        }
+
+        window.cancelCropAvatar();
+        showToast('تم اعتماد الصورة! ✨', 'تم تعديل وقص صورتك الشخصية بنجاح.');
+    };
+
+    // معالج رفع الصورة لفتح أداة القص فوراً
     window.handleAvatarUpload = function(event) {
         const file = event.target.files[0];
         if (!file || !window.currentUserAccount) return;
-        const preview = document.getElementById('modalAvatarPreview');
 
         const reader = new FileReader();
         reader.onload = function(e) {
-            const rawDataUrl = e.target.result;
-            const img = new Image();
-            img.onload = function() {
-                const canvas = document.createElement('canvas');
-                const maxDim = 160;
-                let w = img.width, h = img.height;
-                if (w > h) { h = Math.round((h / w) * maxDim); w = maxDim; }
-                else { w = Math.round((w / h) * maxDim); h = maxDim; }
-                canvas.width = w; canvas.height = h;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, w, h);
-                const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+            cropImg = new Image();
+            cropImg.onload = function() {
+                cropScale = 1.0;
+                cropOffsetX = 0;
+                cropOffsetY = 0;
+                cropRotation = 0;
                 
-                window.currentUserAccount.avatar = compressedDataUrl;
-                if (preview) preview.src = compressedDataUrl;
+                // حساب المقياس الأساسي لتغطية الإطار
+                const minDim = Math.min(cropImg.width, cropImg.height);
+                cropBaseScale = 240 / minDim;
+
+                const slider = document.getElementById('cropZoomSlider');
+                if (slider) slider.value = 1;
+
+                const modal = ensureCropperModalExists();
+                modal.style.display = 'flex';
+                redrawCropCanvas();
             };
-            img.src = rawDataUrl;
+            cropImg.src = e.target.result;
         };
         reader.readAsDataURL(file);
     };
+
 
     // حفظ تعديلات الملف الشخصي
     window.saveProfileChanges = async function() {

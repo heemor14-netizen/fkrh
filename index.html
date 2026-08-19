@@ -700,6 +700,86 @@
     position: relative;
     z-index: 1;
 }
+    
+        /* تحسينات بصرية إضافية للأزرار والبطاقات */
+        .btn-primary {
+            background: linear-gradient(135deg, #FF5E36 0%, #FF8A3D 50%, #FFA048 100%) !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 6px 20px rgba(255, 94, 54, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4) !important;
+            position: relative !important;
+            overflow: hidden !important;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            font-weight: 800 !important;
+            border: none !important;
+            letter-spacing: 0.2px !important;
+        }
+        .btn-primary::after {
+            content: "" !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: -100% !important;
+            width: 60% !important;
+            height: 100% !important;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent) !important;
+            transform: skewX(-25deg) !important;
+            transition: 0.7s ease !important;
+        }
+        .btn-primary:hover::after {
+            left: 150% !important;
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.03) !important;
+            box-shadow: 0 12px 28px rgba(255, 94, 54, 0.45), 0 0 15px rgba(255, 94, 54, 0.2) !important;
+        }
+        .btn-primary:active {
+            transform: translateY(1px) scale(0.97) !important;
+        }
+
+        .btn-share, .btn-compact {
+            background: rgba(255, 255, 255, 0.85) !important;
+            backdrop-filter: blur(10px) !important;
+            border: 1.5px solid rgba(255, 94, 54, 0.3) !important;
+            color: #FF5E36 !important;
+            font-weight: 800 !important;
+            transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.03) !important;
+        }
+        .btn-share:hover, .btn-compact:hover {
+            background: #FFF2ED !important;
+            border-color: #FF5E36 !important;
+            color: #E84C23 !important;
+            transform: translateY(-2.5px) scale(1.02) !important;
+            box-shadow: 0 8px 20px rgba(255, 94, 54, 0.22) !important;
+        }
+
+        .cat-chip {
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            font-weight: 700 !important;
+            border: 1.5px solid rgba(0, 0, 0, 0.06) !important;
+        }
+        .cat-chip:hover {
+            transform: translateY(-2px) !important;
+            border-color: rgba(255, 94, 54, 0.4) !important;
+            background: #FFF9F6 !important;
+            color: var(--primary-orange) !important;
+        }
+        .cat-chip.active {
+            background: var(--orange-gradient) !important;
+            color: #FFFFFF !important;
+            border-color: transparent !important;
+            box-shadow: 0 6px 18px var(--orange-glow) !important;
+            transform: translateY(-2px) !important;
+        }
+
+        .game-card {
+            border: 1px solid rgba(255, 255, 255, 0.8) !important;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        }
+        .game-card:hover {
+            transform: translateY(-8px) scale(1.01) !important;
+            box-shadow: 0 20px 45px rgba(255, 94, 54, 0.18), 0 0 0 1px rgba(255, 94, 54, 0.2) !important;
+        }
+
     </style>
 </head>
 <body>
@@ -738,19 +818,19 @@
     <!-- الصفحة الرئيسية: قائمة الألعاب وشريط البحث -->
     <div id="homeMainView">
         <section class="hero">
-            <h1>كل لعبة تبدأ بـ <span>فِكْرَة</span>..<br>تحدى أصحابك واثبت إنك الأذكى! 🔥</h1>
-            <p>جمّع أصحابك والعبوا ألعاب السرعة والذكاء !</p>
+            <h1>كل تحدٍّ يبدأ بـ <span>فِكْرَة</span>..<br>منصة الألعاب الجماعية التفاعلية والتحديات الذهنية 🔥</h1>
+            <p>تنافس مع أصدقائك في باقة متكاملة من ألعاب الذكاء والمعرفة وسرعة البديهة عبر غرف لعب مباشرة.</p>
         </section>
 
         <section class="controls-section">
             <div class="search-box">
-                <input type="text" id="searchInput" oninput="filterGames()" placeholder="🔍 ابحث عن لعبتك المفضلة (اسم انسان، جماد، جاسوس...)...">
+                <input type="text" id="searchInput" oninput="filterGames()" placeholder="🔍 ابحث عن لعبتك المفضلة (إنسان حيوان، خمن الدولة، الجاسوس، السرعة...)...">
             </div>
             <div class="share-btn-container" style="gap: 0.6rem;">
     <!-- زر المشاركة -->
     <button class="btn-share" onclick="shareWebsite()">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
-        <span>مشاركة الموقع</span>
+        <span>مشاركة المنصة</span>
     </button>
 
     <!-- زر تصغير العرض بنفس التنسيق تماماً -->
@@ -760,122 +840,128 @@
     </button>
 </div>
             <div class="categories">
-                <div class="cat-chip active" onclick="filterByCategory('all', this)">كل الألعاب 🔥</div>
-                <div class="cat-chip" onclick="filterByCategory('word', this)">ألعاب الكلمات 📝</div>
-                <div class="cat-chip" onclick="filterByCategory('speed', this)">سرعة وذكاء ⚡</div>
-                <div class="cat-chip" onclick="filterByCategory('party', this)">تحديات جماعية 👥</div>
+                <div class="cat-chip active" onclick="filterByCategory('all', this)">جميع الألعاب 🌟</div>
+                <div class="cat-chip" onclick="filterByCategory('word', this)">ألعاب الكلمات والمعرفة 📝</div>
+                <div class="cat-chip" onclick="filterByCategory('speed', this)">السرعة والبديهة ⚡</div>
+                <div class="cat-chip" onclick="filterByCategory('party', this)">التحديات الجماعية 👥</div>
             </div>
         </section>
 
         <main class="games-grid" id="gamesGridContainer">
-            <!-- لعبة إنسان جماد نبات (شغالة) -->
-            <div class="game-card" data-category="word party" data-name=" انسان جماد نبات بلاد">
+            <!-- لعبة إنسان جماد نبات -->
+            <div class="game-card" data-category="word party" data-name="انسان جماد نبات بلاد حيوان">
                 <div class="game-icon-img">
-    <img src="./images/asm.jpeg" alt="أيقونة اللعبة">
-</div>
-                <div class="game-title"> انسان جماد نبات</div>
-                <div class="game-desc">اللعبة الكلاسيكية الشهيرة! اختبر سرعة بديهتك وجيب كلمات بالحرف المطلوب.</div>
+                    <img src="./images/asm.jpeg" alt="إنسان حيوان جماد">
+                </div>
+                <div class="game-title">إنسان حيوان جماد</div>
+                <div class="game-desc">اللعبة الكلاسيكية الشهيرة؛ استعرض سرعة بديهتك وحصيلتك اللغوية بالحرف المختار قبل انتهاء المؤقت.</div>
                 <div class="game-meta">
                     <span class="players-count">👥 2 - 8 لاعبين</span>
-                    <button onclick="openGameRoom('scattergories')" class="btn btn-primary">العب🔥</button>
+                    <button onclick="openGameRoom('scattergories')" class="btn btn-primary">ابدأ اللعب ⚡</button>
                 </div>
             </div>
 
-  <div class="game-card" data-category="word party" data-name="خمن الدولة">
-                    <div class="game-icon-img">
-    <img src="./images/dwlh.jpeg" alt="أيقونة اللعبة">
-</div>
-    <div class="game-title">خمن الدولة</div>
-    <div class="game-desc">تحدي جغرافي شيق يعتمد على سرعة استنتاج أسماء الدول من خلال تلميحات ومعالم سريعة.</div>
-    <div class="game-meta">
-        <span class="players-count">👥 2 - 8 لاعبين</span>
-        <button onclick="location.href='country.html'" class="btn btn-primary">العب 🔥</button>
-    </div>
-</div>
+            <!-- لعبة خمن الدولة -->
+            <div class="game-card" data-category="word party" data-name="خمن الدولة جغرافيا معالم">
+                <div class="game-icon-img">
+                    <img src="./images/dwlh.jpeg" alt="خمّن الدولة">
+                </div>
+                <div class="game-title">خمّن الدولة</div>
+                <div class="game-desc">تحدٍ جغرافي وثقافي شيق؛ استنتج أسماء الدول والمدن العالمية من خلال الدلائل والمعالم الرمزية بأعلى سرعة.</div>
+                <div class="game-meta">
+                    <span class="players-count">👥 2 - 8 لاعبين</span>
+                    <button onclick="location.href='country.html'" class="btn btn-primary">ابدأ اللعب ⚡</button>
+                </div>
+            </div>
 
-            <div class="game-card" data-category="word party" data-name="الكلمات المبعثرة">
-                                <div class="game-icon-img">
-    <img src="./images/klmat.jpeg" alt="أيقونة اللعبة">
-</div>
+            <!-- لعبة الكلمات المبعثرة -->
+            <div class="game-card" data-category="word party" data-name="الكلمات المبعثرة حروف لغة">
+                <div class="game-icon-img">
+                    <img src="./images/klmat.jpeg" alt="الكلمات المبعثرة">
+                </div>
                 <div class="game-title">الكلمات المبعثرة</div>
-                <div class="game-desc">تختبر قوة تركيزك وبصرك عبر فك وتركيب الحروف المقلوبة للوصول إلى الكلمة الصحيحة.</div>
+                <div class="game-desc">اختبار لقوة الملاحظة والتركيز البصري؛ أعد ترتيب الحروف المقلوبة لاكتشاف المفردات اللغوية الصحيحة.</div>
                 <div class="game-meta">
                     <span class="players-count">👥 2 - 8 لاعبين</span>
-                    <button onclick="location.href='./klmat.html'" class="btn btn-primary">إلعب 🔥</button>
+                    <button onclick="location.href='./klmat.html'" class="btn btn-primary">ابدأ اللعب ⚡</button>
                 </div>
             </div>
 
-            <div class="game-card" data-category="word party" data-name="معلومات كروية">
-                                <div class="game-icon-img">
-   <img src="./images/krt.jpeg" alt="أيقونة اللعبة">
-</div>
+            <!-- لعبة معلومات كروية -->
+            <div class="game-card" data-category="word party" data-name="معلومات كروية رياضة كرة قدم">
+                <div class="game-icon-img">
+                    <img src="./images/krt.jpeg" alt="معلومات كروية">
+                </div>
                 <div class="game-title">معلومات كروية</div>
-                <div class="game-desc">اختبر معلوماتك الكروية، وتوقع النتائج ونافس مع أصدقائك لتفوز بكأس الدوري.</div>
+                <div class="game-desc">تحدي الثقافة الرياضية الكبرى؛ اختبر رصيدك من بطولات وأندية كرة القدم وتنافس للوصول إلى صدارة الترتيب.</div>
                 <div class="game-meta">
                     <span class="players-count">👥 2 - 8 لاعبين</span>
-                    <button onclick="location.href='football.html'" class="btn btn-primary">العب 🔥</button>
+                    <button onclick="location.href='football.html'" class="btn btn-primary">ابدأ اللعب ⚡</button>
                 </div>
             </div>
 
-                        <div class="game-card" data-category="word party" data-name="أكمل الشطر">
-                                <div class="game-icon-img">
-    <img src="./images/shtr.jpeg" alt="أيقونة اللعبة">
-</div>
+            <!-- لعبة أكمل الشطر -->
+            <div class="game-card" data-category="word party" data-name="أكمل الشطر شعر أمثال حكمة">
+                <div class="game-icon-img">
+                    <img src="./images/shtr.jpeg" alt="أكمل الشطر">
+                </div>
                 <div class="game-title">أكمل الشطر</div>
-                <div class="game-desc">تختبر سرعة بديهتك في تذكر وتكملة الأشعار والأمثال الشعبية والكلمات الناقصة.</div>
+                <div class="game-desc">سباق أدبي وثقافي راقٍ؛ أثبت فصاحتك وسرعة استحضارك في إكمال الأبيات الشعرية والأمثال والحكم الخالدة.</div>
                 <div class="game-meta">
                     <span class="players-count">👥 2 - 8 لاعبين</span>
-                    <button onclick="location.href='mthl.html'" class="btn btn-primary">العب 🔥</button>
+                    <button onclick="location.href='mthl.html'" class="btn btn-primary">ابدأ اللعب ⚡</button>
                 </div>
             </div>
 
-             <div class="game-card" data-category="word party" data-name="وش العذر">
-                                <div class="game-icon-img">
-    <img src="./images/3thr.jpeg" alt="أيقونة اللعبة">
-</div>
-                <div class="game-title">وش العذر</div>
-                <div class="game-desc">تختبر قدرتك على اختلاق أغبى وأقوى الأعذار لتصريف مواقف محرجة يضعك فيها أصحابك.</div>
+            <!-- لعبة وش العذر -->
+            <div class="game-card" data-category="word party" data-name="وش العذر مواقف إبداع">
+                <div class="game-icon-img">
+                    <img src="./images/3thr.jpeg" alt="وش العذر">
+                </div>
+                <div class="game-title">فن الأعذار</div>
+                <div class="game-desc">تحدٍ إبداعي فكاهي؛ ابتكر أذكى التبريرات والحلول المنطقية لتجاوز المواقف المفاجئة والمحرجة بأسلوب مقنع.</div>
                 <div class="game-meta">
                     <span class="players-count">👥 2 - 8 لاعبين</span>
-                    <button onclick="location.href='3thr.html'" class="btn btn-primary">العب 🔥</button>
+                    <button onclick="location.href='3thr.html'" class="btn btn-primary">ابدأ اللعب ⚡</button>
                 </div>
             </div>
 
-            <!-- لعبة مين الجاسوس (شغالة ومفعلة الآن!) -->
-            <div class="game-card" data-category="party" data-name=" الجاسوس">
-                                <div class="game-icon-img">
-    <img src="./images/jasos.jpeg" alt="أيقونة اللعبة">
-</div>
+            <!-- لعبة مين الجاسوس -->
+            <div class="game-card" data-category="party" data-name="مين الجاسوس استنتاج تحقيق">
+                <div class="game-icon-img">
+                    <img src="./images/jasos.jpeg" alt="مين الجاسوس">
+                </div>
                 <div class="game-title">مين الجاسوس؟</div>
-                <div class="game-desc">اكتشف الجاسوس المتخفي بينكم قبل ما يعرف المكان السري! لعبة الذكاء والتشكيك.</div>
+                <div class="game-desc">لعبة الذكاء الاجتماعي والتحقيق؛ اكتشف الجاسوس المتخفي بين اللاعبين قبل أن يحدد الموقع السري المشترك.</div>
                 <div class="game-meta">
                     <span class="players-count">👥 3 - 10 لاعبين</span>
-                    <button onclick="location.href='gasos.html'" class="btn btn-primary">العب 🔥</button>
+                    <button onclick="location.href='gasos.html'" class="btn btn-primary">ابدأ اللعب ⚡</button>
                 </div>
             </div>
 
-            <div class="game-card" data-category="speed" data-name="تحدي السرعة">
-                                <div class="game-icon-img">
-    <img src="./images/asr3.jpeg" alt="أيقونة اللعبة">
-</div>
+            <!-- لعبة تحدي السرعة -->
+            <div class="game-card" data-category="speed" data-name="تحدي السرعة سرعة بديهة وقت">
+                <div class="game-icon-img">
+                    <img src="./images/asr3.jpeg" alt="تحدي السرعة">
+                </div>
                 <div class="game-title">تحدي السرعة</div>
-                <div class="game-desc">تختبر سرعة بديهتك في كتابة أو ذكر إجابة صحيحة قبل نفاد الوقت القصير.</div>
+                <div class="game-desc">سباق مع الزمن؛ أجب بدقة على التحديات اللغوية والذهنية المتتالية قبل نفاد ثواني المؤقت الحاسم.</div>
                 <div class="game-meta">
                     <span class="players-count">👥 2 - 6 لاعبين</span>
-                    <button onclick="location.href='timer.html'" class="btn btn-primary">العب 🔥</button>
+                    <button onclick="location.href='timer.html'" class="btn btn-primary">ابدأ اللعب ⚡</button>
                 </div>
             </div>
 
-            <!-- لعبة ارسم وتخمّن (جاهزة وشغالة 100%) -->
-            <div class="game-card" data-category="party" data-name="ارسم وتخمن">
-                                <div class="game-icon-img">
-    <img src="./images/rsm.jpeg" alt="أيقونة اللعبة">
-</div>
+            <!-- لعبة ارسم وتخمّن -->
+            <div class="game-card" data-category="party" data-name="ارسم وتخمن رسم إبداع">
+                <div class="game-icon-img">
+                    <img src="./images/rsm.jpeg" alt="ارسم وتخمّن">
+                </div>
                 <div class="game-title">ارسم وتخمّن</div>
-                <div class="game-desc">ارسم الكلمة المكتوبة وخلي بقية اللاعبين يحزرون الرسمة بأسرع وقت.</div>
+                <div class="game-desc">مساحة الإبداع الفني البصري؛ عبّر عن الكلمة المطلوبة بالرسم المباشر ليتعرف عليها باقي اللاعبين بأسرع وقت.</div>
                 <div class="game-meta">
                     <span class="players-count">👥 2 - 12 لاعبين</span>
-                    <button onclick="location.href='draw.html'" class="btn btn-primary">العب 🔥</button>
+                    <button onclick="location.href='draw.html'" class="btn btn-primary">ابدأ اللعب ⚡</button>
                 </div>
             </div>
         </main>
@@ -1829,7 +1915,8 @@ function toggleCompactView() {
 
             roomRef.get().then((snapshot) => {
                 if (snapshot.exists()) {
-                    roomRef.child('players/' + playerName).set({ joined: true, score: 0 });
+                    const pAvatar = (window.currentUserAccount && window.currentUserAccount.avatar) ? window.currentUserAccount.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
+                    roomRef.child('players/' + playerName).set({ joined: true, score: 0, avatar: pAvatar });
                     document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
                     listenToFirebaseRoom();
                     switchScatterSubView('lobbyView');
@@ -1896,15 +1983,18 @@ function toggleCompactView() {
 
         function updatePlayersUI() {
             const container = document.getElementById('connectedPlayersContainer');
+            if (!container) return;
             container.innerHTML = '';
             playersList.forEach(p => {
                 let kickBtn = '';
                 if (isHost && p !== playerName) {
-                    kickBtn = `<button onclick="kickPlayer('${p}')" class="btn btn-danger btn-sm">طرد ❌</button>`;
+                    kickBtn = `<button onclick="kickPlayer('${p}')" class="btn btn-danger btn-sm" style="margin-right:auto; padding:0.25rem 0.6rem; font-size:0.75rem;">طرد ❌</button>`;
                 }
+                const pAvatar = (p === playerName && window.currentUserAccount) ? window.currentUserAccount.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
                 container.innerHTML += `
                     <div class="player-chip">
-                        <span>👤 ${p} ${p === playerName ? ' (أنت)' : ''}</span>
+                        <img src="${pAvatar}" class="player-chip-avatar" alt="${p}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+                        <span class="player-chip-name">${p}${p === playerName ? ' (أنت)' : ''}</span>
                         ${kickBtn}
                     </div>
                 `;

@@ -812,7 +812,8 @@
 
             roomRef.get().then((snap) => {
                 if(snap.exists()) {
-                    roomRef.child('players/' + playerName).set({ score: 0 });
+                    const pAvatar = (window.currentUserAccount && window.currentUserAccount.avatar) ? window.currentUserAccount.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
+                    roomRef.child('players/' + playerName).set({ score: 0, avatar: pAvatar, joined: true });
                     document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
                     listenToFirebase();
                     switchView('lobbyView');
@@ -885,10 +886,22 @@
 
         function updatePlayersUI(playersObj) {
             const container = document.getElementById('connectedPlayersContainer');
+            if (!container) return;
             container.innerHTML = '';
             for(let p in playersObj) {
-                container.innerHTML += `<div class="player-chip">👤 ${p} <span style="color:var(--primary-orange);">${playersObj[p].score} نقطة</span></div>`;
+                const pData = playersObj[p] || {};
+                const pScore = (typeof pData.score === 'number') ? pData.score : (pData.score || 0);
+                const pAvatar = pData.avatar || ((p === playerName && window.currentUserAccount) ? window.currentUserAccount.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png');
+                const isMe = (p === playerName);
+                container.innerHTML += `
+                    <div class="player-chip">
+                        <img src="${pAvatar}" class="player-chip-avatar" alt="${p}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+                        <span class="player-chip-name">${p}${isMe ? ' (أنت)' : ''}</span>
+                        <span class="player-chip-score">${pScore} نقطة</span>
+                    </div>
+                `;
             }
+        }
         }
 
         function hostStartGame() {
