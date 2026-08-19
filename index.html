@@ -839,6 +839,17 @@
         <span id="compactBtnText">تصغير العرض</span>
     </button>
 </div>
+            
+        <!-- بطاقة الانضمام السريع وكشف غرف نفس الشبكة في الرئيسية -->
+        <div class="home-quick-join-card">
+            <div class="quick-join-input-wrap">
+                <span class="quick-join-icon">🔑</span>
+                <input type="text" id="homeQuickRoomCode" class="quick-join-input" placeholder="أدخل رمز أي غرفة للدخول المباشر..." maxlength="10" onkeydown="if(event.key==='Enter') window.homeJoinAnyRoom()">
+                <button type="button" class="btn-home-quick-join" onclick="window.homeJoinAnyRoom()">دخول سريع ⚡</button>
+            </div>
+            <div id="homeNearbyRoomsList" class="home-nearby-rooms-list" style="display:none;"></div>
+        </div>
+
             <div class="categories">
                 <div class="cat-chip active" onclick="filterByCategory('all', this)">جميع الألعاب 🌟</div>
                 <div class="cat-chip" onclick="filterByCategory('word', this)">ألعاب الكلمات والمعرفة 📝</div>
@@ -3037,6 +3048,7 @@ ${JSON.stringify(allAnswers, null, 2)}
             });
         }
     
+        if (window.initHomeAllRoomsDiscovery) window.initHomeAllRoomsDiscovery();
         if (window.initRoomDiscovery) window.initRoomDiscovery('scattergories', (code) => { if (typeof guestJoinRoom === 'function') guestJoinRoom(); });
 </script>
 </body>

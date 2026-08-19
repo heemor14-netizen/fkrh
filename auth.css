@@ -809,3 +809,170 @@ header {
     transform: translateY(-2px) scale(1.04) !important;
     box-shadow: 0 6px 16px rgba(255, 94, 54, 0.4) !important;
 }
+
+
+/* ====================================================
+   بطاقة الدخول السريع واكتشاف الغرف في الصفحة الرئيسية (Home Quick Join)
+   ==================================================== */
+.home-quick-join-card {
+    max-width: 800px;
+    margin: 0.8rem auto 1.5rem;
+    padding: 0.8rem 1rem;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-radius: 20px;
+    border: 1.5px solid rgba(255, 94, 54, 0.3);
+    box-shadow: 0 8px 24px rgba(255, 94, 54, 0.08);
+    direction: rtl;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.quick-join-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.quick-join-icon {
+    font-size: 1.2rem;
+    padding: 0 4px;
+}
+
+.quick-join-input {
+    flex: 1;
+    padding: 0.65rem 1rem;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 50px;
+    outline: none;
+    font-size: 0.9rem;
+    font-weight: 700;
+    background: #F8FAFC;
+    color: #1E293B;
+    font-family: inherit;
+    transition: 0.25s;
+}
+
+.quick-join-input:focus {
+    border-color: var(--auth-orange-main);
+    background: #FFFFFF;
+    box-shadow: 0 0 0 3px rgba(255, 94, 54, 0.15);
+}
+
+.btn-home-quick-join {
+    padding: 0.65rem 1.3rem !important;
+    border-radius: 50px !important;
+    background: var(--auth-orange-grad) !important;
+    color: #FFFFFF !important;
+    font-weight: 800 !important;
+    font-size: 0.88rem !important;
+    border: none !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 14px var(--auth-orange-glow) !important;
+    transition: all 0.25s !important;
+    white-space: nowrap !important;
+}
+
+.btn-home-quick-join:hover {
+    transform: translateY(-2px) scale(1.03) !important;
+    box-shadow: 0 8px 20px rgba(255, 94, 54, 0.4) !important;
+}
+
+.home-nearby-rooms-list {
+    margin-top: 0.8rem;
+    padding-top: 0.8rem;
+    border-top: 1px dashed rgba(255, 94, 54, 0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.home-nearby-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    font-size: 0.88rem;
+    color: #1E293B;
+    margin-bottom: 4px;
+}
+
+.home-room-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0.8rem;
+    background: #FFFFFF;
+    border-radius: 14px;
+    border: 1px solid #E2E8F0;
+    transition: all 0.25s ease;
+    cursor: pointer;
+}
+
+.home-room-row:hover {
+    transform: translateY(-2px);
+    border-color: var(--auth-orange-main);
+    box-shadow: 0 6px 16px rgba(255, 94, 54, 0.15);
+    background: #FFFDFC;
+}
+
+.home-room-row.same-net-highlight {
+    border: 1.5px solid #10B981;
+    background: #F0FDF4;
+}
+
+.home-room-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.home-room-game-badge {
+    background: var(--auth-orange-grad);
+    color: #FFFFFF;
+    font-weight: 800;
+    font-size: 0.74rem;
+    padding: 3px 8px;
+    border-radius: 8px;
+    white-space: nowrap;
+}
+
+.home-room-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    text-align: right;
+}
+
+.home-room-title {
+    font-weight: 800;
+    font-size: 0.88rem;
+    color: #1E293B;
+}
+
+.home-room-sub {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.76rem;
+    color: #64748B;
+}
+
+@media (max-width: 600px) {
+    .home-quick-join-card {
+        margin: 0.6rem 0.5rem 1.2rem;
+        padding: 0.7rem 0.8rem;
+    }
+    .quick-join-input {
+        font-size: 0.82rem;
+        padding: 0.55rem 0.8rem;
+    }
+    .btn-home-quick-join {
+        padding: 0.55rem 1rem !important;
+        font-size: 0.82rem !important;
+    }
+}

@@ -671,7 +671,6 @@
                 `;
             }
         }
-        }
 
         function hostStartGame() {
             if(window.unbroadcastRoom) window.unbroadcastRoom('gasos', currentRoomCode);
@@ -903,6 +902,17 @@
         }
     
         if (window.initRoomDiscovery) window.initRoomDiscovery('gasos', (code) => { if (typeof guestJoinRoom === 'function') guestJoinRoom(); });
-</script>
+
+        // الانضمام التلقائي عند فتح الرابط المباشر
+        const urlParams = new URLSearchParams(window.location.search);
+        const joinCode = urlParams.get('join');
+        if (joinCode) {
+            const input = document.getElementById('roomCodeInput');
+            if (input) input.value = joinCode;
+            setTimeout(() => {
+                if (typeof guestJoinRoom === 'function') guestJoinRoom();
+            }, 350);
+        }
+    </script>
 </body>
 </html>
