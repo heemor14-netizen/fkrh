@@ -3200,97 +3200,130 @@ ${JSON.stringify(allAnswers, null, 2)}
             });
         }
 
-        // ==================== دوال الانضمام السريع واكتشاف الغرف ====================
+        // ==================== دوال الانضمام السريع واكتشاف الغرف (يدعم جميع الألعاب الـ 9) ====================
 
-        // دالة الانضمام السريع من الصفحة الرئيسية — تبحث في كل أنواع الغرف
-        window.homeJoinAnyRoom = function() {
+        // دالة الانضمام السريع من الصفحة الرئيسية — تبحث في كل مسارات الألعاب في Firebase بالتوازي
+        window.homeJoinAnyRoom = async function() {
             const codeInput = document.getElementById('homeQuickRoomCode');
-            const code = codeInput.value.trim();
+            const code = (codeInput ? codeInput.value : '').trim();
             if (!code) {
-                triggerUniversalToast('أدخل الرمز 🔑', 'اكتب رمز الغرفة عشان تدخل!', false);
+                triggerUniversalToast('أدخل الرمز 🔑', 'اكتب رمز الغرفة المكون من أرقام!', false);
                 return;
             }
 
-            // تعطيل الزر أثناء البحث
             const btn = document.querySelector('.btn-home-quick-join');
-            const originalText = btn.textContent;
-            btn.textContent = 'جاري البحث...';
-            btn.disabled = true;
+            const originalText = btn ? btn.textContent : 'دخول سريع ⚡';
+            if (btn) {
+                btn.textContent = 'جاري البحث...';
+                btn.disabled = true;
+            }
 
-            // البحث في غرف إنسان حيوان جماد
-            db.ref('rooms/' + code).once('value').then(snap => {
-                if (snap.exists()) {
+            const restoreBtn = () => {
+                if (btn) {
                     btn.textContent = originalText;
                     btn.disabled = false;
-                    openGameRoom('scattergories');
-                    document.getElementById('roomCodeInput').value = code;
-                    if (currentUserAccount && currentUserAccount.name) {
-                        document.getElementById('playerNameInput').value = currentUserAccount.name;
+                }
+            };
+
+            // قائمة جميع الألعاب الـ 9 ومساراتها في Firebase وصفحاتها
+            const allGames = [
+                { type: 'scattergories', path: 'rooms', name: 'إنسان حيوان جماد', page: null },
+                { type: 'country', path: 'country_rooms', name: 'خمّن الدولة', page: 'country.html' },
+                { type: 'klmat', path: 'scramble_rooms', name: 'الكلمات المبعثرة', page: 'klmat.html' },
+                { type: 'football', path: 'football_rooms', name: 'معلومات كروية', page: 'football.html' },
+                { type: 'mthl', path: 'complete_rooms', name: 'أكمل الشطر', page: 'mthl.html' },
+                { type: '3thr', path: 'excuse_rooms', name: 'فن الأعذار', page: '3thr.html' },
+                { type: 'gasos', path: 'spy_rooms', name: 'مين الجاسوس', page: 'gasos.html' },
+                { type: 'timer', path: 'fast_write_rooms', name: 'تحدي السرعة', page: 'timer.html' },
+                { type: 'draw', path: 'draw_rooms', name: 'ارسم وتخمّن', page: 'draw.html' }
+            ];
+
+            try {
+                // فحص متوازي فائق السرعة لجميع مسارات الألعاب
+                const checkPromises = allGames.map(g => 
+                    db.ref(g.path + '/' + code).once('value')
+                        .then(snap => (snap.exists() ? g : null))
+                        .catch(() => null)
+                );
+
+                const results = await Promise.all(checkPromises);
+                const match = results.find(g => g !== null);
+
+                if (match) {
+                    restoreBtn();
+                    if (codeInput) codeInput.value = '';
+
+                    if (match.page === null) {
+                        // لعبة إنسان حيوان جماد المدمجة في الرئيسية
+                        openGameRoom('scattergories');
+                        const rInput = document.getElementById('roomCodeInput');
+                        if (rInput) rInput.value = code;
+                        if (currentUserAccount && currentUserAccount.name) {
+                            const pInput = document.getElementById('playerNameInput');
+                            if (pInput) pInput.value = currentUserAccount.name;
+                        }
+                        if (typeof guestJoinRoom === 'function') guestJoinRoom();
+                    } else {
+                        // الانتقال المباشر لصفحة اللعبة المستقلة مع كود الانضمام التلقائي
+                        window.location.href = match.page + '?join=' + encodeURIComponent(code);
                     }
-                    guestJoinRoom();
-                    codeInput.value = '';
                     return;
                 }
 
-                // البحث في غرف الجاسوس
-                db.ref('spyRooms/' + code).once('value').then(snap2 => {
-                    if (snap2.exists()) {
-                        btn.textContent = originalText;
-                        btn.disabled = false;
-                        openGameRoom('spy');
-                        document.getElementById('spyRoomCodeInput').value = code;
-                        if (currentUserAccount && currentUserAccount.name) {
-                            document.getElementById('spyPlayerNameInput').value = currentUserAccount.name;
-                        }
-                        spyGuestJoinRoom();
-                        codeInput.value = '';
-                        return;
-                    }
-
-                    // البحث في غرف الرسم
-                    db.ref('drawRooms/' + code).once('value').then(snap3 => {
-                        btn.textContent = originalText;
-                        btn.disabled = false;
-                        if (snap3.exists()) {
-                            openGameRoom('draw');
-                            document.getElementById('drawRoomCodeInput').value = code;
-                            if (currentUserAccount && currentUserAccount.name) {
-                                document.getElementById('drawPlayerNameInput').value = currentUserAccount.name;
-                            }
-                            drawGuestJoinRoom();
-                            codeInput.value = '';
-                        } else {
-                            triggerUniversalToast('غير موجود ❌', 'ما لقينا غرفة بهالرمز، تأكد منه!', false);
+                // فحص احتياطي في قائمة الغرف النشطة activeRooms
+                const activeSnap = await db.ref('activeRooms').once('value');
+                if (activeSnap.exists()) {
+                    let foundRoom = null;
+                    activeSnap.forEach(child => {
+                        const r = child.val();
+                        if (r && String(r.code).trim() === String(code).trim()) {
+                            foundRoom = r;
                         }
                     });
-                });
-            }).catch(() => {
-                btn.textContent = originalText;
-                btn.disabled = false;
-                triggerUniversalToast('خطأ في الاتصال ❌', 'تأكد من اتصالك بالإنترنت وحاول مرة ثانية.', false);
-            });
+
+                    if (foundRoom) {
+                        restoreBtn();
+                        if (codeInput) codeInput.value = '';
+                        const gameRedirectMap = {
+                            'scattergories': null,
+                            'country': 'country.html',
+                            'klmat': 'klmat.html',
+                            'football': 'football.html',
+                            'mthl': 'mthl.html',
+                            '3thr': '3thr.html',
+                            'gasos': 'gasos.html',
+                            'spy': 'gasos.html',
+                            'timer': 'timer.html',
+                            'draw': 'draw.html'
+                        };
+
+                        const targetPage = gameRedirectMap[foundRoom.gameType];
+                        if (targetPage) {
+                            window.location.href = targetPage + '?join=' + encodeURIComponent(code);
+                            return;
+                        } else {
+                            openGameRoom('scattergories');
+                            const rInput = document.getElementById('roomCodeInput');
+                            if (rInput) rInput.value = code;
+                            if (currentUserAccount && currentUserAccount.name) {
+                                const pInput = document.getElementById('playerNameInput');
+                                if (pInput) pInput.value = currentUserAccount.name;
+                            }
+                            if (typeof guestJoinRoom === 'function') guestJoinRoom();
+                            return;
+                        }
+                    }
+                }
+
+                restoreBtn();
+                triggerUniversalToast('غير موجود ❌', 'ما لقينا غرفة نشطة بهذا الرمز (' + code + ')، تأكد من الرمز وحاول مجدداً!', false);
+            } catch(err) {
+                restoreBtn();
+                triggerUniversalToast('خطأ في الاتصال ❌', 'تعذر التحقق من رمز الغرفة، تأكد من اتصالك بالإنترنت.', false);
+            }
         };
 
-        // نشر الغرفة في قائمة الغرف النشطة عشان الكل يشوفها
-        window.broadcastRoom = function(gameType, code, gameName, hostName, hostAvatar) {
-            const roomKey = gameType + '_' + code;
-            db.ref('activeRooms/' + roomKey).set({
-                gameType: gameType,
-                code: code,
-                gameName: gameName,
-                hostName: hostName,
-                hostAvatar: hostAvatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
-                createdAt: firebase.database.ServerValue.TIMESTAMP
-            });
-        };
-
-        // إزالة الغرفة من القائمة لما اللعبة تبدأ أو تنتهي
-        window.unbroadcastRoom = function(gameType, code) {
-            const roomKey = gameType + '_' + code;
-            db.ref('activeRooms/' + roomKey).remove();
-        };
-
-        // اكتشاف الغرف النشطة وعرضها في الصفحة الرئيسية
+        // اكتشاف الغرف النشطة وعرضها تلقائياً في الصفحة الرئيسية لجميع الألعاب
         window.initHomeAllRoomsDiscovery = function() {
             const listEl = document.getElementById('homeNearbyRoomsList');
             if (!listEl) return;
@@ -3303,28 +3336,45 @@ ${JSON.stringify(allAnswers, null, 2)}
                 }
 
                 listEl.style.display = 'block';
-                let html = '<div class="nearby-rooms-title"><span class="nearby-pulse"></span> غرف متاحة الحين</div>';
+                let html = '<div class="nearby-rooms-title"><span class="nearby-pulse"></span> غرف متاحة الحين (اضغط للدخول المباشر)</div>';
+
+                const gameMap = {
+                    'scattergories': { title: '🧠 إنسان حيوان جماد', page: null },
+                    'country': { title: '🌍 خمّن الدولة', page: 'country.html' },
+                    'klmat': { title: '📝 الكلمات المبعثرة', page: 'klmat.html' },
+                    'football': { title: '⚽ معلومات كروية', page: 'football.html' },
+                    'mthl': { title: '📜 أكمل الشطر', page: 'mthl.html' },
+                    '3thr': { title: '🎭 فن الأعذار', page: '3thr.html' },
+                    'gasos': { title: '🕵️ مين الجاسوس', page: 'gasos.html' },
+                    'spy': { title: '🕵️ مين الجاسوس', page: 'gasos.html' },
+                    'timer': { title: '⚡ تحدي السرعة', page: 'timer.html' },
+                    'draw': { title: '🎨 ارسم وتخمّن', page: 'draw.html' }
+                };
 
                 snapshot.forEach(child => {
                     const room = child.val();
-                    const gameLabels = {
-                        'scattergories': '🧠 إنسان حيوان جماد',
-                        'spy': '🕵️ مين الجاسوس',
-                        'draw': '🎨 ارسم وتخمّن'
-                    };
-                    const gameLabel = gameLabels[room.gameType] || room.gameName || room.gameType;
+                    if (!room || !room.code) return;
+                    const gInfo = gameMap[room.gameType] || { title: '🎮 ' + (room.gameName || 'لعبة جماعية'), page: null };
                     const avatar = room.hostAvatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
+                    const targetPage = gInfo.page;
+
+                    let joinAction = '';
+                    if (targetPage) {
+                        joinAction = `window.location.href='${targetPage}?join=${room.code}';`;
+                    } else {
+                        joinAction = `document.getElementById('homeQuickRoomCode').value='${room.code}'; window.homeJoinAnyRoom();`;
+                    }
 
                     html += `
                         <div class="nearby-room-card">
                             <div class="nearby-room-info">
-                                <img src="${avatar}" alt="${room.hostName}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+                                <img src="${avatar}" alt="${room.hostName || 'الهوست'}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
                                 <div class="nearby-room-details">
-                                    <span class="nearby-room-game">${gameLabel}</span>
-                                    <span class="nearby-room-host">🎮 ${room.hostName} • رمز: ${room.code}</span>
+                                    <span class="nearby-room-game">${gInfo.title}</span>
+                                    <span class="nearby-room-host">🎮 الهوست: ${room.hostName || 'اللاعب'} • رمز الغرفة: <strong>${room.code}</strong></span>
                                 </div>
                             </div>
-                            <button class="btn-nearby-join" onclick="document.getElementById('homeQuickRoomCode').value='${room.code}'; window.homeJoinAnyRoom();">انضم ⚡</button>
+                            <button class="btn-nearby-join" onclick="${joinAction}">انضم ⚡</button>
                         </div>
                     `;
                 });
@@ -3333,13 +3383,9 @@ ${JSON.stringify(allAnswers, null, 2)}
             });
         };
 
-        // تهيئة اكتشاف الغرف (تُستدعى عند فتح لعبة معينة - اختياري)
-        window.initRoomDiscovery = function(gameType, callback) {
-            // هذه الدالة اختيارية — الاكتشاف الرئيسي يتم من initHomeAllRoomsDiscovery
-        };
-
         // تشغيل اكتشاف الغرف عند تحميل الصفحة
         window.initHomeAllRoomsDiscovery();
+
 
 </script>
 </body>

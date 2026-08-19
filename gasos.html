@@ -574,6 +574,7 @@
 
             currentRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
             document.getElementById('displayRoomCode').innerText = currentRoomCode + " 📋";
+            const pAvatar = (window.currentUserAccount && window.currentUserAccount.avatar) ? window.currentUserAccount.avatar : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
             if(window.broadcastRoom) window.broadcastRoom('gasos', currentRoomCode, 'مين الجاسوس', playerName, pAvatar);
 
             roomRef = db.ref('spy_rooms/' + currentRoomCode);

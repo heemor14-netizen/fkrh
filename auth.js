@@ -673,6 +673,39 @@
         });
     }
 
+    // ==================== نظام بث وإدارة الغرف الموحد لجميع الألعاب ====================
+    window.broadcastRoom = function(gameType, code, gameName, hostName, hostAvatar) {
+        const { db } = getFirebase();
+        if (!db || !code) return;
+        const roomKey = gameType + '_' + code;
+        const pAvatar = hostAvatar || (window.currentUserAccount && window.currentUserAccount.avatar) ? window.currentUserAccount.avatar : DEFAULT_AVATAR;
+        const pName = hostName || (window.currentUserAccount && window.currentUserAccount.name) ? window.currentUserAccount.name : 'الهوست';
+        
+        try {
+            db.ref('activeRooms/' + roomKey).set({
+                gameType: gameType,
+                code: String(code),
+                gameName: gameName || gameType,
+                hostName: pName,
+                hostAvatar: pAvatar,
+                createdAt: (typeof firebase !== 'undefined' && firebase.database && firebase.database.ServerValue) ? firebase.database.ServerValue.TIMESTAMP : Date.now()
+            }).catch(() => {});
+        } catch(e) {}
+    };
+
+    window.unbroadcastRoom = function(gameType, code) {
+        const { db } = getFirebase();
+        if (!db || !code) return;
+        const roomKey = gameType + '_' + code;
+        try {
+            db.ref('activeRooms/' + roomKey).remove().catch(() => {});
+        } catch(e) {}
+    };
+
+    window.initRoomDiscovery = function(gameType, callback) {
+        // متوافق مع الاستدعاءات القديمة في صفحات الألعاب
+    };
+
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
             updateHeaderAuthUI();
