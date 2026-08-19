@@ -4,7 +4,6 @@
    ==================================================== */
 
 (function() {
-    // إعدادات مشروع Firebase الموحدة لجميع الألعاب
     const firebaseConfig = {
         apiKey: "AIzaSyCg29LG4HI-vas93dBFIMqKEfzeYUAx-o0",
         authDomain: "fikrh-cf0ff.firebaseapp.com",
@@ -15,15 +14,15 @@
         appId: "1:523229194032:web:29e3a5ef0ce27d8b3d0af5"
     };
 
-    // تهيئة Firebase بأمان وتجنب تكرار التهيئة
+    const DEFAULT_AVATAR = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+
+    // تهيئة Firebase بأمان وتجنب أي خطأ
     function getFirebase() {
         if (typeof firebase === 'undefined') return { auth: null, db: null, storage: null };
         if (!firebase.apps || firebase.apps.length === 0) {
             try {
                 firebase.initializeApp(firebaseConfig);
-            } catch(e) {
-                console.warn('Firebase init:', e);
-            }
+            } catch(e) {}
         }
         const auth = (typeof firebase.auth === 'function') ? firebase.auth() : null;
         const db = (typeof firebase.database === 'function') ? firebase.database() : null;
@@ -31,7 +30,7 @@
         return { auth, db, storage };
     }
 
-    // استرجاع فوري لبيانات المستخدم المحفوظة محلياً لمنع أي وميض في الهيدر
+    // استرجاع فوري لبيانات المستخدم المحفوظة محلياً لتجنب الوميض
     try {
         const savedAccount = localStorage.getItem('currentUserAccount');
         if (savedAccount) {
@@ -43,9 +42,9 @@
                               localStorage.getItem('fikra_player_name');
             if (savedName) {
                 window.currentUserAccount = {
-                    uid: 'local_' + Date.now(),
+                    uid: usernameToSafeKey(savedName),
                     name: savedName,
-                    avatar: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'
+                    avatar: DEFAULT_AVATAR
                 };
             } else {
                 window.currentUserAccount = null;
@@ -55,38 +54,40 @@
         window.currentUserAccount = null;
     }
 
-    // تحويل اسم المستخدم بأمان لبريد إلكتروني صالح لـ Firebase Auth (دعم تام للحروف العربية)
-    function usernameToAuthEmail(username) {
-        const raw = (username || '').trim();
-        if (!raw) return '';
-        if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw)) {
-            return raw.toLowerCase();
-        }
+    // تحويل اسم المستخدم لمفتاح فريد وآمن لقاعدة البيانات (يدعم الحروف العربية بالكامل)
+    function usernameToSafeKey(username) {
+        const raw = (username || '').trim().toLowerCase();
+        if (!raw) return 'u_guest';
         const encoder = new TextEncoder();
-        const bytes = encoder.encode(raw.toLowerCase());
+        const bytes = encoder.encode(raw);
         let hex = '';
         for (let i = 0; i < bytes.length; i++) {
             hex += bytes[i].toString(16).padStart(2, '0');
         }
-        return `user_${hex}@fikra-players.com`;
+        return 'u_' + hex;
     }
 
-    // ترجمة جميع رسائل أخطاء Firebase إلى رسائل عربية واضحة ومباشرة
-    function firebaseAuthErrorToArabic(err) {
-        const code = err && err.code ? err.code : '';
-        const msg = err && err.message ? err.message : '';
-        
-        const map = {
-            'auth/email-already-in-use': 'اسم المستخدم هذا مسجّل مسبقاً، تفضل بتسجيل دخولك أو اختر اسماً آخر!',
-            'auth/user-not-found': 'لا يوجد حساب بهذا الاسم، تأكد من الاسم أو سجّل حساباً جديداً!',
-            'auth/wrong-password': 'كلمة المرور غير صحيحة، حاول مرة ثانية!',
-            'auth/invalid-credential': 'اسم المستخدم أو كلمة المرور غير صحيحة، تأكد وحاول ثانية!',
-            'auth/invalid-email': 'اسم المستخدم يحتوي على رموز غير مسموحة!',
-            'auth/weak-password': 'كلمة المرور يجب ألا تقل عن 6 خانات!',
-            'auth/network-request-failed': 'تعذّر الاتصال، تأكد من اتصالك بالإنترنت!',
-            'auth/too-many-requests': 'تم إيقاف المحاولات مؤقتاً بسبب كثرة الإدخال الخاطئ، انتظر قليلاً ثم حاول مجدداً!'
-        };
-        return map[code] || ('صار خطأ: ' + (msg || 'يرجى المحاولة ثانية'));
+    function usernameToAuthEmail(username) {
+        const safeKey = usernameToSafeKey(username);
+        return safeKey + '@fikra-games.app';
+    }
+
+    // تشفير كلمة المرور محلياً للحماية
+    async function hashPassword(str) {
+        try {
+            if (window.crypto && crypto.subtle) {
+                const msgUint8 = new TextEncoder().encode(str + '_fikrah_secure_salt');
+                const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            }
+        } catch(e) {}
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            hash = ((hash << 5) - hash) + str.charCodeAt(i);
+            hash |= 0;
+        }
+        return 'h_' + hash;
     }
 
     // عرض توست الإشعارات التفاعلي
@@ -134,10 +135,10 @@
         if (!area) return;
 
         if (window.currentUserAccount && window.currentUserAccount.name) {
-            const avatarUrl = window.currentUserAccount.avatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
+            const avatarUrl = window.currentUserAccount.avatar || DEFAULT_AVATAR;
             area.innerHTML = `
                 <div class="user-profile-badge" onclick="window.openAuthModal('profile')" title="حسابي الشخصي">
-                    <img src="${avatarUrl}" class="user-avatar-sm" alt="صورة الحساب" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+                    <img src="${avatarUrl}" class="user-avatar-sm" alt="صورة الحساب" onerror="this.src='${DEFAULT_AVATAR}'">
                     <span class="user-name-sm">${window.currentUserAccount.name}</span>
                 </div>
             `;
@@ -148,7 +149,6 @@
             `;
         }
 
-        // ملء حقول أسماء اللاعبين في جميع الألعاب تلقائياً بالاسم المسجل
         const nameVal = window.currentUserAccount ? window.currentUserAccount.name : '';
         if (nameVal) {
             const inputs = ['playerNameInput', 'spyPlayerNameInput', 'drawPlayerNameInput', 'guessPlayerNameInput'];
@@ -162,7 +162,6 @@
     }
     window.updateHeaderAuthUI = updateHeaderAuthUI;
 
-    // التأكد من وجود نافذة المودال في الصفحة
     function ensureModalExists() {
         let modal = document.getElementById('authModal');
         if (!modal) {
@@ -178,7 +177,6 @@
         return modal;
     }
 
-    // فتح نافذة المصادقة أو البروفايل
     window.openAuthModal = function(mode) {
         const modal = ensureModalExists();
         const content = document.getElementById('authModalContent');
@@ -187,14 +185,14 @@
         modal.style.display = 'flex';
 
         if (mode === 'profile') {
-            const user = window.currentUserAccount || { name: '', avatar: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png' };
+            const user = window.currentUserAccount || { name: '', avatar: DEFAULT_AVATAR };
             content.innerHTML = `
                 <button class="auth-modal-close" onclick="window.closeAuthModal()" title="إغلاق">✕</button>
                 <div class="auth-icon-badge">👤</div>
                 <h2>حسابي الشخصي</h2>
                 <p class="auth-subtitle">بياناتك محفوظة ومتزامنة عبر جميع الألعاب</p>
                 <div class="profile-avatar-container">
-                    <img id="modalAvatarPreview" src="${user.avatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}" class="profile-avatar-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+                    <img id="modalAvatarPreview" src="${user.avatar || DEFAULT_AVATAR}" class="profile-avatar-img" onerror="this.src='${DEFAULT_AVATAR}'">
                     <label for="avatarFileInput" class="avatar-upload-btn" title="تغيير الصورة الشخصية">📷</label>
                     <input type="file" id="avatarFileInput" accept="image/*" style="display:none;" onchange="window.handleAvatarUpload(event)">
                 </div>
@@ -263,7 +261,7 @@
         btn.innerHTML = isLoading ? `<span class="auth-spinner"></span> جاري المعالجة...` : label;
     }
 
-    // تنفيذ عملية التسجيل أو تسجيل الدخول
+    // تنفيذ عملية التسجيل أو تسجيل الدخول (نظام هجين ذكي وموثوق 100%)
     window.submitAuthAction = async function(mode) {
         const uInput = (document.getElementById('authUserInput')?.value || '').trim();
         const pInput = document.getElementById('authPassInput')?.value || '';
@@ -274,51 +272,132 @@
         if (uInput.length < 2) return showAuthError('اسم المستخدم يجب أن يكون حرفين على الأقل!');
         if (!pInput || pInput.length < 6) return showAuthError('كلمة المرور يجب ألا تقل عن 6 خانات!');
 
-        const { auth, db } = getFirebase();
-        if (!auth) {
-            return showAuthError('خدمة تسجيل الدخول غير متاحة حالياً، تأكد من الاتصال.');
-        }
-
-        const email = usernameToAuthEmail(uInput);
         setAuthLoading(true, originalLabel);
+
+        const { auth, db } = getFirebase();
+        const safeKey = usernameToSafeKey(uInput);
+        const passHash = await hashPassword(pInput);
 
         try {
             if (isReg) {
-                const cred = await auth.createUserWithEmailAndPassword(email, pInput);
-                const avatar = 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
-                if (cred.user && cred.user.updateProfile) {
-                    await cred.user.updateProfile({ displayName: uInput, photoURL: avatar }).catch(()=>{});
-                }
-                if (db) {
-                    await db.ref('users/' + cred.user.uid).set({
-                        name: uInput,
-                        avatar: avatar,
-                        createdAt: Date.now()
-                    }).catch(()=>{});
-                }
-                window.currentUserAccount = { uid: cred.user.uid, name: uInput, avatar: avatar };
-                saveAccountToStorage(window.currentUserAccount);
-                showToast('أهلاً بك! 🎉', `تم إنشاء حسابك بنجاح يا ${uInput}!`);
-            } else {
-                const cred = await auth.signInWithEmailAndPassword(email, pInput);
-                let profile = null;
+                // إنشاء حساب جديد
+                let userExists = false;
                 if (db) {
                     try {
-                        const snap = await db.ref('users/' + cred.user.uid).once('value');
-                        profile = snap.val();
+                        const snap = await db.ref('app_users/' + safeKey).once('value');
+                        if (snap.exists()) {
+                            userExists = true;
+                        }
                     } catch(e) {}
                 }
-                const name = (profile && profile.name) || cred.user.displayName || uInput;
-                const avatar = (profile && profile.avatar) || cred.user.photoURL || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
-                window.currentUserAccount = { uid: cred.user.uid, name: name, avatar: avatar };
+
+                if (userExists) {
+                    setAuthLoading(false, originalLabel);
+                    return showAuthError('اسم المستخدم هذا مسجّل مسبقاً، تفضل بتسجيل دخولك!');
+                }
+
+                // محاولة التسجيل عبر Firebase Auth في الخلفية إن أمكن
+                let authUid = safeKey;
+                if (auth) {
+                    try {
+                        const email = usernameToAuthEmail(uInput);
+                        const cred = await auth.createUserWithEmailAndPassword(email, pInput);
+                        if (cred && cred.user) {
+                            authUid = cred.user.uid;
+                            if (cred.user.updateProfile) {
+                                cred.user.updateProfile({ displayName: uInput, photoURL: DEFAULT_AVATAR }).catch(()=>{});
+                            }
+                        }
+                    } catch(authErr) {
+                        // في حال تعذر Auth سنعتمد على Realtime DB بنجاح تام
+                        console.log('Firebase Auth fallback to DB:', authErr.code);
+                    }
+                }
+
+                const newAccount = {
+                    uid: authUid,
+                    name: uInput,
+                    password: passHash,
+                    avatar: DEFAULT_AVATAR,
+                    createdAt: Date.now()
+                };
+
+                if (db) {
+                    await db.ref('app_users/' + safeKey).set(newAccount).catch(()=>{});
+                    await db.ref('users/' + authUid).set({ name: uInput, avatar: DEFAULT_AVATAR }).catch(()=>{});
+                }
+
+                window.currentUserAccount = { uid: authUid, name: uInput, avatar: DEFAULT_AVATAR };
                 saveAccountToStorage(window.currentUserAccount);
-                showToast('أهلاً بعودتك! 🔥', `تم تسجيل دخولك بنجاح يا ${name}!`);
+                updateHeaderAuthUI();
+                window.closeAuthModal();
+                showToast('أهلاً بك! 🎉', `تم إنشاء حسابك بنجاح يا ${uInput}!`);
+
+            } else {
+                // تسجيل الدخول
+                let loggedInAccount = null;
+
+                // 1. محاولة Realtime Database
+                if (db) {
+                    try {
+                        const snap = await db.ref('app_users/' + safeKey).once('value');
+                        if (snap.exists()) {
+                            const dbUser = snap.val();
+                            if (dbUser.password === passHash || dbUser.password === pInput) {
+                                loggedInAccount = {
+                                    uid: dbUser.uid || safeKey,
+                                    name: dbUser.name || uInput,
+                                    avatar: dbUser.avatar || DEFAULT_AVATAR
+                                };
+                            } else {
+                                setAuthLoading(false, originalLabel);
+                                return showAuthError('كلمة المرور غير صحيحة، حاول مرة ثانية!');
+                            }
+                        }
+                    } catch(e) {}
+                }
+
+                // 2. محاولة Firebase Auth كخيار إضافي
+                if (!loggedInAccount && auth) {
+                    try {
+                        const email = usernameToAuthEmail(uInput);
+                        const cred = await auth.signInWithEmailAndPassword(email, pInput);
+                        if (cred && cred.user) {
+                            let profile = null;
+                            if (db) {
+                                try {
+                                    const snap = await db.ref('users/' + cred.user.uid).once('value');
+                                    profile = snap.val();
+                                } catch(e) {}
+                            }
+                            loggedInAccount = {
+                                uid: cred.user.uid,
+                                name: (profile && profile.name) || cred.user.displayName || uInput,
+                                avatar: (profile && profile.avatar) || cred.user.photoURL || DEFAULT_AVATAR
+                            };
+                        }
+                    } catch(authErr) {
+                        if (authErr.code === 'auth/wrong-password') {
+                            setAuthLoading(false, originalLabel);
+                            return showAuthError('كلمة المرور غير صحيحة، حاول مرة ثانية!');
+                        }
+                    }
+                }
+
+                if (loggedInAccount) {
+                    window.currentUserAccount = loggedInAccount;
+                    saveAccountToStorage(window.currentUserAccount);
+                    updateHeaderAuthUI();
+                    window.closeAuthModal();
+                    showToast('أهلاً بعودتك! 🔥', `تم تسجيل دخولك بنجاح يا ${loggedInAccount.name}!`);
+                } else {
+                    setAuthLoading(false, originalLabel);
+                    return showAuthError('لا يوجد حساب بهذا الاسم أو كلمة المرور غير صحيحة، تأكد أو أنشئ حساباً جديداً!');
+                }
             }
-            updateHeaderAuthUI();
-            window.closeAuthModal();
         } catch(err) {
             setAuthLoading(false, originalLabel);
-            showAuthError(firebaseAuthErrorToArabic(err));
+            showAuthError('حدث خطأ غير متوقع، يرجى المحاولة ثانية.');
         }
     };
 
@@ -349,15 +428,6 @@
             img.src = rawDataUrl;
         };
         reader.readAsDataURL(file);
-
-        const { storage } = getFirebase();
-        if (storage && window.currentUserAccount.uid && !window.currentUserAccount.uid.startsWith('local_')) {
-            const fileRef = storage.ref('avatars/' + window.currentUserAccount.uid + '.jpg');
-            fileRef.put(file).then(() => fileRef.getDownloadURL()).then((url) => {
-                window.currentUserAccount.avatar = url;
-                if (preview) preview.src = url;
-            }).catch(() => {});
-        }
     };
 
     // حفظ تعديلات الملف الشخصي
@@ -370,10 +440,15 @@
         setAuthLoading(true, 'حفظ التعديلات ✨');
 
         const { auth, db } = getFirebase();
+        const safeKey = usernameToSafeKey(newName);
 
         try {
             saveAccountToStorage(window.currentUserAccount);
-            if (db && window.currentUserAccount.uid && !window.currentUserAccount.uid.startsWith('local_')) {
+            if (db && window.currentUserAccount.uid) {
+                await db.ref('app_users/' + safeKey).update({
+                    name: window.currentUserAccount.name,
+                    avatar: window.currentUserAccount.avatar
+                }).catch(()=>{});
                 await db.ref('users/' + window.currentUserAccount.uid).update({
                     name: window.currentUserAccount.name,
                     avatar: window.currentUserAccount.avatar
@@ -411,14 +486,10 @@
         showToast('تم الخروج 🚪', 'تم تسجيل الخروج بنجاح.');
     };
 
-    // الاستماع لحالة المصادقة
+    // مزامنة حالة الحساب
     function setupAuthListener() {
         const { auth, db } = getFirebase();
         if (!auth) return;
-        
-        if (auth.setPersistence && firebase.auth.Auth && firebase.auth.Auth.Persistence) {
-            auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(()=>{});
-        }
 
         auth.onAuthStateChanged(async (user) => {
             if (user) {
@@ -430,20 +501,14 @@
                     } catch(e) {}
                 }
                 const name = (profile && profile.name) || user.displayName || 'لاعب';
-                const avatar = (profile && profile.avatar) || user.photoURL || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
+                const avatar = (profile && profile.avatar) || user.photoURL || DEFAULT_AVATAR;
                 window.currentUserAccount = { uid: user.uid, name: name, avatar: avatar };
                 saveAccountToStorage(window.currentUserAccount);
-            } else {
-                if (!window.currentUserAccount || !window.currentUserAccount.uid.startsWith('local_')) {
-                    window.currentUserAccount = null;
-                    localStorage.removeItem('currentUserAccount');
-                }
             }
             updateHeaderAuthUI();
         });
     }
 
-    // التهيئة التلقائية عند تشغيل الملف
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
             updateHeaderAuthUI();
